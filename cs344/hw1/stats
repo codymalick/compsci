@@ -1,0 +1,135 @@
+#!/bin/bash
+#check for proper inputs
+declare cols=--cols
+declare rows=--rows
+declare c=-c
+declare r=-r
+
+declare avg=0
+declare itr=1
+
+declare -a col
+declare -a row
+
+declare file_name=temp$$
+
+declare input=$2
+
+
+#trap "rm -f ohgodrunaway" INT HUP
+
+#if test $# -q 2
+#checks for two parameters
+
+if [ "$1" != "$cols" ] && [ "$1" != "$rows" ];
+	then
+	   #check if file exists
+	   if [ ! -f $2 ];
+	   then
+	      echo invalid file
+	      echo "{-rows|-cols} [input_file]"
+	      exit $?
+	   fi
+	   echo "{-rows|-cols} [input_file]"
+	   exit $?
+fi
+
+function columns() {
+	while [ true ]; do
+		col[$((itr))]=$(cut -f $itr $input)
+		if [ -z "${col[$((itr))]}" ]; then
+		   	break
+	        fi
+		itr=$(($itr+1))
+	done
+
+
+	cat $input
+
+	for i in ${col[@]};
+	do
+	   	echo $i >> temp/$file_name
+	done
+}
+
+function rows() {
+	echo Average Median
+
+	row_length="$(wc $input | cut -d ' ' -f2)"
+	row_length=$(($row_length - 1))
+	median_location=0
+	median=0
+	is_even=0
+	index=0
+
+	if [ "expr(($row_length%2)) != 0" ]; 
+	then
+	   median_location=$((row_length/2))
+	  else
+	     median_location=$((row_length/2))
+	     is_even=1
+	fi
+
+	temp_avg=0
+	temp_median=0
+
+	while read my_line
+	do
+	   for i in ${my_line[@]}
+	   do
+                #cumulative sum
+	     	temp_avg=$((i + temp_avg))
+
+		#output for sorting
+		echo $i >> temp/$file_name
+	   done
+
+	   #Calculate Average
+	   temp_avg=$(echo "scale=3; $temp_avg/$row_length" | bc)
+
+	   #fun bash manipulation: handles rounding to integer numbers
+	   #using integer division
+	   temp_avg=$(echo "($temp_avg+.05)/1" | bc)
+	   
+	   if [ $is_even == 1 ]; then
+	      echo fuck
+	      else
+		 median=$(sort -n temp/$file_name)
+	   fi
+
+	   sorted="$(head temp/$file_name)"
+	   
+	   for i in ${sorted[@]}
+	   do
+		if [ $index == $median_location ]; then
+			if [ $is_even == 1 ]; then
+			   median=$(((i+{@+1})/2))
+			     else
+				median=$i
+				break
+			fi
+		fi
+
+		index=$((index+1))
+	   done
+	   index=0
+
+	   echo -e $temp_avg'\t'$median	
+	   temp_avg=0
+	   median=0
+	   echo > temp/$file_name
+	    
+	done < test_file
+}
+
+function median() {
+	echo test
+}
+
+
+if [ "$1" == "$cols" ];
+then
+   columns
+else
+   rows
+fi
