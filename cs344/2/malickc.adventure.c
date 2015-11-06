@@ -1,18 +1,7 @@
 /*******************************************************
  * Author: Cody Malick
  * Program: Adventure program that the user has fun with!
- * RIP C++ 
- *
  *******************************************************/
-/*
- * Psuedo code:
- * Make directory
- * Make Files
- * 	- Declare Struct
- * 	- Take static names, assign them to file struct
- * 	- Create Links to other files
- * 	- 
- */
 
 #include<stdlib.h>
 #include<stdio.h>
@@ -20,13 +9,8 @@
 #include<string.h>
 #include<time.h>
 
-struct room {
-	char name[30];
-	char connections[6][30];	
-	char type[30];
-	int count;
-};
 
+//Function declarations
 void gen_files(char* dir);
 void assign_names();
 void generate_connections();
@@ -37,6 +21,13 @@ int get_start_room();
 int find_room(char* name);
 
 //Struct/Variable Declarations
+struct room {
+	char name[30];
+	char connections[6][30];	
+	char type[30];
+	int count;
+};
+
 struct room rooms[6];
 struct room rrooms[6];
 
@@ -47,28 +38,30 @@ int main()
 	//seed random number
 	srand(time(NULL));
 
-	//room directory
-	char room_path[20]; 
-	sprintf(room_path, "malickc.rooms.%i", getpid());
+	char room_path[20];		//Room path
+	sprintf(room_path, "malickc.rooms.%i", getpid());	//Create room directory path
+	mkdir(room_path, 0777);		//Create directory
 
-	//create room directory
-	mkdir(room_path, 0777);
+	assign_names();		//Assign names from "Names array"
 
-	assign_names();
-
-	generate_connections();
+	generate_connections();		//Generate random connections between rooms
 	
-	assign_types();
+	assign_types();		//Assign room types
 
-	gen_files(room_path);
+	gen_files(room_path);	//generate files from room structs array "rooms"
 
-	read_rooms(room_path);
+	read_rooms(room_path);		//read files into new structs array "rrooms"
 
-	game_loop();
+	game_loop();	//game loop
 	
-	return 0;
+	return 0;	//exit 0
 }
 
+/**************************************************
+ *	Function: get_start_rooms()
+ *	Purpose: finds the room with type "START_ROOM"
+ *	Return: room index
+ **************************************************/
 int get_start_room() {
 	int i = 0;
 	for(i = 0; i < 7; i++) {
@@ -79,6 +72,12 @@ int get_start_room() {
 	exit(1);
 }
 
+
+/**************************************************
+ *	Function: find_room()
+ *	Purpose: finds the room from given name,
+ *	Return: room index
+ **************************************************/
 int find_room(char* name) {
 	int i = 0;
 	for(i = 0; i < 7; i++) {
@@ -89,6 +88,12 @@ int find_room(char* name) {
 	return 100;
 }
 
+/**************************************************
+ *	Function: game_loop()
+ *	Purpose: runs the game loop after components
+ *		have been built
+ *	Return: --
+ **************************************************/
 void game_loop() {
 	printf("Welcome to the game! \n");
 	int game = 0;
@@ -96,10 +101,12 @@ void game_loop() {
 	char input[100];
 	int steps = 0;
 	char vic_path[1000]="";
-
+	
+	//start game
 	while(game == 0) {
 		printf("CURRENT LOCATION: %s\n", rrooms[c_room].name);
 		printf("POSSIBLE LOCATIONS: ");
+		
 		int i = 0;
 		for(i = 0; i < 6; i++) {
 			if(rrooms[c_room].connections[i][0]) {
@@ -109,6 +116,8 @@ void game_loop() {
 		printf("\n");
 				
 		int move = 0;
+		
+		//move loop
 		while(move == 0) {
 			printf("WHERE TO? >");
 
@@ -148,7 +157,12 @@ void game_loop() {
 	}
 }
 
-
+/**************************************************
+ *	Function: assign_names()
+ *	Purpose: assigns seven random names from the list
+ *		of ten
+ *	Return: --
+ **************************************************/
 void assign_names() {
 	int i, j, k, match;
 	int random = 0;
@@ -179,34 +193,52 @@ void assign_names() {
 	}
 }
 
+/**************************************************
+ *	Function: generate_connections()
+ *	Purpose: uses an adjecency matrix to mark connections
+ *		and build the connections for each room based
+ *		off the matrix:
+ *	Return: --
+ **************************************************/
 void generate_connections() {
 
+	//adjacency matrix
 	int c_array[7][7] = {0};
 	
-	int i, j, k, l;
+	int i, j;
 	int connections = 0;
 	int con = 0;
 
+	//for each room
 	for(i = 0; i < 7; i++) {
+		//seed random
 		srand(time(NULL)+i);
+		//roll number of connections
 		connections = rand() % 4 + 3;
+		//check for existing connections, if any, decrement
 		for(j = 0; j < 7; j++) {
 			if(c_array[i][j]) {
 				connections--;
 			}
 		}
 
+		//for each connection
 		for(j = 0; j < connections; j++) {
+			//generate connection
 			con = rand() % 7;
+			//check to make sure it isn't connecting to itself and a connection
+			//doesn't already exist, if it does, re-roll
 			while(i == con && !c_array[i][j]) {
 				con = rand() % 7;
 			}	
 			
+			//create connection in room and room connecting to
 			c_array[i][con] = 1;
 			c_array[con][i] = 1;
 		}
 	}
 
+	//Actuall write connections to rooms struct array
 	for(i = 0; i < 7; i++) {
 		for(j = 0; j < 7; j++) {
 			if(c_array[i][j]) {
@@ -225,6 +257,12 @@ void generate_connections() {
 	}
 }
 
+/**************************************************
+ *	Function: assign_types
+ *	Purpose: Assigns rooms types, randomly for Start
+ *		and End rooms, then fills with Middle rooms
+ *	Return: --
+ **************************************************/
 void assign_types() {
 
 	int i = 0;
@@ -246,6 +284,12 @@ void assign_types() {
 	}
 }
 
+/**************************************************
+ *	Function: gen_files(char* dir)
+ *	Purpose: generates files for game after the room
+ *		structs have been completely filled out 
+ *	Return: --
+ **************************************************/
 void gen_files(char* dir) {
 	
 	int r_i = 0;
@@ -280,6 +324,13 @@ void gen_files(char* dir) {
 	}
 
 }
+
+/**************************************************
+ *	Function: read_rooms(char* dir) 
+ *	Purpose: Reads room files and fills "rrooms" struct
+ *		array with data
+ *	Return: --
+ **************************************************/
 
 void read_rooms(char* dir) {
 	int i = 0;
