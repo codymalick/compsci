@@ -1,0 +1,6 @@
+#!/bin/bash
+
+while read my_line
+do
+	echo "$my_line"
+done <$1
