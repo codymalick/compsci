@@ -1,0 +1,9 @@
+#!/bin/bash
+echo compiling keygen.c
+clang -o key keygen.c
+
+echo compiling otp_enc.c
+clang -o enc otp_enc.c
+
+echo compiling otp_enc_d.c
+clang -o enc otp_enc_d.c

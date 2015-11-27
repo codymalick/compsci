@@ -12,8 +12,9 @@ int main(int argc, char* argv[]) {
 		int size = atoi(argv[1]);	
 		key_gen(size);
 	} else {
-		printf("%s\n", USAGE);
+		printf("USAGE: %s\n", USAGE);
 	}
+	return 0;
 }
 
 
