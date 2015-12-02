@@ -8,11 +8,15 @@
 #include<netinet/in.h>
 
 #define USAGE "otp_enc_d [listening_port]"
+#define BUFF 4096
 
 char key[4096];
 
+char* encrypt(char* plain[BUFF]);
+
 //otp_enc_d [listening_port]
 int main(int argc, char* argv[]) {
+
 	if(argc < 2 || !argv[1]) {
 		fprintf(stderr, "USAGE: %s\n", USAGE);
 		exit(1);
@@ -24,9 +28,10 @@ int main(int argc, char* argv[]) {
 	}
 
 	//Temp for testing pipes
-	if(argc < 3) {
-		scanf(i"%s", key);
-	}
+	//if(argc < 3) {
+	//	scanf("%s", key);
+	//	printf("key %s\n", key);
+	//}
 		
 	printf("Encryption Daemon\n");
 	printf("Creating Socket:\n");
@@ -41,6 +46,6 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 	
-	printf("Socket created");
+	printf("Socket created\n");
 	return 0;
 }
