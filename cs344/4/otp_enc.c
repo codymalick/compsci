@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 	int strlength = strlen(message);
 	message[strlength] = '\n';
 
-	printf("message: %s, key: %s, port: %i\n", message, key, port);
+	//printf("message: %s, key: %s, port: %i\n", message, key, port);
 
 	int i;
 	for(i = 0; i < 4096; i++) {

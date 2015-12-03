@@ -7,3 +7,6 @@ clang -o enc otp_enc.c
 
 echo compiling otp_enc_d.c
 clang -o enc_d otp_enc_d.c
+
+echo compiling otp_dec.c
+clang -o dec otp_dec.c

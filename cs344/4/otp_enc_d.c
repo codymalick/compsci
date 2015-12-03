@@ -38,14 +38,27 @@ int main(int argc, char* argv[]) {
 
 	struct sockaddr_in server;
 	int sock;
+	char message[BUFF];	
+
+	server.sin_family = AF_INET;
+	server.sin_port = htons(port);
+	server.sin_addr.s_addr = INADDR_ANY;
 
 	//Create the socket and set it up to accept connections
 	sock = socket(AF_INET, SOCK_STREAM, 0);
+
+	bind(sock, (struct sockaddr *) &server, sizeof(server));
+
 	if(listen(sock, 1) < 0) {
 		perror("listen");
 		exit(1);
 	}
+
+	int clientsock = accept(sock, NULL, NULL);
+
+	ssize_t r;
+	while((r = recv(clientsock, message, sizeof(message), 0)));
+	printf("%s\n", message); 
 	
-	printf("Socket created\n");
 	return 0;
 }
