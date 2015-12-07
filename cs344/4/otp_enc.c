@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 	//printf("message: %s, key: %s, port: %i\n", message, key, port);
 
 	int i;
-	for(i = 0; i < 4096; i++) {
+	while(1) {
 		if(message[i] == '\n') {
 			exit(0); 
 		}
@@ -33,8 +33,10 @@ int main(int argc, char* argv[]) {
 		
 		//printf("%i\n", ('A' + ((message[i] + key[i]) % 26)));
 
-		ciphertext[i] = ('A' + ((message[i] + key[i]) % 26));
-
+		ciphertext[i] = ('A' + ((message[i] + key[i]) % 27));
+		if(ciphertext[i] == '[') {
+			ciphertext[i] = ' ';
+		}
 		printf("%c", ciphertext[i]);
 	}
 	exit(1);

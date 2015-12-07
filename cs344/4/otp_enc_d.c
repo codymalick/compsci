@@ -33,9 +33,6 @@ int main(int argc, char* argv[]) {
 	//	printf("key %s\n", key);
 	//}
 		
-	printf("Encryption Daemon\n");
-	printf("Creating Socket:\n");
-
 	struct sockaddr_in server;
 	int sock;
 	char message[BUFF];	
@@ -48,17 +45,35 @@ int main(int argc, char* argv[]) {
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 
 	bind(sock, (struct sockaddr *) &server, sizeof(server));
-
 	if(listen(sock, 1) < 0) {
-		perror("listen");
-		exit(1);
+			perror("listen");
+			exit(1);
+	}
+	int pid;
+
+	for(int f = 0; f < 5; f++) {
+		pid = fork();
+			
+		if(pid == 0) {
+			break;
+		}
+		printf("%i\n", pid);
 	}
 
-	int clientsock = accept(sock, NULL, NULL);
 
-	ssize_t r;
-	while((r = recv(clientsock, message, sizeof(message), 0)));
-	printf("%s\n", message); 
-	
+
+	while(1) {
+		if(pid == 0) {
+			int clientsock = accept(sock, NULL, NULL);
+			ssize_t r;
+			while((r = recv(clientsock, message, sizeof(message), 0)));
+			printf("%s\n", message);
+			//enc/dec stuff	
+		} else {
+			//parent
+			wait();
+			pid = fork();
+		}
+	}	
 	return 0;
 }

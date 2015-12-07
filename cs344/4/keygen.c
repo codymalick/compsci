@@ -23,7 +23,10 @@ void key_gen(int size) {
 	char key[size];
 	int i;
 	for(i = 0; i < size; i++) {
-		char c = 'A' + (rand() % 26);	//start with 'a', random number between the low and the high	
+		char c = 'A' + (rand() % 27);	//start with 'a', random number between the low and the high
+		if(c == '[') {
+			c = ' ';
+		}
 		key[i] = c;	
 	}
 	key[i] = '\0';	//Null terminate the string
