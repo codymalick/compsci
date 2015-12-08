@@ -97,8 +97,6 @@ int main(int argc, char* argv[]) {
 
 	//SEND STRING
 
-	//printf("%s\n", buffer);
-    	//fgets(buffer,BUFF,stdin);
     	n = write(sockfd,buffer,strlen(buffer));
     	if (n < 0) 
         	error("ERROR writing to socket");
@@ -111,37 +109,4 @@ int main(int argc, char* argv[]) {
 
 	exit(0);
 
-
-
-
-	//printf("message: %i, key: %i\n", messagesize, keysize);
-	
-	//printf("Message: %s Key: %s", message, key);
-
-	//printf("%i\n", BUFF);	
-
-	char ciphertext[BUFF];	
-
-	int strlength = strlen(message);
-	message[strlength] = '\n';
-
-	//printf("message: %s, key: %s, port: %i\n", message, key, port);
-
-	int i;
-	for(i = 0; i<BUFF; i++) {
-		if(message[i] == '\n') {
-			printf("\n");
-			exit(0); 
-		}
-		//printf("A: %i, Message[i]: %i, Key[i]: %i\n", 'A', message[i], key[i]);
-		
-		//printf("%i\n", ('A' + ((message[i] + key[i]) % 26)));
-		ciphertext[i] = ('A' + ((message[i] + key[i]) % 26));
-		if(ciphertext[i] == '[') {
-			ciphertext[i] = ' ';
-		}
-		printf("%c", ciphertext[i]);
-	}
-	exit(1);
-	return 0;
 }
