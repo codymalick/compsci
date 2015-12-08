@@ -1,0 +1,151 @@
+#Initializing - Cleaning up - ignore Operation Not Permitted errors
+
+#-----------------------------------------
+#START OF GRADING SCRIPT
+#keygen 20 > key20
+#5 POINTS: key20 must exist
+key20 exists!
+
+#-----------------------------------------
+#5 POINTS: Number of characters in key20, should be 21:
+21 key20
+
+#-----------------------------------------
+#keygen 70000 > key70000
+#5 POINTS: Number of characters in key70000, should be 70001:
+70001 key70000
+
+#-----------------------------------------
+#otp_enc plaintext1 key20 $encport
+#10 POINTS: Should return error about too-short key
+
+#-----------------------------------------
+#otp_enc plaintext1 key70000 $encport
+#20 POINTS: Should return encrypted version of plaintext1
+ZHTHFKDQEGLM HPLDRRILLZLNXGQTCLSC OP
+
+#-----------------------------------------
+#otp_enc plaintext1 key70000 $encport > ciphertext1
+#10 POINTS: ciphertext1 must exist
+ciphertext1 exists!
+
+#-----------------------------------------
+#10 POINTS: ciphertext1 must be same number of chars as source
+#wc -m plaintext1
+37 plaintext1
+#Should be same: wc -m ciphertext1
+37 ciphertext1
+
+#-----------------------------------------
+#5 POINTS: ciphertext1 should look encrypted
+ZHTHFKDQEGLM HPLDRRILLZLNXGQTCLSC OP
+
+#-----------------------------------------
+#otp_dec ciphertext1 key70000 $encport
+#5 POINTS: Should fail giving error that otp_dec cannot use otp_enc_d
+EHHPUQDGCZIGVPZLZDQRWDYKSQ YFYDKNGOP
+
+#-----------------------------------------
+#20 POINTS: should return decrypted ciphertext1 that matches source
+#cat plaintext1
+THE RED GOOSE FLIES AT MIDNIGHT STOP
+#otp_dec ciphertext1 key70000 $decport
+THE RED GOOSE FLIES AT MIDNIGHT STOP
+
+#-----------------------------------------
+#otp_dec ciphertext1 key70000 $decport > plaintext1_a
+#10 POINTS: plaintext1_a must exist
+plaintext1_a exists!
+
+#-----------------------------------------
+#5 POINTS: plaintext1 must be same number of chars as plaintext1_a
+#wc -m plaintext1
+37 plaintext1
+#Should be same: wc -m ciphertext1
+37 plaintext1_a
+
+#-----------------------------------------
+#20 POINTS: concurrent test of encryption - look for 4 properly-sized ciphertext# files, or 5 where the 5th is 0 bytes
+#5 POINTS: Should be only one error about plaintext5 being bad
+Ten second sleep, your program must complete in this time
+total 320
+drwxrwxr-x 2 code code  4096 Dec  7 18:30 ./
+drwxrwxr-x 6 code code  4096 Nov 26 12:48 ../
+-rw-rw-r-- 1 code code    37 Dec  7 18:30 ciphertext1
+-rw-rw-r-- 1 code code     0 Dec  7 18:30 ciphertext2
+-rw-rw-r-- 1 code code    17 Dec  7 18:30 ciphertext3
+-rw-rw-r-- 1 code code     0 Dec  7 18:30 ciphertext4
+-rw-rw-r-- 1 code code    42 Dec  7 18:30 ciphertext5
+-rwxrwxr-x 1 code code   285 Dec  7 18:23 compileall
+-rw-rw-r-- 1 code code  5955 Dec  7 18:24 grade
+-rw-rw-r-- 1 code code  2291 Dec  7 18:30 grade2
+-rw-rw-r-- 1 code code   101 Dec  7 14:40 key100
+-rw-rw-r-- 1 code code    21 Dec  7 18:30 key20
+-rw-rw-r-- 1 code code  7001 Dec  7 14:18 key7000
+-rw-rw-r-- 1 code code 70001 Dec  7 18:30 key70000
+-rwxrwxr-x 1 code code  7576 Dec  7 18:29 keygen
+-rw-rw-r-- 1 code code   597 Dec  6 22:21 keygen.c
+-rwxrwxr-x 1 code code 11256 Dec  7 18:29 otp_dec
+-rwxrwxr-x 1 code code 10080 Dec  7 18:29 otp_dec_d
+-rw-rw-r-- 1 code code  2225 Dec  7 18:29 otp_dec_d.c
+-rw-r--r-- 1 code code 12288 Dec  7 18:29 .otp_dec_d.c.swp
+-rwxrwxr-x 1 code code 11256 Dec  7 18:29 otp_enc
+-rw-rw-r-- 1 code code  3138 Dec  7 18:17 otp_enc.c
+-rwxrwxr-x 1 code code 10080 Dec  7 18:29 otp_enc_d
+-rw-rw-r-- 1 code code  2225 Dec  7 18:29 otp_enc_d.c
+-rw-r--r-- 1 code code 12288 Dec  7 18:29 .otp_enc_d.c.swp
+-rwxrwxr-x 1 code code  4948 Dec  6 22:44 p4gradingscript
+-rw-rw-r-- 1 code code    37 Dec  6 22:06 plaintext1
+-rw-rw-r-- 1 code code   317 Dec  6 22:06 plaintext2
+-rw-rw-r-- 1 code code    17 Dec  6 22:06 plaintext3
+-rw-rw-r-- 1 code code 69333 Dec  6 22:06 plaintext4
+-rw-rw-r-- 1 code code    42 Dec  6 22:07 plaintext5
+-rw-rw-r-- 1 code code     6 Dec  7 16:23 testcipher
+-rw-rw-r-- 1 code code     6 Dec  7 16:18 testplain
+
+#-----------------------------------------
+#15 POINTS: concurrent test of decryption - look for 4 plaintext#_a files that match the plaintext# files
+#Ten second sleep, your program must complete in this time
+total 332
+drwxrwxr-x 2 code code  4096 Dec  7 18:30 ./
+drwxrwxr-x 6 code code  4096 Nov 26 12:48 ../
+-rw-rw-r-- 1 code code    37 Dec  7 18:30 ciphertext1
+-rw-rw-r-- 1 code code     0 Dec  7 18:30 ciphertext2
+-rw-rw-r-- 1 code code    17 Dec  7 18:30 ciphertext3
+-rw-rw-r-- 1 code code     0 Dec  7 18:30 ciphertext4
+-rw-rw-r-- 1 code code    42 Dec  7 18:30 ciphertext5
+-rwxrwxr-x 1 code code   285 Dec  7 18:23 compileall
+-rw-rw-r-- 1 code code  5955 Dec  7 18:24 grade
+-rw-rw-r-- 1 code code  4229 Dec  7 18:30 grade2
+-rw-rw-r-- 1 code code   101 Dec  7 14:40 key100
+-rw-rw-r-- 1 code code    21 Dec  7 18:30 key20
+-rw-rw-r-- 1 code code  7001 Dec  7 14:18 key7000
+-rw-rw-r-- 1 code code 70001 Dec  7 18:30 key70000
+-rwxrwxr-x 1 code code  7576 Dec  7 18:29 keygen
+-rw-rw-r-- 1 code code   597 Dec  6 22:21 keygen.c
+-rwxrwxr-x 1 code code 11256 Dec  7 18:29 otp_dec
+-rwxrwxr-x 1 code code 10080 Dec  7 18:29 otp_dec_d
+-rw-rw-r-- 1 code code  2225 Dec  7 18:29 otp_dec_d.c
+-rw-r--r-- 1 code code 12288 Dec  7 18:29 .otp_dec_d.c.swp
+-rwxrwxr-x 1 code code 11256 Dec  7 18:29 otp_enc
+-rw-rw-r-- 1 code code  3138 Dec  7 18:17 otp_enc.c
+-rwxrwxr-x 1 code code 10080 Dec  7 18:29 otp_enc_d
+-rw-rw-r-- 1 code code  2225 Dec  7 18:29 otp_enc_d.c
+-rw-r--r-- 1 code code 12288 Dec  7 18:29 .otp_enc_d.c.swp
+-rwxrwxr-x 1 code code  4948 Dec  6 22:44 p4gradingscript
+-rw-rw-r-- 1 code code    37 Dec  6 22:06 plaintext1
+-rw-rw-r-- 1 code code    37 Dec  7 18:30 plaintext1_a
+-rw-rw-r-- 1 code code   317 Dec  6 22:06 plaintext2
+-rw-rw-r-- 1 code code     0 Dec  7 18:30 plaintext2_a
+-rw-rw-r-- 1 code code    17 Dec  6 22:06 plaintext3
+-rw-rw-r-- 1 code code    17 Dec  7 18:30 plaintext3_a
+-rw-rw-r-- 1 code code 69333 Dec  6 22:06 plaintext4
+-rw-rw-r-- 1 code code     0 Dec  7 18:30 plaintext4_a
+-rw-rw-r-- 1 code code    42 Dec  6 22:07 plaintext5
+-rw-rw-r-- 1 code code     6 Dec  7 16:23 testcipher
+-rw-rw-r-- 1 code code     6 Dec  7 16:18 testplain
+
+#-----------------------------------------
+#Cleaning up - ignore Operation Not Permitted errors
+
+#SCRIPT COMPLETE
