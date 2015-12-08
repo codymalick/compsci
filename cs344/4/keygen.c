@@ -1,3 +1,9 @@
+/*********************************
+ * File Name: Keygen.c
+ * Function: Generates a key based
+ * on input parameter
+**********************************/
+
 #include<stdio.h>
 #include<time.h>
 #include<stdlib.h>
@@ -8,17 +14,19 @@
 void key_gen(int size);
 
 int main(int argc, char* argv[]) {
+	//checks for correct input
 	if(argv[1]) {
 		int size = atoi(argv[1]);	
 		key_gen(size);
 	} else {
-		printf("USAGE: %s\n", USAGE);
+		fprintf(stderr, "USAGE: %s\n", USAGE);
 	}
 	return 0;
 }
 
-
+//function generates the actual key
 void key_gen(int size) {
+	//seed random
 	srand(time(NULL));
 	char key[size];
 	int i;
