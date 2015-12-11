@@ -8,7 +8,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#define BUFF 50000
+#define BUFF 70000
 
 void error(const char *msg)
 {
@@ -75,9 +75,24 @@ int main(int argc, char *argv[])
      			if (n < 0) error("ERROR reading from socket");
 
 			//read input, tokenize into seperate variables	
-			message = strtok(buffer, "~");	
+			char type_key = 'k';
+			char enc = 'e';
+			char dec = 'd';
+			
+			type_key = *strtok(buffer, "|");
+			message = strtok(NULL, "~");	
 			key = strtok(NULL, "`");	
 
+			//printf("enc/decrypt key: %c - %c\n", type_key, enc);
+
+			if(type_key != enc) {
+				fprintf(stderr, "otp_dec cannot use otp_enc_d");
+				char empty_string[10] = " ";
+				int j = write(newsockfd, empty_string, BUFF);		
+				break;
+			}
+
+		
 			message = strtok(message, "\n");
 			key = strtok(key, "\n");
 			

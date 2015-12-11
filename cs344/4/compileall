@@ -12,4 +12,4 @@ echo compiling otp_dec_d.c
 clang -o otp_dec_d otp_dec_d.c
 
 echo compiling otp_dec.c
-clang -o otp_dec otp_enc.c
+clang -o otp_dec otp_dec.c

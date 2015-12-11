@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	char encrypt_key[4];
-	strcpy(encrypt_key, "e|");	
+	strcpy(encrypt_key, "d|");	
 
 	//indicate that this string needs encrypting
 	strcpy(buffer, encrypt_key);

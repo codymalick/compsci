@@ -8,7 +8,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#define BUFF 50000
+#define BUFF 70000
 
 void error(const char *msg)
 {
@@ -68,8 +68,9 @@ int main(int argc, char *argv[])
 			bzero(buffer,BUFF);
      			n = read(newsockfd,buffer,BUFF);
      			if (n < 0) error("ERROR reading from socket");
-			
-			message = strtok(buffer, "~");	
+		
+			char *dump = strtok(buffer, "|");	
+			message = strtok(NULL, "~");	
 			key = strtok(NULL, "`");	
 
 			message = strtok(message, "\n");
