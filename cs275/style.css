@@ -1,0 +1,57 @@
+#banner {
+	background-color: #cb4b16;
+	color: black;
+	text-align: center;
+	padding: 5px;
+	border-radius: 25px;
+	margin-left: 4%;
+}
+
+#side {
+	float: left;
+	background-color: #586e75;
+	padding: 10px;
+	text-align: left;
+	color: white;
+	height: 700px;
+	width: 15%;
+	border-radius: 25px;
+	margin-left: 4%;
+}
+
+#main {
+	padding: 10px;
+	text-align: center;
+}
+#list {
+	padding: 10px;
+	margin-left: 4%;
+	float: left;
+}
+
+.parent {
+	position: relative;
+}
+
+#form {
+	width: 475px;
+	height: 30%;
+	padding: 10px;
+	
+}
+
+#form label {
+	float: left;
+}
+
+#textbox {
+	float: right;
+}
+
+ul {
+	list-style-type:none;
+}
+div {
+	padding: 10px, 10px, 10px, 10px;
+}
+
