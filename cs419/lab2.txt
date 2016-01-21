@@ -1,0 +1,22 @@
+Lab 2 - Defense Against the Dark Arts
+String Analysis
+
+Sample 1:
+- Analysing different window's tool versions
+	- Explorer
+- "This program cannot be run in DOS mode"
+	- prompts the user to run the program
+- Registry entries
+
+Sample 2:
+- Select * from Win32_DiskParition WHERE BootPartition = true
+	- pulling large chunks of data from the registry
+- Your PC is blocked. All the hard drives were encrypted. Browse www.safe-data.ru
+	- Sample 2 seems to be some sort of cryptoware that encrypts the hard drive, or
+	pretends to encrypt the hard drive to get the user to pay them to unlock the hard
+	drive.
+- 
+
+Sample 3:
+- Not sure what's happening, but it's changing file pointers, wasn't able to see much
+	with only static analysis
