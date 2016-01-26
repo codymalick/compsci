@@ -1,9 +1,2 @@
-﻿Build started 7/20/2014 10:34:25 PM.
-     1>Project "C:\src\CS271\Assignment2\Assignment2\copy\Assignment1\Assignment1.vcxproj" on node 2 (Build target(s)).
-     1>Link:
-         Assignment1.vcxproj -> C:\src\CS271\Assignment2\Assignment2\copy\Debug\Assignment2.exe
-     1>Done Building Project "C:\src\CS271\Assignment2\Assignment2\copy\Assignment1\Assignment1.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:00.18
+﻿  Assembling ..\main.asm...
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\BuildCustomizations\masm.targets(50,5): error MSB3721: The command "ml.exe /c /nologo /Zi /Fo"Debug\main.obj" /Fl"$Assignment1.lst" /I "c:\Irvine" /W3 /errorReport:prompt  /Ta..\main.asm" exited with code 1.
