@@ -1,0 +1,20 @@
+Week 4 Labs
+
+Exploiting Windows
+
+Ran active x control
+
+Windbg
+Attached to internet exploder process
+Set Breakpoint
+Hit breakpoint 0 @ 54431df0
+	Stepping through:
+		1. What address is the FSExploitMe.ocx loaded at?
+			54431df9 - Wrong Answer, Correct answer is 54430000
+			lmf m FSExploitMe
+				lmf is a windbg command
+				Seems to output where a file is loaded
+		2. How Large is the stack?
+			
+		3. What is the starting address of the process heap?
+		4. What value of EIP?
