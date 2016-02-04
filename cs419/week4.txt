@@ -1,5 +1,6 @@
 Week 4 Labs
 
+Lab 1:
 Exploiting Windows
 
 Ran active x control
@@ -18,3 +19,23 @@ Hit breakpoint 0 @ 54431df0
 			
 		3. What is the starting address of the process heap?
 		4. What value of EIP?
+
+
+Lab 2:
+turn in topic on what you want to cover on the final
+One person per topic
+	Topics can be anything from the political ramifications of stuxnet to ip over dns
+	Turn in topic sooner than later
+	Start soon
+
+	Video needs to be in .mp4 format, has to be downloadable
+Continued on Lab 1, as I was interested in finishing it
+	4. What is the value of EIP:
+		Command: ?EIP
+			Result: 1413684720 = 54431df0
+	
+	5. How much space is allocated to the local variable
+		Use the command u eip l10
+		How much space is used for local variables?
+			14h
+
