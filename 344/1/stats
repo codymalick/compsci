@@ -1,0 +1,312 @@
+#!/bin/bash
+#Variable declarations for trap
+declare file_name=temp$$
+declare file_name_1=temp$$1
+declare col_stats=temp$$2
+declare standard=temp$$3
+#remove temp files
+trap "rm -f temp*" INT HUP KILL EXIT
+
+#File creations
+touch $file_name
+touch $file_name_1
+touch $col_stats
+
+#For args comparison
+declare cols=--cols
+declare rows=--rows
+declare c="-c"
+declare r="-r"
+
+#Error output
+declare usage="Usage: {-rows|-cols} [input_file]"
+
+declare -a col
+declare -a row
+
+declare avg=0
+declare in_check=""
+declare arg=$1
+declare median=0
+declare median_location=0
+declare is_even=0
+declare index=0
+
+#checks for two or less parameters, never need more than two
+if [ ! "$#" -lt 3 ]; then
+   #echo to stderr
+   echo $usage >&2
+   exit 1
+fi
+
+#variable used to check the first two characters of -c or -r arg
+in_check=$(echo ' '$arg | cut -c2-3)
+
+if [ "$in_check" == "$c" ]; then   
+   arg=$cols
+     else 
+	if [ "$in_check" == "$r" ]; then
+	   arg=$rows
+	fi
+fi
+
+#actually check if args are proper
+if [ "$arg" != "$cols" ] && [ "$arg" != "$rows" ]; then
+	echo $usage >&2
+	exit 1
+fi
+
+#declare input=${2:-dev/stdin}
+declare input=$2
+
+#check if file exists
+if [ "$#" -eq 1 ]; then
+   input="$standard"
+   #handle stdin
+   cat > $input
+elif [ -f "$(cat $2)" ]; then
+    echo invalid file
+    echo $usage >&2
+    exit 1
+fi
+
+#check for read permissions
+if [ ! -r $2 ]; then
+   echo cannot read $2 >&2
+exit 1
+fi
+
+#Column calculations
+function colcalc {
+	#begin output
+	echo Averages:
+
+	#get column length for average and median calculation
+	col_length=$(cut -c1 $input | wc -l)
+
+	#iterator for correctly seperating columns
+	declare itr=1
+
+	while [ true ]; do
+			
+	   	col[$itr]=$(cut -f$itr $input | sort -n)
+
+		if [ -z "${col[$((itr))]}" ]; then
+		   	break
+	        fi
+		echo ${col[$itr]} >> $file_name
+
+		#check even/odd column length
+		if [ $((col_length % 2)) != 0 ]; 
+		then
+		   median_location=$((col_length/2))
+	  	else
+	     		median_location=$((col_length/2))
+	     		is_even=1
+		fi
+		
+		#handle case length 1 infinite loop
+		if [ $col_length -eq 1 ]; then  	
+			break
+		fi
+
+
+		itr=$(($itr+1))
+	done
+
+	#read temp file just created	
+	while read my_line
+	do
+		for i in ${my_line[@]}
+	   	do
+                	#cumulative sum
+		     	temp_avg=$((i + temp_avg))
+
+			#output for sorting
+			echo $i >> $file_name_1
+	   	done
+
+	   	#Calculate Average
+		temp_avg=$(echo "scale=3; $temp_avg/$col_length" | bc)
+
+	   	#fun bash manipulation: handles rounding to integer numbers
+	   	#using integer division
+	   	temp_avg=$(echo "($temp_avg+.5)/1" | bc)
+	  
+		echo -ne $temp_avg'\t' >> $col_stats
+		
+		#reset temp average for next column	
+		temp_avg=0
+
+		echo > $file_name_1
+	
+	done < $file_name
+	
+	#output columns statistics
+	cat $col_stats
+	echo 
+
+	#median output begin
+ 	echo Medians:
+	#new line in temp file
+	echo -n > $col_stats
+
+	#median loop
+	while read my_line
+	do
+		for i in ${my_line[@]}
+	       	do
+			#new temp file
+			echo $i >> $file_name_1
+	     	done
+		sorted=$(sort -n $file_name_1)
+
+		#for even column length case, need two variables
+	   	even_1=0
+	   	even_2=0
+
+	   	for i in ${sorted[@]}
+	   	do
+		   	#check if even is the case we are handling, else odd handle
+			if [ $is_even == 1 ]; then
+			   	#check currently location for first even variable
+				if [ $index == $((median_location-1)) ]; then
+					if [ $even_1 == 0 ]; then
+			      			even_1=$i
+			   		fi
+			fi
+			
+			#check current interator for second even variable
+			if [ $index == $((median_location)) ] && [ $is_even == 1 ]; then
+		   		even_2=$i
+				break
+			fi
+		    else
+			#odd case
+			if [ $index == $((median_location)) ]; then
+				median=$i
+			  	break
+			fi
+		       
+		    fi
+
+			index=$((index+1))
+	   	done
+
+		#more even case handling	
+		if [ $is_even == 1 ]; then
+		   if (( even_1 > even_1 )); then
+		      median=$even_1
+		   else
+		      median=$even_2
+		   fi
+     	   	fi
+
+		#reset variables and output results
+		index=0
+
+		echo -ne $median'\t' >> $col_stats
+		temp_avg=0
+		median=0
+		echo > $file_name_1
+	
+	done < "$file_name"
+
+	cat $col_stats
+	echo " "
+}
+
+function rowcalc {
+	#begin output
+	echo "Average Median"
+
+	#Get row
+	row_length=$(head -n 1 $input | wc | cut -c15)	
+
+	#calculate midpoint(s)
+	if [ $((row_length % 2)) != 0 ];  
+	then
+	   median_location=$((row_length/2))
+	  else
+	     median_location=$((row_length/2))
+	     is_even=1
+	fi
+
+	#average and median values
+	temp_avg=0
+	temp_median=0
+
+	while read my_line
+	do
+	   for i in ${my_line[@]}
+	   do
+                #cumulative sum
+	     	temp_avg=$((i + temp_avg))
+
+		#output for sorting
+		echo $i >> $file_name
+	   done
+
+	   #Calculate Average
+	   temp_avg=$(echo "scale=3; $temp_avg/$row_length" | bc)
+
+	   #fun bash manipulation: handles rounding to integer numbers
+	   #using integer division
+	   temp_avg=$(echo "($temp_avg+.5)/1" | bc)
+	   
+	   temp_counter=0
+
+	   sorted=$(sort -n $file_name)
+
+	   even_1=0
+	   even_2=0
+
+	   for i in ${sorted[@]}
+	   do
+	      if [ $is_even == 1 ]; then
+		   if [ $index == $((median_location-1)) ]; then
+			if [ $even_1 == 0 ]; then
+				even_1=$i
+			fi
+		fi
+		if [ $index == $((median_location)) ] && [ $is_even == 1 ]; then
+			even_2=$i
+			break
+		fi
+		else
+			if [ $index == $((median_location)) ]; then
+				median=$i
+				break
+		        fi
+		    fi
+		index=$((index+1))
+	   done
+
+	   #Handle the median for the even case
+	   if [ $is_even == 1 ]; then
+	      if (( even_1 > even_2 )); then
+		 median=$even_1
+	      else
+		 median=$even_2
+	      fi
+	   fi
+
+	   #Reset variables for the loop
+	   index=0
+
+	   echo -e $temp_avg'\t'$median	
+	   temp_avg=0
+	   median=0
+	   echo > $file_name
+	    
+	done < $input
+}
+
+#Actual function calls here. 
+if [ "$arg" == "$cols" ];
+then
+   colcalc
+else
+   rowcalc
+fi
+rm -rf temp* 

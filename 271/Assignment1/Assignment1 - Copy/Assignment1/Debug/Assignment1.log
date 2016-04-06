@@ -1,0 +1,14 @@
+﻿Build started 8/15/2014 10:13:57 AM.
+     1>Project "C:\src\CS271\Assignment1\Assignment1 - Copy\Assignment1\Assignment1.vcxproj" on node 2 (Build target(s)).
+     1>_MASM:
+         Assembling ..\main.asm...
+         cmd.exe /C "C:\Users\Code\AppData\Local\Temp\tmp56f89ee066b84a00be0b867d28e5b0ad.cmd"
+         ml.exe /c /nologo /Zi /Fo"Debug\main.obj" /Fl"$Assignment1.lst" /I "c:\Irvine" /W3 /errorReport:prompt  /Ta..\main.asm
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\src\CS271\Assignment1\Assignment1 - Copy\Debug\Assignment1.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\Irvine irvine32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\src\CS271\Assignment1\Assignment1 - Copy\Debug\Assignment1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\src\CS271\Assignment1\Assignment1 - Copy\Debug\Assignment1.lib" /MACHINE:X86 /SAFESEH:NO Debug\main.obj
+         Assignment1.vcxproj -> C:\src\CS271\Assignment1\Assignment1 - Copy\Debug\Assignment1.exe
+     1>Done Building Project "C:\src\CS271\Assignment1\Assignment1 - Copy\Assignment1\Assignment1.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.95

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" type="text/css" href="style.css">
+<div id="banner">
+		<h1>Student Information Center</h1>
+</div>
+<br>
+<title>Student Information</title>
+<body>
+	<div id="side">
+			<ul>
+				<li><a href="index.php">Home</a></li>
+				<br>
+				<li><a href="student_information.html">Submit a Record</a></li>
+				<br>
+				<li><a href="student_list.php">Student List</a></li>
+				<br>
+			</ul>
+		</div>	
+	<br>
+	<fieldset id="formbox">
+		<legend>Student Information Form</legend>		
+		<form method="post" action="confirmation.php">
+			<div id="form">
+			<p><label>Student ID:</label> <input id="textbox" type="text" name="studentID" required><br></p>
+			<p><label>First Name:</label> <input id="textbox" type="text" name="fName" required><br></p>
+			<p><label>Last Name:</label> <input id="textbox" type="text" name="lName" required><br></p>
+			<p><label>Email Address:</label> <input id="textbox" type="email" name="email" required><br></p>
+			<p><label>Date of Birth:</label> <select id="textbox" name="dob">
+				  <script>
+				  var myDate = new Date();
+				  var year = myDate.getFullYear();
+				  for(var i = 1900; i < year+1; i++){
+					  document.write('<option value="'+i+'">'+i+'</option>');
+				  }
+			  </script><br></p>
+
+			</select>
+			Major: <br>
+				<input type="radio" name="major" value="CS"> CS <br>
+				<input type="radio" name="major" value="ECE"> ECE <br>
+				<input type="radio" name="major" value="Other"> Other <br>
+			<br>
+			Courses: <br>
+				<input type="checkbox" name="class" value="CS161"> CS 161 <br>
+				<input type="checkbox" name="class" value="CS162"> CS 162 <br>
+				<input type="checkbox" name="class" value="CS261"> CS 261 <br>
+				<input type="checkbox" name="class" value="MTH251"> MTH 251 <br>
+				<input type="checkbox" name="class" value="ECE111"> ECE 111 <br>
+		
+
+		<input type="submit"/>
+	</fieldset>
+	</div>
+	</form>
+</body>
+</html>
