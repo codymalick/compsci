@@ -1,2 +1,2 @@
 concurmake: concur.cpp
-	g++ -o c -pthread concur.cpp
+	g++ -o c -pthread -g concur.cpp

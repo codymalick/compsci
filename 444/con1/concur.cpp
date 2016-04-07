@@ -8,6 +8,19 @@ struct message {
     int wait_period;
 };
 
+struct buffer {
+    struct message buffer[32];  
+};
+
+int buff_push(struct buffer *buff) {
+    
+    return 0;
+}
+
+struct message buff_pop() {
+    
+}
+
 void *message_out(void *ptr) {
     printf("%s\n", "print 1");
 }
@@ -20,6 +33,9 @@ int main(int argc, char *argv[]) {
 
     //thread declaration
     pthread_t factory, consumer;
+
+    struct buffer *buff;
+    buff = (struct buffer *)malloc(sizeof(struct buffer));
 
     const char *char1 = "thread 1";
     const char *char2 = "thread 2";
@@ -46,6 +62,7 @@ int main(int argc, char *argv[]) {
     printf("pthread_create for thread 2 returns: %i\n", t_2);
 
     //wait for threads to complete, barrier
+    free(buff);
     pthread_join(factory, NULL);
     pthread_join(consumer, NULL);
 
