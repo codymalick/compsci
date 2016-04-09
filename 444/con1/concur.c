@@ -48,6 +48,15 @@ int rand_gen(int upr_bound, int lwr_bound)
     return abs((int)genrand_int32()) % upr_bound + lwr_bound;
 }
 
+/*
+ *Url for reference: 
+ *https://software.intel.com/en-us/articles/intel-digital-random-number-
+ *   generator-drng-software-implementation-guide/
+ */
+int rdrand_call() {
+    return 0;
+}
+
 void *factory_function(void *ptr)
 {
     /*cast void pointer to buffer pointer*/
