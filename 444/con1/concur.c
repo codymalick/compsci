@@ -32,6 +32,74 @@ struct buffer {
 	int size;
 };
 
+void buff_push(struct buffer *buff, struct message m);
+void buff_pop(struct buffer *buff);
+int rand_gen(int upr_bound, int lwr_bound);
+void *factory_function(void *ptr);
+void *consumer_function(void *ptr);
+
+int main(int argc, char *argv[])
+{
+	
+	/*check if rdrand is supported*/
+	if(get_drng_support()) {
+		printf("Using rdrand\n");
+		rdrand = 1;
+		/* uint32_t seed; */
+		/* rdseed32_step(&seed);*/
+	} else {
+		printf("Using Mersenne Twister\n");
+		//seed random number generator
+		init_genrand(time(NULL));
+	}
+
+	/*thread declaration*/
+	pthread_t factory;
+	pthread_t consumer;
+
+	/*buffer struct init*/
+	struct buffer *buff;
+	buff = (struct buffer *)malloc(sizeof(struct buffer));
+	buff->size = 0;
+
+	/*mutex init*/
+	pthread_mutex_init(&mutex, NULL);
+
+	/*variables for error checking*/
+	int t_1, t_2;
+
+	/*
+	 *Create new thread
+	 *pthread_create(pthread_t *thread, const pthread_attr_t *attr,
+	 *	void *(*start_routine) (void *), void *arg);
+	 */
+	t_1 = pthread_create(&factory, NULL, factory_function, (void*)buff);
+
+	if(t_1) {
+		fprintf(stderr, "Error, pthread_create() - exit: %i\n", t_1);
+		exit(t_1);
+	}
+
+	t_2 = pthread_create(&consumer, NULL, consumer_function, (void*)buff);
+
+	if(t_2) {
+		fprintf(stderr, "Error, pthread_create() - exit: %i\n", t_2);
+		exit(t_2);
+	}
+
+	/*
+	 * This code is never run due to infinite loops, but if the program does
+	 * terminate, all memory is freed and threads complete properly.
+	 */
+
+	/*wait for threads to complete, barrier*/
+	pthread_join(factory, NULL);
+	pthread_join(consumer, NULL);
+
+	free(buff);
+	exit(0);
+}
+
 void buff_push(struct buffer *buff, struct message m)
 {
 	buff->b[buff->size] = m;
@@ -103,64 +171,4 @@ void *consumer_function(void *ptr)
 	}
 }
 
-int main(int argc, char *argv[])
-{
-	
-	/*check if rdrand is supported*/
-	if(get_drng_support()) {
-		printf("Using rdrand\n");
-		rdrand = 1;
-		uint32_t seed;
-		rdseed32_step(&seed);
-	} else {
-		printf("Using Mersenne Twister\n");
-		//seed random number generator
-		init_genrand(time(NULL));
-	}
 
-	/*thread declaration*/
-	pthread_t factory;
-	pthread_t consumer;
-
-	/*buffer struct init*/
-	struct buffer *buff;
-	buff = (struct buffer *)malloc(sizeof(struct buffer));
-	buff->size = 0;
-
-	/*mutex init*/
-	pthread_mutex_init(&mutex, NULL);
-
-	/*variables for error checking*/
-	int t_1, t_2;
-
-	/*
-	 *Create new thread
-	 *pthread_create(pthread_t *thread, const pthread_attr_t *attr,
-	 *	void *(*start_routine) (void *), void *arg);
-	 */
-	t_1 = pthread_create(&factory, NULL, factory_function, (void*)buff);
-
-	if(t_1) {
-		fprintf(stderr, "Error, pthread_create() - exit: %i\n", t_1);
-		exit(t_1);
-	}
-
-	t_2 = pthread_create(&consumer, NULL, consumer_function, (void*)buff);
-
-	if(t_2) {
-		fprintf(stderr, "Error, pthread_create() - exit: %i\n", t_2);
-		exit(t_2);
-	}
-
-	/*
-	 * This code is never run due to infinite loops, but if the program does
-	 * terminate, all memory is freed and threads complete properly.
-	 */
-
-	/*wait for threads to complete, barrier*/
-	pthread_join(factory, NULL);
-	pthread_join(consumer, NULL);
-
-	free(buff);
-	exit(0);
-}

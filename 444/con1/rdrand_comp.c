@@ -85,9 +85,12 @@ int rdrand32_step (uint32_t *rand)
 	return (int) ok;
 }
 
+/*
 int rdseed32_step (uint32_t *seed)
 {
 	unsigned char ok;
 	asm volatile ("rdseed %0; setc %1" : "=r" (*seed), "=qm" (ok));
 	return (int) ok;
 }
+*/
+
