@@ -52,7 +52,7 @@ int rand_gen(int upr_bound, int lwr_bound)
 	if(rdrand) {
 		uint32_t num = 0;
 		if(rdrand32_step(&num))
-			return (int)num;
+			return abs((int)num) % upr_bound + lwr_bound;
 	}
 	/*abs to solve negative numbers from generator*/
 	return abs((int)genrand_int32()) % upr_bound + lwr_bound;
