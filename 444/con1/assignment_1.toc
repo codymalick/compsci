@@ -1,6 +1,7 @@
 \contentsline {section}{\numberline {1}Concurrency Assignment 1}{2}
 \contentsline {subsection}{\numberline {1.1}Assignment Purpose}{2}
 \contentsline {subsection}{\numberline {1.2}Problem Approach}{2}
+\contentsline {subsubsection}{\numberline {1.2.1}Code Samples}{2}
 \contentsline {subsection}{\numberline {1.3}Testing}{2}
 \contentsline {subsection}{\numberline {1.4}What did I learn?}{2}
 \contentsline {section}{\numberline {2}Quemu Flags}{2}
