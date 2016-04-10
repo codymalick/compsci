@@ -4,6 +4,8 @@
 #include<unistd.h>
 #include<pthread.h> /*pthread.h include for pthreads*/
 #include"mt19937ar.c" /*twister*/
+#include"rdrand_comp.c" /*functions for rdrand call*/
+#include<stdint.h>
 
 /*constants for random numbers in the instruction bounds*/
 #define PUP 7
@@ -12,6 +14,9 @@
 #define CLO 2
 #define UP 999
 #define LO 0
+
+/*global set to tell the program to use rdrand or not*/
+int rdrand = 0;
 
 /*mutex declaration*/
 pthread_mutex_t mutex;
@@ -44,17 +49,13 @@ void buff_pop(struct buffer *buff)
 
 int rand_gen(int upr_bound, int lwr_bound)
 {
+	if(rdrand) {
+		uint32_t num = 0;
+		if(rdrand32_step(&num))
+			return (int)num;
+	}
 	/*abs to solve negative numbers from generator*/
 	return abs((int)genrand_int32()) % upr_bound + lwr_bound;
-}
-
-/*
- *Url for reference:
- *https://software.intel.com/en-us/articles/intel-digital-random-number-
- *	 generator-drng-software-implementation-guide/
- */
-int rdrand_call() {
-	return 0;
 }
 
 void *factory_function(void *ptr)
@@ -104,8 +105,18 @@ void *consumer_function(void *ptr)
 
 int main(int argc, char *argv[])
 {
-	//seed random number generator
-	init_genrand(time(NULL));
+	
+	/*check if rdrand is supported*/
+	if(get_drng_support()) {
+		printf("Using rdrand\n");
+		rdrand = 1;
+		uint32_t seed;
+		rdseed32_step(&seed);
+	} else {
+		printf("Using Mersenne Twister\n");
+		//seed random number generator
+		init_genrand(time(NULL));
+	}
 
 	/*thread declaration*/
 	pthread_t factory;
