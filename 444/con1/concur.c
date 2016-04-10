@@ -1,5 +1,3 @@
-#include<stdio.h>
-#include<time.h>
 #include<stdlib.h>
 #include<unistd.h>
 #include<pthread.h> /*pthread.h include for pthreads*/
@@ -7,7 +5,7 @@
 #include"rdrand_comp.c" /*functions for rdrand call*/
 #include<stdint.h>
 
-/*constants for random numbers in the instruction bounds*/
+/*constants for random numbers in the instruction for the assignment*/
 #define PUP 7
 #define PLO 3
 #define CUP 9
@@ -35,8 +33,9 @@ struct buffer {
 void buff_push(struct buffer *buff, struct message m);
 void buff_pop(struct buffer *buff);
 int rand_gen(int upr_bound, int lwr_bound);
-void *factory_function(void *ptr);
+void *producer_function(void *ptr);
 void *consumer_function(void *ptr);
+void print_column(char col1[], int col2, int col3, int col4);
 
 int main(int argc, char *argv[])
 {
@@ -45,8 +44,6 @@ int main(int argc, char *argv[])
 	if(get_drng_support()) {
 		printf("Using rdrand\n");
 		rdrand = 1;
-		/* uint32_t seed; */
-		/* rdseed32_step(&seed);*/
 	} else {
 		printf("Using Mersenne Twister\n");
 		//seed random number generator
@@ -54,7 +51,7 @@ int main(int argc, char *argv[])
 	}
 
 	/*thread declaration*/
-	pthread_t factory;
+	pthread_t producer;
 	pthread_t consumer;
 
 	/*buffer struct init*/
@@ -73,7 +70,7 @@ int main(int argc, char *argv[])
 	 *pthread_create(pthread_t *thread, const pthread_attr_t *attr,
 	 *	void *(*start_routine) (void *), void *arg);
 	 */
-	t_1 = pthread_create(&factory, NULL, factory_function, (void*)buff);
+	t_1 = pthread_create(&producer, NULL, producer_function, (void*)buff);
 
 	if(t_1) {
 		fprintf(stderr, "Error, pthread_create() - exit: %i\n", t_1);
@@ -93,7 +90,7 @@ int main(int argc, char *argv[])
 	 */
 
 	/*wait for threads to complete, barrier*/
-	pthread_join(factory, NULL);
+	pthread_join(producer, NULL);
 	pthread_join(consumer, NULL);
 
 	free(buff);
@@ -118,6 +115,7 @@ void buff_pop(struct buffer *buff)
 int rand_gen(int upr_bound, int lwr_bound)
 {
 	if(rdrand) {
+		/*rdrand required unsigned 32 bit int*/
 		uint32_t num = 0;
 		if(rdrand32_step(&num))
 			return abs((int)num) % upr_bound + lwr_bound;
@@ -126,11 +124,13 @@ int rand_gen(int upr_bound, int lwr_bound)
 	return abs((int)genrand_int32()) % upr_bound + lwr_bound;
 }
 
-void *factory_function(void *ptr)
+void *producer_function(void *ptr)
 {
 	/*cast void pointer to buffer pointer*/
 	struct buffer *buff = (buffer *)ptr;
 	struct message item;
+
+	char prod[] = "Producer";
 
 	while(1) {
 		/*check if buffer is full*/
@@ -142,8 +142,9 @@ void *factory_function(void *ptr)
 
 			buff_push(buff, item);
 
+			print_column(prod, item.number, item.wait_period, buff->size);
 			pthread_mutex_unlock(&mutex);
-			printf("Produced (%i,%i), sleeping\n", item.number, item.wait_period);
+
 			sleep(rand_gen(PUP, PLO));
 			}
 		}
@@ -154,6 +155,9 @@ void *consumer_function(void *ptr)
 	/*cast void pointer to buffer pointer*/
 	struct buffer *buff = (buffer*)ptr;
 	struct message item;
+
+	char cons[] = "Consumer";
+
 	int wait_time = 0;
 	while(1) {
 
@@ -164,11 +168,14 @@ void *consumer_function(void *ptr)
 			item = buff->b[0];
 			buff_pop(buff);
 
+			print_column(cons, item.number, item.wait_period, buff->size);
 			pthread_mutex_unlock(&mutex);
-			printf("Number: %i, Wait: %i\n", item.number, item.wait_period);
+
 			sleep(item.wait_period);
 		}
 	}
 }
 
-
+void print_column(char col1[], int col2, int col3, int col4) {
+	printf("%s | Number:%3i | Wait:%2i | buffer: %2i |\n", col1, col2, col3, col4);
+}
