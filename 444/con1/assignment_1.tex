@@ -16,7 +16,7 @@
   stringstyle=\color{mauve},
   breaklines=true,
   breakatwhitespace=true,
-  tabsize=3
+  tabsize=4
 }
 
 \begin{document}
@@ -235,8 +235,204 @@
       \end{description}
 \section{Work Log}
 
+
+
 \section{Command Log}
 
+Here is my history for the Qemu part of the assignment: \\
+\lstset{frame=tb,
+  language=bash,
+  columns=flexible,
+  numberstyle=\tiny\color{black},
+  keywordstyle=\color{black},
+  commentstyle=\color{black},
+  stringstyle=\color{black},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+\begin{lstlisting}
+455  git clone git://git.yoctoproject.org/linux-yocto-3.14
+456  ls
+457  cp linux-yocto-3.14/ /scratch/spring2016/cs444-086/
+458  cp -r linux-yocto-3.14/ /scratch/spring2016/cs444-086/
+459  cd /scratch/spring2016/cs444-086
+460  ls
+461  git remote
+462  git origin
+463  git --help
+464  git config remote
+465  git config origin
+466  git config
+467  git config --get-all
+468  git config --local --get-all
+469  git config --global --get-all
+470  git status
+471  git remote -v
+472  git remote rm origin
+473  git remote
+474  git remote -v
+475  git status
+476  git pull
+477  git push
+478  git log
+479  git log --color
+480  source /scratch/opt/environment-setup-i586-poky-linux
+481  cp /scratch/opt/environment-setup-i586-poky-linux .
+482  ls
+483  git add .
+484  git commit -m "Copied env script to local repo"
+485  git log
+486  ls
+487  cp /scratch/spring2016/files/bzImage-qemux86.bin .
+488  cp /scratch/spring2016/files/core-image-lsb-sdk-qemux86.ext3 .
+489  cp /scratch/spring2016/files/config-3.14.26-yocto-qemu .
+490  ls
+491  git add .
+492  git status
+493  git add bzImage-qemux86.bin
+494  cat .gitignore
+495  cat .gitignore | grep .bin
+496  ls
+497  mkdir vmfiles
+498  mv bzImage-qemux86.bin vmfiles/
+499  mv -t vmfiles/ core-image-lsb-sdk-qemux86.ext3
+500  mv config-3.14.26-yocto-qemu vmfiles/
+501  git add .
+502  git status
+503  git commit -m "added vm files"
+504  printenv
+505  cd vmfiles/
+506  git checkout v3.14.26
+507  ls
+508  cd ..
+509  ls
+510  git branch
+511  git checkout master
+512  cat README
+513  ls
+514  rm .
+515  rm ./*
+516  rm -rf ./*
+517  ls
+518  cp ~/git/linux-yocto-3.14/ .
+519  cp ~/git/linux-yocto-3.14/ . -r
+520  ls
+521  mv linux-yocto-3.14/* .
+522  ls
+523  rm linux-yocto-3.14/
+524  cd linux-yocto-3.14/
+525  ls
+526  cd ..
+527  rm -r linux-yocto-3.14/
+528  cd linux-yocto-3.14/
+529  ls -a
+530  mv .git ../
+531  mv .git ../ -rf
+532  mv .git ../
+533  cd ..
+534  ls
+535  rm -rf ./*
+536  ls -a
+537  rm .git -rf
+538  rm .gitignore -rf
+539  rm .mailmap -rf
+540  ls
+541  ls -a
+542  cp ~/git/linux-yocto-3.14/* .
+543  cp ~/git/linux-yocto-3.14/* . -r
+544  ls -la
+545  cd .git
+546  ls ~/git/linux-yocto-3.14/
+547  ls ~/git/linux-yocto-3.14/ -la
+548  ls -la
+549  cp ~/git/linux-yocto-3.14/.git . -r
+550  cp ~/git/linux-yocto-3.14/.gitignore . -r
+551  ls
+552  git status
+553  cp ~/git/linux-yocto-3.14/.mailmap .
+554  git status
+555  git checkout v3.14.26
+556  git checkout master
+557  git branch
+558  cp /scratch/spring2016/files/* ./vmfiles/
+559  mkdir vmfiles
+560  cp /scratch/spring2016/files/* ./vmfiles/
+561  ls vmfiles/
+562  git branch -a
+563  git ls-remote
+564  git reset --hard
+565  git status
+566  git checkout tags/v3.14.26
+567  git checkout master
+568  git checkout refs/tags/v3.14.26
+569  git checkout master
+570  git tag -l
+571  git checkout -b v3.14.26 v3.14.26
+572  git status
+573  git describe --tags
+574  ls vmfiles/
+575  gitgit remote -l
+576  git remote -v
+577  git remote rm origin
+578  git remote -v
+579  git status
+580  git add . -f
+581  git status
+582  git add --help
+583  git add vmfiles/ -f
+584  git checkout -b assignment0
+585  git branch
+586  git checkout master
+587  git branch -D assignment0
+588  git checkout v3.14.26
+589  git checkout -b a0 v3.14.26
+590  git checkout a0
+591  git branch
+592  git branch a0 v3.14.26
+593  git status
+594  git commit -m "Added vm files"
+595  git status
+596  git branch a0 v3.14.26
+597  git checkout master
+598  ls -a
+599  git branch -D v3.14.26
+600  git branch
+601  git branch a0 v3.14.26
+602  git branch
+603  git checkout a0
+604  git status
+605  git log
+606  mkdir vmfiles
+607  cp /scratch/spring2016/files/* vmfiles/
+608  cp /scratch/opt/environment-setup-i586-poky-linux vmfiles/
+609  git add vmfiles/ -f
+610  git log
+611  git status
+612  git commit -m "added vm files"
+613  git remote -v
+614  git log
+615  ls
+616  cd vmfiles/
+617  ls
+618  source environment-setup-i586-poky-linux
+619  qemu-system-i386 -gdb tcp::5586 -S -nographic -kernel bzImage-qemux86.bin -drive file=core-image-lsb-sdk-qemux86.ext3,if=virtio -enable-kvm -net none -usb -localtime --no-reboot --append "root=/dev/vda rw console=ttyS0 debug"
+620  qemu-system-i386 -gdb tcp::5500086 -S -nographic -kernel bzImage-qemux86.bin -drive file=core-image-lsb-sdk-qemux86.ext3,if=virtio -enable-kvm -net none -usb -localtime --no-reboot --append "root=/dev/vda rw console=ttyS0 debug"
+621  top
+622  qemu-system-i386 -gdb tcp::5500086 -S -nographic -kernel ../arch/x86/boot/bzImage -drive file=core-image-lsb-sdk-qemux86.ext3,if=virtio -enable-kvm -net none -usb -localtime --no-reboot --append "root=/dev/vda rw console=ttyS0 debug"
+623  history
+624  vim ~/.bashrc
+625  source ~/.bashrc
+626  cat ~/.bashrc
+627  startq
+628  cd
+629  ls
+630  cd cs
+631  ls
+632  mkdir 444
+633  cd 444/
+634  history > commands.log
+\end{lstlisting}
 \section{Version Control Log}
 
 \clearpage
