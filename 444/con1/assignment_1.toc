@@ -5,5 +5,5 @@
 \contentsline {subsection}{\numberline {1.4}What did I learn?}{4}
 \contentsline {section}{\numberline {2}Qemu Flags}{4}
 \contentsline {section}{\numberline {3}Work Log}{4}
-\contentsline {section}{\numberline {4}Command Log}{4}
+\contentsline {section}{\numberline {4}Command Log}{5}
 \contentsline {section}{\numberline {5}Version Control Log}{8}
