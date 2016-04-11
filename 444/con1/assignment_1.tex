@@ -27,9 +27,16 @@
   \texttt{malickc@oregonstate.edu}}
   \date{\today}
   \maketitle
-
+  \vspace*{2cm}
   \begin{abstract}
-      This is my abstract section
+      \noindent Concurrency is an important issue when working with shared resources,
+      especially resources being actively used by the kernel.
+      The problem with sharing resources across threads is safely
+      accessing the resources without causing a race condition. This problem is
+      solved by using a mutex in order to lock down the resource until the thread
+      is done with it's task, then releasing it for other threads. By using this
+      process, we can create multithreaded programs that can safely access shared
+      resources. Following are the details on how I approached this problem.
   \end{abstract}
 
 \end{titlepage}
@@ -499,6 +506,7 @@ Cody Malick & 2016-04-10 & Merge pull request \#10 from codymalick/con1\_writeup
 \end{center}
 
 \clearpage
+\section{Bibliography}
 
 \bibliographystyle{IEEEtran}
 \bibliography{assignment_1}
