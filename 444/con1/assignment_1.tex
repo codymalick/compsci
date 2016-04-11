@@ -192,15 +192,47 @@
   gave myself a basic refresher on the C language and its caveats. \\
 
   \noindent I also learned the basics needed to build and implement a linux kernel,
-  how to connect to and debug a Quemu VM, and how to use \LaTeX{}!
+  how to connect to and debug a Qemu VM, and how to use \LaTeX{}!
 
-\section{Quemu Flags}
+\section{Qemu Flags}
   The command we are told to use is the following: \\
 
   \noindent \texttt{qemu-system-i386 -gdb tcp::5500086 -S -nographic -kernel
       bzImage-qemux86.bin -drive file=core-\\image-lsb-sdk-qemux86.ext3,if=virtio
       -enable-kvm -net none -usb -localtime --no-reboot --append\\ "root=/dev/vda
-      rw console=ttyS0 debug"}
+      rw console=ttyS0 debug"} \\
+
+      \noindent Here's the breakdown of the flags \cite{anthonyl.2010}: \\
+      \begin{description}
+          \item \texttt{-gdb tcp::xxx}: Wait for gdb connection on device, in
+          this case, tcp port xxx
+          \item \texttt{-S}: Do not start CPU at startup
+          \item \texttt{-nographic}: Disables graphical output, and redirects it
+          to a virtual port
+          \item \texttt{-kernel bzImage-qemux96.bin}: Use specified file as the
+          kernel image
+          \item \texttt{-drive}: Define a new drive
+          \begin{description}
+            \item \texttt{file=} Defines which disk image to use with the drive
+            \item \texttt{if=} Defines which type of interface the drive is connected
+            through. Types are ide, scsi, sd, mtd, floppy, pflash, virtio
+          \end{description}
+          \item \texttt{-enable-kvm} Enable KVM full virtualization support. KVM
+          == Kernel-based Virtual Machine
+          \item \texttt{-net}: Creates a new network interface card and connects
+          it to VLAN n
+          \item \texttt{-usb}: Enables USB driver
+          \item \texttt{-localtime}: Sets current machine time to current local
+          time
+          \item \texttt{--no-reboot}: Exit instead of rebooting
+          \item \texttt{--append} Gives the kernel command line arguments
+          \begin{description}
+            \item \texttt{root=/dev/vda rw} Gives read/write access to the vda
+            (Virtualization-Aware Disk)
+            \item \texttt{console=ttyS0 debug} Directs the kernel to use serial
+            port ttyS0 in debug mode
+          \end{description}
+      \end{description}
 \section{Work Log}
 
 \section{Command Log}
