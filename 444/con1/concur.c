@@ -39,7 +39,7 @@ void print_column(char col1[], int col2, int col3, int col4);
 
 int main(int argc, char *argv[])
 {
-	
+
 	/*check if rdrand is supported*/
 	if(get_drng_support()) {
 		printf("Using rdrand\n");

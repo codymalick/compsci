@@ -1,7 +1,25 @@
 \documentclass[10pt,letterpaper]{article}
 \usepackage[margin=0.75in]{geometry}
-\begin{document}
+\usepackage{listings}
+\usepackage{color}
 
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C,
+  columns=flexible,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\begin{document}
 \begin{titlepage}
   \title{CS 444 - Assignment 1}
   \author{Cody Malick\\
@@ -20,14 +38,169 @@
 
 \section{Concurrency Assignment 1}
   \subsection{Assignment Purpose}
+    I think this assignment was used a primer for working with the kernel, where
+    multithreading and shared resource management are important. Being able to
+    write programs that don't deadlock or cause race conditions is important
+    when working with a kernel. \\
+
   \subsection{Problem Approach}
-  \subsubsection{Code Samples}
-    \cite{johnm.2014}
+    The over assignment wasn't that difficult to conceptualize. A producer and
+    a consumer were needed, and the synchronization construct could be a simple
+    data structure.\\
+
+    \noindent I used a queue structure for my buffer. The main reason was
+    simplicity, first-in first-out made sense in this situation. I thought about
+    using a stack, but that created a problem where the first message may never
+    be reached once burried under new messages.\\
+
+    \noindent I used a very simple layout for the buffer: an array of the message
+    struct, and an int to track the current size of the buffer.
+
+    \begin{lstlisting}
+      struct message {
+      	int number;
+      	int wait_period;
+      };
+
+      /*buffer is a basic queue, first in, first out implementation*/
+      struct buffer {
+      	struct message b[32];
+      	int size;
+      };
+    \end{lstlisting}
+
+    \noindent The queue has two mutator functions: push and pop. Push would put
+    a new message on the queue, while pop would take the first message out, and
+    move all following messages forward.\\
+
+    \noindent To handle the producer function, I spawn my threads using
+    \texttt{pthread\_create()} and handing the threads a producer function and consumer
+    function. Once the threads enter these functions, they enter the infinite
+    loops that are the assigned program. Here are the producer and consumer
+    functions I used:
+
+    \begin{lstlisting}
+      void *producer_function(void *ptr)
+      {
+      	/*cast void pointer to buffer pointer*/
+      	struct buffer *buff = (buffer *)ptr;
+      	struct message item;
+
+      	char prod[ ] = "Producer";
+
+      	while(1) {
+      		/*check if buffer is full*/
+      		if(buff->size < (sizeof(buff->b)/sizeof(struct message))) {
+      			pthread_mutex_lock(&mutex);
+            /*UP, LO, CUP, CLO, PUP, and PLO, are constants declared to avoid magic numbers*/
+      			item.number = rand_gen(UP, LO);
+      			item.wait_period = rand_gen(CUP, CLO);
+
+      			buff_push(buff, item);
+
+      			print_column(prod, item.number, item.wait_period, buff->size);
+      			pthread_mutex_unlock(&mutex);
+
+      			sleep(rand_gen(PUP, PLO));
+      			}
+      		}
+      }
+
+      void *consumer_function(void *ptr)
+      {
+      	/*cast void pointer to buffer pointer*/
+      	struct buffer *buff = (buffer*)ptr;
+      	struct message item;
+
+      	char cons[ ] = "Consumer";
+
+      	int wait_time = 0;
+      	while(1) {
+
+      		if(buff->size > 0) {
+
+      			pthread_mutex_lock(&mutex);
+
+      			item = buff->b[0];
+      			buff_pop(buff);
+
+      			print_column(cons, item.number, item.wait_period, buff->size);
+      			pthread_mutex_unlock(&mutex);
+
+      			sleep(item.wait_period);
+      		}
+      	}
+      }
+    \end{lstlisting}
+
+    \noindent The producer and consumer functions each lock the shared buffer
+    with \texttt{pthread\_mutex\_lock(\&mutex)} and unlock with
+    \texttt{pthread\_mutex\_unlock(\&mutex)} when they're done accessing it.
+    I decided to include the \texttt{printf()} statement within the mutex locks
+    so that I could actively print out the status of the queue's size.\\
+
+    \noindent To handle the rdrand requirement, I took code from Intel's online
+    guide to rdrand \cite{johnm.2014}. Using that code, I had to do a check in
+    the main function and set a global flag, \texttt{int rdrand}, so that when
+    my random function \texttt{rand\_gen()} is called it knows which generator
+    to use. If rdrand is not supported, it calls Mersenne Twister with the
+    \texttt{genrand\_int32()} function call. Here is my random generator function:
+
+    \begin{lstlisting}
+      int rand_gen(int upr_bound, int lwr_bound)
+      {
+      	if(rdrand) {
+      		/*rdrand required unsigned 32 bit int*/
+      		uint32_t num = 0;
+      		if(rdrand32_step(&num))
+      			return abs((int)num) % upr_bound + lwr_bound;
+      	}
+      	/*abs to solve negative numbers from generator*/
+      	return abs((int)genrand_int32()) % upr_bound + lwr_bound;
+      }
+    \end{lstlisting}
+
+    \noindent Lastly, to show that program is operating properly, my output does
+    the following: lists if it's the producer or consumer, what the randomly
+    generated number is, what the wait time of that message is, and how many items
+    are in the buffer after that production or consumption is complete. \\
+
+    \noindent Example: \\
+
+    \noindent \texttt{Producer | Number:587 | Wait: 6 | buffer:  1 |} \\
+    \texttt{Consumer | Number:587 | Wait: 6 | buffer:  0 |}
+
   \subsection{Testing}
+  I did some manual testing to ensure that my pthread implementation was working.
+  The first was to run the program multiple times and see that different printf
+  statements printed at different times, a good indicator that the threads were
+  in fact spawning and running properly. \\
+
+  \noindent The other manual test I did was to move my mutex locks outside my
+  producer and consumer function infinite loops. When I did that, in the producer's
+  case, the producer would never release the mutex on the buffer, and the consumer
+  would never be able to access the buffer. In the opposite case, the producer
+  would produce zero or one messages, put them in the buffer, and the consumer
+  would then lock the buffer for the rest of the program runtime. This resulted
+  in nothing happening as the producer couldn't put anything in the buffer, and
+  the consumer would never consume.
+
   \subsection{What did I learn?}
+  I learned quite a bit in this assignment! I learned how to use pthreads (as this
+  was not covered in my OS I class), how to use mutex to control which thread
+  has access to a resource, how to implement some basic inline assembly, and
+  gave myself a basic refresher on the C language and its caveats. \\
+
+  \noindent I also learned the basics needed to build and implement a linux kernel,
+  how to connect to and debug a Quemu VM, and how to use \LaTeX{}!
 
 \section{Quemu Flags}
+  The command we are told to use is the following: \\
 
+  \noindent \texttt{qemu-system-i386 -gdb tcp::5500086 -S -nographic -kernel
+      bzImage-qemux86.bin -drive file=core-\\image-lsb-sdk-qemux86.ext3,if=virtio
+      -enable-kvm -net none -usb -localtime --no-reboot --append\\ "root=/dev/vda
+      rw console=ttyS0 debug"}
 \section{Work Log}
 
 \section{Command Log}
