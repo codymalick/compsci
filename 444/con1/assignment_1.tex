@@ -2,7 +2,8 @@
 \usepackage[margin=0.75in]{geometry}
 \usepackage{listings}
 \usepackage{color}
-
+\usepackage{longtable}
+\usepackage{tabu}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -41,18 +42,15 @@
     I think this assignment was used a primer for working with the kernel, where
     multithreading and shared resource management are important. Being able to
     write programs that don't deadlock or cause race conditions is important
-    when working with a kernel. \\
-
+    when working with a kernel.
   \subsection{Problem Approach}
     The over assignment wasn't that difficult to conceptualize. A producer and
     a consumer were needed, and the synchronization construct could be a simple
-    data structure.\\
-
+    data structure.
     \noindent I used a queue structure for my buffer. The main reason was
     simplicity, first-in first-out made sense in this situation. I thought about
     using a stack, but that created a problem where the first message may never
-    be reached once burried under new messages.\\
-
+    be reached once burried under new messages.
     \noindent I used a very simple layout for the buffer: an array of the message
     struct, and an int to track the current size of the buffer.
 
@@ -71,7 +69,7 @@
 
     \noindent The queue has two mutator functions: push and pop. Push would put
     a new message on the queue, while pop would take the first message out, and
-    move all following messages forward.\\
+    move all following messages forward.
 
     \noindent To handle the producer function, I spawn my threads using
     \texttt{pthread\_create()} and handing the threads a producer function and consumer
@@ -137,7 +135,7 @@
     with \texttt{pthread\_mutex\_lock(\&mutex)} and unlock with
     \texttt{pthread\_mutex\_unlock(\&mutex)} when they're done accessing it.
     I decided to include the \texttt{printf()} statement within the mutex locks
-    so that I could actively print out the status of the queue's size.\\
+    so that I could actively print out the status of the queue's size.
 
     \noindent To handle the rdrand requirement, I took code from Intel's online
     guide to rdrand \cite{johnm.2014}. Using that code, I had to do a check in
@@ -163,9 +161,10 @@
     \noindent Lastly, to show that program is operating properly, my output does
     the following: lists if it's the producer or consumer, what the randomly
     generated number is, what the wait time of that message is, and how many items
-    are in the buffer after that production or consumption is complete. \\
+    are in the buffer after that production or consumption is complete.
 
-    \noindent Example: \\
+
+    \noindent Example:
 
     \noindent \texttt{Producer | Number:587 | Wait: 6 | buffer:  1 |} \\
     \texttt{Consumer | Number:587 | Wait: 6 | buffer:  0 |}
@@ -174,7 +173,7 @@
   I did some manual testing to ensure that my pthread implementation was working.
   The first was to run the program multiple times and see that different printf
   statements printed at different times, a good indicator that the threads were
-  in fact spawning and running properly. \\
+  in fact spawning and running properly.
 
   \noindent The other manual test I did was to move my mutex locks outside my
   producer and consumer function infinite loops. When I did that, in the producer's
@@ -189,20 +188,20 @@
   I learned quite a bit in this assignment! I learned how to use pthreads (as this
   was not covered in my OS I class), how to use mutex to control which thread
   has access to a resource, how to implement some basic inline assembly, and
-  gave myself a basic refresher on the C language and its caveats. \\
+  gave myself a basic refresher on the C language and its caveats.
 
   \noindent I also learned the basics needed to build and implement a linux kernel,
   how to connect to and debug a Qemu VM, and how to use \LaTeX{}!
 
 \section{Qemu Flags}
-  The command we are told to use is the following: \\
+  The command we are told to use is the following:
 
   \noindent \texttt{qemu-system-i386 -gdb tcp::5500086 -S -nographic -kernel
       bzImage-qemux86.bin -drive file=core-\\image-lsb-sdk-qemux86.ext3,if=virtio
       -enable-kvm -net none -usb -localtime --no-reboot --append\\ "root=/dev/vda
-      rw console=ttyS0 debug"} \\
+      rw console=ttyS0 debug"}
 
-      \noindent Here's the breakdown of the flags \cite{anthonyl.2010}: \\
+      \noindent Here's the breakdown of the flags \cite{anthonyl.2010}:
       \begin{description}
           \item \texttt{-gdb tcp::xxx}: Wait for gdb connection on device, in
           this case, tcp port xxx
@@ -235,11 +234,9 @@
       \end{description}
 \section{Work Log}
 
-
-
 \section{Command Log}
 
-Here is my history for the Qemu part of the assignment: \\
+Here is my history for the Qemu part of the assignment:
 \lstset{frame=tb,
   language=bash,
   columns=flexible,
@@ -433,7 +430,59 @@ Here is my history for the Qemu part of the assignment: \\
 633  cd 444/
 634  history > commands.log
 \end{lstlisting}
+
+
 \section{Version Control Log}
+
+\begin{center}
+\begin{longtabu} to \textwidth {|
+    X[4,l]|
+    X[3,c]|
+    X[8,l]|}
+    \hline
+    \textbf{Author} & \textbf{Date} & \textbf{Message} \\ \hline
+codymalick & 2016-04-05 & threads working \\ \hline
+codymalick & 2016-04-06 & removed duplicate directories \\ \hline
+codymalick & 2016-04-06 & added data structure \\ \hline
+codymalick & 2016-04-07 & latex hello world \\ \hline
+codymalick & 2016-04-07 & working make file and example.tex \\ \hline
+Cody Malick & 2016-04-07 & Merge pull request \#6 from codymalick/latex \\ \hline
+codymalick & 2016-04-08 & Working weekly template \\ \hline
+codymalick & 2016-04-08 & working on debug \\ \hline
+codymalick & 2016-04-08 & resolved barrier issue \\ \hline
+codymalick & 2016-04-08 & mutex lock working, consumer and producer working \\ \hline
+codymalick & 2016-04-08 & fixed some styling \\ \hline
+codymalick & 2016-04-08 & random function with twister working \\ \hline
+codymalick & 2016-04-08 & prep for rdrand \\ \hline
+codymalick & 2016-04-08 & summary 1 done \\ \hline
+Cody Malick & 2016-04-08 & Merge pull request \#7 from codymalick/summary\_1 \\ \hline
+codymalick & 2016-04-08 & fixed typo \\ \hline
+codymalick & 2016-04-08 & fixed stuff \\ \hline
+codymalick & 2016-04-09 & added new directory for summary 2 \\ \hline
+codymalick & 2016-04-09 & completed summary 2 \\ \hline
+codymalick & 2016-04-09 & fixed summary 1 \\ \hline
+codymalick & 2016-04-09 & typos fixed \\ \hline
+Cody Malick & 2016-04-09 & Merge pull request \#8 from codymalick/summary\_2 \\ \hline
+codymalick & 2016-04-09 & fixed spaces -\textgreater{} tabs, debug message added \\ \hline
+codymalick & 2016-04-09 & Twister and rdrand working \\ \hline
+codymalick & 2016-04-09 & rdrand correction, confirmed working on surfacebook \\ \hline
+codymalick & 2016-04-09 & removed binary \\ \hline
+codymalick & 2016-04-09 & removed binary \\ \hline
+codymalick & 2016-04-09 & removed duplicate file \\ \hline
+codymalick & 2016-04-09 & removed rdseed as it isn't supported on OS class \\ \hline
+codymalick & 2016-04-10 & removed external readme \\ \hline
+codymalick & 2016-04-10 & fixed output formatting, cleaned code, updated makefile \\ \hline
+codymalick & 2016-04-10 & combined makefile working \\ \hline
+codymalick & 2016-04-10 & layout done, toc working \\ \hline
+codymalick & 2016-04-10 & IEEtran working, added reference \\ \hline
+codymalick & 2016-04-10 & Added reference to bibtex, updated .tex, added listings.dtx \\ \hline
+codymalick & 2016-04-10 & qemu flag descriptions done \\ \hline
+codymalick & 2016-04-10 & done with report \\ \hline
+Cody Malick & 2016-04-10 & Merge pull request \#10 from codymalick/con1\_writeup \\ \hline
+\end{longtabu}
+\end{center}
+
+
 
 \clearpage
 
