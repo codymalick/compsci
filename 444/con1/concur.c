@@ -1,7 +1,7 @@
 #include<stdlib.h>
 #include<unistd.h>
 #include<pthread.h> /*pthread.h include for pthreads*/
-#include"mt19937ar.c" /*twister*/
+#include"twist.c" /*twister*/
 #include"rdrand_comp.c" /*functions for rdrand call*/
 #include<stdint.h>
 
