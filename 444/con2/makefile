@@ -12,7 +12,7 @@ PSF	= $(SRC:%.tex=%.ps)
 PDF	= $(SRC:%.tex=%.pdf)
 
 all: concur.c
-	g++ -o c -pthread -g concur.c
+	clang -o c -pthread -g concur.c
 
 pdf: $(PDF)
 
