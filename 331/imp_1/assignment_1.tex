@@ -41,49 +41,55 @@ expanding all possible nodes until a solution is found is memory intensive.
 We implemented this algorithm using queue for the general data structure, we
 used a set data structure containing tuples representing individual states
 visited, and a trace function "ascend()" to return the path the algorithm takes
-to find the solution.
-
+to find the solution. The signature vector was used across all algorithms.
 
 	\subsubsection{Depth-First Search}
 Depth-first was much faster than BFS. The only difference between this and BFS
-was that we used a double-ended queue for our data structure.
+implementation was that we used a stack for our data structure.
 
 	\subsubsection{Iterative Deepening Depth-First Search}
 This is identical to DFS, with the added element of a maximum depth variable.
-Through some experimentation, we found that a solution could be found at X depth.
-We tried many different depths, such as the depth found with the result of running
-straight DFS which was X. For each of the test files, here were the depths we
-used to find solutions for the corresponding test cases:
-\begin{enumerate}
-  \item
-  \item
-  \item
-\end{enumerate}
+Through some experimentation, we found that starting depth at one, then doubling
+it each time was a good way to increase the depth quickly enough. We considered
+doing an additive approach, but it was too slow as the data set size increased.
 
 	\subsubsection{A-Star Search}
-Stuff, explanation of heuristic
+For A-Star we used a priority queue, a self-sorting queue, that sorts based on
+the heuristic we assigned it. In this case, the heuristic we used was absolute
+distance from the current state, to the end state. We defined this by subtracting
+the absolute value of how many people still need to be moved to the goal shore
+versus the goal state.
+
+Here's pseudo code on this idea:
+\begin{lstlisting}
+  abs((current: goal_shore_population)-(goal: goal_shore_population)) +
+  abs((current: source_shore_population)-(goal: source_shore_population));
+\end{lstlisting}
 
   \subsection{Results}
   Here are the results of our implmentations:
-
 
   \begin{center}
       \begin{tabular}{ | l | p{2cm} | p{2cm} | p{2cm} |}
       \hline
       & Test Case 1 & Test Case 2 & Test Case 3 \\ \hline
-      BFS & Path:29  Nodes:2971 & Path:52  Nodes:12305  & Path:  Nodes: \\ \hline
-      DFS & Path:40  Nodes:58 & Path:82  Nodes:165 & Path:5256  Nodes:11040 \\ \hline
-      IDDFS & Path:  Nodes: & Path:  Nodes: & Path:  Nodes: \\ \hline
-      A-Star & Path:  Nodes: & Path:  Nodes: & Path:  Nodes: \\ \hline
+      BFS & Path:29  Nodes:2971 & Path:52 Nodes:12305  & Path: - Nodes: - \\ \hline
+      DFS & Path:40  Nodes:58 & Path:82 Nodes:165 & Path:5256  Nodes:11040 \\ \hline
+      IDDFS & Path:40  Nodes:58 & Path:82 Nodes:165 & Path:5256  Nodes:11040 \\ \hline
+      A-Star & Path:31  Nodes:63 & Path:52 Nodes:97 & Path:668  Nodes:1485 \\ \hline
       \end{tabular}
   \end{center}
 
 
-	Here is a graph illustrating the results of our executions:
+	Here is a graph illustrating the results of our executions. We used a log x and
+  y axis to appropriately show the differences in performance. The x axis is solution
+  size, and the y axis is number of nodes traversed:
   \subsubsection{graph}
     \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
+        xmode=log,
+        ymode=log,
         title=Algorithm Performance,
         legend pos=outer north east,
         xlabel=$x$,
@@ -91,16 +97,16 @@ Stuff, explanation of heuristic
         ]
         \addplot[blue!80!black]
           coordinates
-          {(29,2971)(52,12305)(600, 20000)};
+          {(29,2971)(52,12305)};
         \addplot[green!80!black]
           coordinates
           {(40,58)(82,165)(5256,11040)};
         \addplot[red!80!black]
           coordinates
-          {(1,3)(2,4)(2,5)(3,6)(4,7)};
-        \addplot[purple!80!black]
+          {(40,58)(82,165)(5256,11040)};
+        \addplot[black!80!black]
           coordinates
-          {(1,4)(2,5)(2,6)(3,7)(4,8)};
+          {(31,63)(52, 97)(668,1485)};
           \legend{{$bfs$},{$dfs$},{$iddfs$},{$a-star$}}
         \end{axis}
     \end{tikzpicture}
@@ -117,22 +123,29 @@ Stuff, explanation of heuristic
   We had quite a time running this algorithm against test case three, containing
   eighty-eight missionaries and eighty cannibles. Before sorting out a few memory
   leaks (we implmented all our algorithms in C++), we were hitting thirty-plus
-  gigabytes of RAM while BFS was trying to resolve the solution. Luckly, we were
-  able to resolve the memory issue, and BFS on that size array eventually
-  terminated.
+  gigabytes of RAM while BFS was trying to resolve the solution. After further
+  investigation, the memory issue was due to the overhead in the class system
+  written, and the size of the signature vector we used.
 
-  Depth-first was quite a different experience from BFS. We implemented it using
-  a double-ended queue. Depth-first was able to resolve the solutions for all three test cases quickly
-  and efficiently, contrary to what we believed would happen. We (Andy and Cody)
-  thought it would be as slow or slightly faster, but it ended up being drastically
-  better in performance and number of steps taken.
+  Depth-first was quite a different experience from BFS. Depth-first was able to
+  resolve the solutions for all three test cases quickly and efficiently,
+  contrary to what we believed would happen. We thought it would be as slow or
+  slightly faster, but it ended up being drastically better in performance and
+  number of steps taken.
 
-  Iterative Deepening Depth-First was a nice improvement over DFS, and much, much
-  better than BFS. By implementing the hard limit on depth and only increasing that
-  when we need to, we get the best solution across multiple branches quickly.
+  Iterative Deepening Depth-First search we expected to perform on par with or
+  better than DFS, but it ended being exactly the same. This was a little surprising,
+  but actually made sense given the size of the data sets we have. We would only
+  expect a large performance increase given an extremely large set of data, where
+  solutions exist at many different points relative to this data size.
 
-
+  A-Star we expected would perform better than all the above, given the priority
+  queue and heuristic. With the priority queue sorting the possible paths in order
+  of the heuristic, it could find solutions more efficiently in different positions
+  that the other algorithms do not have the capacity to find.
 
   \subsection{Conclusion}
-  From these results, we can see that XXX search is the most efficient of these four.
+  From these results, we can clearly see that A-Star is the most efficient
+  algorithm for this setup. This was largely expected as it's the only one that
+  had any heuristic and path prioritization.
 \end{document}
