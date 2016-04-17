@@ -24,11 +24,6 @@ struct table {
 	struct fork *fork5;	
 };
 
-struct args {
-	struct table tab;
-	struct philosopher philo;
-};
-
 void* start_eating(void *ptr);
 void think(struct philosopher *philo);
 void get_forks(struct philosopher *philo);
@@ -98,33 +93,13 @@ int main(int argc, char *argv[])
 	a->left_fork = tab->fork5;
 	a->right_fork = tab->fork1;
 
-	struct args *arg1 = (struct args *)malloc(sizeof(struct args));
-	arg1->tab = *tab;
-	arg1->philo = *l;
-	
-	struct args *arg2 = (struct args *)malloc(sizeof(struct args));
-	arg2->tab = *tab;
-	arg2->philo = *v;
-
-	struct args *arg3 = (struct args *)malloc(sizeof(struct args));
-	arg3->tab = *tab;
-	arg3->philo = *d;
-
-	struct args *arg4 = (struct args *)malloc(sizeof(struct args));
-	arg4->tab = *tab;
-	arg4->philo = *a;
-
-	struct args *arg5 = (struct args *)malloc(sizeof(struct args));
-	arg5->tab = *tab;
-	arg5->philo = *p;
-
-	struct args* args_array[5] = {arg1, arg2, arg3, arg4, arg5};
+	struct philosopher *p_array[5] = {l, v, d, p, a};
 	int err_check = 0;
 
 	/* Loop through thread array, spawn philosopher threads */
 	for(int i = 0; i < 5; i++) {
 		err_check = pthread_create(philos[i], NULL, start_eating,
-			       (void*)args_array[i]);
+			       (void*)p_array[i]);
 
 		if(err_check) {
 			fprintf(stderr, "Error, a thread failed to create -"
@@ -146,11 +121,6 @@ int main(int argc, char *argv[])
 	free(l);
 	free(p);
 	free(d);
-	free(arg1);
-	free(arg2);
-	free(arg3);
-	free(arg4);
-	free(arg5);
 	free(tab);	
 	return 0;
 }
@@ -163,10 +133,8 @@ int rand_think() {
 	return rand() % 20 + 1;
 }
 void* start_eating(void *ptr) {
-	struct args *arg = (struct args *)ptr;
 
-	struct table *tab = &arg->tab;
-	struct philosopher *philo = &arg->philo;
+	struct philosopher *philo = (struct philosopher *)ptr;
 	
 	pthread_mutex_init(&philo->mutex, NULL);
 
@@ -176,7 +144,6 @@ void* start_eating(void *ptr) {
 		get_forks(philo);
 		eat(philo);
 		put_forks(philo);
-
 	}
 }
 
