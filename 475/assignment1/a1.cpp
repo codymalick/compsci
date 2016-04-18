@@ -1,9 +1,7 @@
 #include<stdlib.h>
+#include<stdio.h>
 #include<iostream>
 #include<omp.h>
-
-#define NUMS 10000
-#define NUMT 4
 
 #define XMIN 0.
 #define XMAX 3.
@@ -31,49 +29,56 @@
 #define Z33 3.
 
 
-float Height( int, int );
+float Height( int, int, int );
 
 int main( int argc, char *argv[ ] )
 {
 
+    for(int NUMT = 1; NUMT <= 4; NUMT++) {
+        for(int NUMS = 5; NUMS < 50000; NUMS*=10) {
+            float volume = 0.0;
+            // the area of a single full-sized tile:
 
-    // the area of a single full-sized tile:
+            float fta = (  ( (XMAX-XMIN)/(float)(NUMS-1) )  * 
+                ( ( YMAX - YMIN )/(float)(NUMS-1) )  );
+            omp_set_num_threads(NUMT);
 
-    float fta = (  ( (XMAX-XMIN)/(float)(NUMS-1) )  * 
-         ( ( YMAX - YMIN )/(float)(NUMS-1) )  );
 
-    float volume = 0.0;
+            double time0 = omp_get_wtime();
+ 
+            // sum up the weighted heights into the variable "volume"
+            // using an OpenMP for loop and a reduction:
+            #pragma omp parallel for reduction(+:volume)
+            for( long i = 0; i <NUMS*NUMS; i++) {
+                int iu = i % NUMS;
+                int iv = i / NUMS;
 
-    omp_set_num_threads(NUMT);
-    // sum up the weighted heights into the variable "volume"
-    // using an OpenMP for loop and a reduction:
-    #pragma omp parallel for reduction(+:volume)
-    for( int i = 0; i <NUMS*NUMS; i++) {
-        int iu = i % NUMS;
-        int iv = i / NUMS;
+                //edge, corner variable, 1 == not edge or corner
+                int multiplier = 1;
 
-        //edge, corner variable, 1 == not edge or corner
-        int multiplier = 1;
+                //if iu == bottom or top edge
+                if(iu == 0 || iu == (NUMS - 1))
+                    multiplier *= .5;
 
-        //if iu == bottom or top edge
-        if(iu == 0 || iu == (NUMS - 1))
-            multiplier *= .5;
+                if(iv == 0 || iv == (NUMS - 1))
+                    multiplier *= .5;
+                volume += multiplier*fta*Height(iu, iv, NUMS);
+            }
+            // Implied barrier
+            
+            double time1 = omp_get_wtime();
+            double mmults = (double)(NUMS*NUMS)/(time1-time0)/1000000.0;
+            printf("|volume: %10f|Num Threads: %2i|Num Sections: %6i|MMults: %5f\n", volume, NUMT, NUMS, mmults);
+        }
 
-        if(iv == 0 || iv == (NUMS - 1))
-            multiplier *= .5;
-        
-        volume += multiplier*fta*Height(iu, iv);
+            printf("----------------------------------------------------------\n");
     }
-    // Implied barrier
-
-        
-
-    std::cout << volume << std::endl;
+          
     return 0;
 }
 
 
-float Height( int iu, int iv )    // iu,iv = 0 .. NUMS-1
+float Height( int iu, int iv, int NUMS )    // iu,iv = 0 .. NUMS-1
 {
     float u = (float)iu / (float)(NUMS-1);
     float v = (float)iv / (float)(NUMS-1);
