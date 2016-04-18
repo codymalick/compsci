@@ -1,10 +1,14 @@
-#define NUMS 10
-#define NUMT 10
+#include<stdlib.h>
+#include<iostream>
+#include<omp.h>
 
-#define XMIN     0.
-#define XMAX     3.
-#define YMIN     0.
-#define YMAX     3.
+#define NUMS 10000
+#define NUMT 4
+
+#define XMIN 0.
+#define XMAX 3.
+#define YMIN 0.
+#define YMAX 3.
 
 #define Z00 0.
 #define Z10 1.
@@ -26,24 +30,45 @@
 #define Z23 3.
 #define Z33 3.
 
-#include<stdlib.h>
-#include<iostream>
-
 
 float Height( int, int );
 
 int main( int argc, char *argv[ ] )
 {
-    //. . .
+
 
     // the area of a single full-sized tile:
 
-    float fullTileArea = (  ( (XMAX-XMIN)/(float)(NUMS-1) )  *  ( ( YMAX - YMIN )/(float)(NUMS-1) )  );
+    float fta = (  ( (XMAX-XMIN)/(float)(NUMS-1) )  * 
+         ( ( YMAX - YMIN )/(float)(NUMS-1) )  );
 
+    float volume = 0.0;
+
+    omp_set_num_threads(NUMT);
     // sum up the weighted heights into the variable "volume"
     // using an OpenMP for loop and a reduction:
-    std::cout << fullTileArea << std::endl;
-    //?????
+    #pragma omp parallel for reduction(+:volume)
+    for( int i = 0; i <NUMS*NUMS; i++) {
+        int iu = i % NUMS;
+        int iv = i / NUMS;
+
+        //edge, corner variable, 1 == not edge or corner
+        int multiplier = 1;
+
+        //if iu == bottom or top edge
+        if(iu == 0 || iu == (NUMS - 1))
+            multiplier *= .5;
+
+        if(iv == 0 || iv == (NUMS - 1))
+            multiplier *= .5;
+        
+        volume += multiplier*fta*Height(iu, iv);
+    }
+    // Implied barrier
+
+        
+
+    std::cout << volume << std::endl;
     return 0;
 }
 
