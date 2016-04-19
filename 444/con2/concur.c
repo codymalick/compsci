@@ -14,6 +14,7 @@ struct philosopher {
 	pthread_mutex_t mutex;
 };
 struct fork {
+    char *name;
 	int used;
 };
 struct table {
@@ -31,6 +32,7 @@ void eat(struct philosopher *philo);
 void put_forks(struct philosopher *philo);
 int rand_eat();
 int rand_think();
+void print_status();
 
 int main(int argc, char *argv[])
 {
@@ -47,18 +49,23 @@ int main(int argc, char *argv[])
 	struct table *tab = (struct table *)malloc(sizeof(struct table));
 	tab->fork1 = (struct fork *)malloc(sizeof(struct fork));
 	tab->fork1->used = 0;
+    tab->fork1->name = "fork1";    
 
 	tab->fork2 = (struct fork *)malloc(sizeof(struct fork));
 	tab->fork2->used = 0;
+    tab->fork2->name = "fork2";
 
 	tab->fork3 = (struct fork *)malloc(sizeof(struct fork));
 	tab->fork3->used = 0;
+    tab->fork3->name = "fork3";
 
 	tab->fork4 = (struct fork *)malloc(sizeof(struct fork));
 	tab->fork4->used = 0;
+    tab->fork4->name = "fork4";
 
 	tab->fork5 = (struct fork *)malloc(sizeof(struct fork));
 	tab->fork5->used = 0;
+    tab->fork5->name = "fork5";
 
 	/* all philosopher structs in order, l == locke, v == voltaire, etc */
 	struct philosopher *l = (struct philosopher *)
@@ -163,6 +170,9 @@ void get_forks(struct philosopher *philo) {
 			philo->right_fork->used = 1;
 			philo->left_fork->used = 1;
 			pthread_mutex_unlock(&philo->mutex);
+            printf("| %11s | %11s | %s and %s |\n", philo->name,
+                     "picked up", philo->left_fork->name,
+                     philo->right_fork->name);
 			break;
 		}
 	}	
@@ -180,4 +190,7 @@ void put_forks(struct philosopher *philo) {
 	philo->right_fork->used = 0;
 	philo->left_fork->used = 0;
 	pthread_mutex_unlock(&philo->mutex);
+    printf("| %11s | %11s | %s and %s |\n", philo->name,
+                     "put down", philo->left_fork->name,
+                     philo->right_fork->name);
 }
