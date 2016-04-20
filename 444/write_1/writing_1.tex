@@ -27,26 +27,40 @@
   \texttt{malickc@oregonstate.edu}}
   \date{April 21, 2016}
   \maketitle
-  \vspace*{2cm}
+  \vspace*{4cm}
   \begin{abstract}
-      \noindent Concurrency is an important issue when working with shared resources,
-      especially resources being actively used by the kernel.
-      The problem with sharing resources across threads is safely
-      accessing the resources without causing a race condition. This problem is
-      solved by using a mutex in order to lock down the resource until the thread
-      is done with it's task, then releasing it for other threads. By using this
-      process, we can create multithreaded programs that can safely access shared
-      resources. Following are the details on how I approached this problem.
+      \noindent Understanding how an operating system handles processes, threads,
+      and CPU scheduling are important topics for an aspiring kernel developer.
+      In this report, we will cover how Linux, Windows, and FreeBSD handle these
+      important structures in their respective kernels, and contrast them.
   \end{abstract}
-
 \end{titlepage}
 
 \tableofcontents
 \clearpage
+\section{Introduction}
+This report contains descriptions on how each of the operating systems, Linux,
+Windows, and FreeBSD handle processes, threads, and CPU scheduling. A lot can be
+learned about the design decisions of the minds behind the operating system by
+how they handle these core constructs.
 
-\section{Concurrency Assignment 1}
-  \subsection{Assignment Purpose}
+I will start by describing how Linux handles these, as Linux is what we will be
+thoroughly examining this term.
 
+\section{Linux}
+  \subsection{Processes}
+  \subsection{Threads}
+  \subsection{CPU Scheduling}
+
+\section{Windows}
+  \subsection{Processes}
+  \subsection{Threads}
+  \subsection{CPU Scheduling}
+\section{FreeBSD}
+  \subsection{Processes}
+  \subsection{Threads}
+  \subsection{CPU Scheduling}
+  
 \clearpage
 \section{Bibliography}
 \cite{johnm.2014}
