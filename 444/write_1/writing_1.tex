@@ -1,0 +1,56 @@
+\documentclass[10pt,letterpaper,onecolumn,draftclsnofoot]{IEEEtran}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{tabu}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C,
+  columns=flexible,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+\begin{document}
+\begin{titlepage}
+  \title{CS 444 - Spring 2016 - Writing Assignment 1}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{April 21, 2016}
+  \maketitle
+  \vspace*{2cm}
+  \begin{abstract}
+      \noindent Concurrency is an important issue when working with shared resources,
+      especially resources being actively used by the kernel.
+      The problem with sharing resources across threads is safely
+      accessing the resources without causing a race condition. This problem is
+      solved by using a mutex in order to lock down the resource until the thread
+      is done with it's task, then releasing it for other threads. By using this
+      process, we can create multithreaded programs that can safely access shared
+      resources. Following are the details on how I approached this problem.
+  \end{abstract}
+
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\section{Concurrency Assignment 1}
+  \subsection{Assignment Purpose}
+
+\clearpage
+\section{Bibliography}
+\cite{johnm.2014}
+\bibliographystyle{IEEEtran}
+\bibliography{writing_1}
+
+\end{document}
