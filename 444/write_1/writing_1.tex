@@ -4,6 +4,7 @@
 \usepackage{color}
 \usepackage{longtable}
 \usepackage{tabu}
+\usepackage{url}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -97,6 +98,27 @@ processes. The only difference is that they have a shared address space,
 filesystem resources, file descriptors, and signal handlers.
 
   \subsection{CPU Scheduling}
+Linux ships with a few different schedulers by default, including a real time
+scheduler.\cite{redhat2016} The default scheduler for Linux is the CFS, or
+the Completely Fair Scheduler.
+The CFS is only fair in so far as it tries its best to split the processors time
+into equal bits, 1/n, where n is the number of processes currently running. The
+CFS weights this with process priority, or nice value, and the higher the weight
+the larger percentage of processor time that process gets. So it's not completely
+fair, but that is the idea behind it.
+
+One of the major problems with this system is that a very large chunk of processes
+creates incredibly small slices of CPU time. For example, if there were six-thousand
+processes and/or threads that all had the same weight, then the cpu slice for
+each process would be 1/6000. There is a point where that slice is not large
+enough to even complete the context switch required to start executing the process
+again. The CFS handles this by implementing a floor on slice size, known as
+\textit{minimum granularity}.\cite{robertlove2010} With this system, every process
+will always have a minimum amount of run time, but the system can become very
+slow once this size is reached.
+
+% https://www.kernel.org/doc/Documentation/scheduler/sched-design-CFS.txt
+% This is a good resource for indepth analysis of the scheduler
 
 \section{Windows}
   \subsection{Processes}
