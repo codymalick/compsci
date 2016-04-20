@@ -42,14 +42,56 @@
 This report contains descriptions on how each of the operating systems, Linux,
 Windows, and FreeBSD handle processes, threads, and CPU scheduling. A lot can be
 learned about the design decisions of the minds behind the operating system by
-how they handle these core constructs.
-
-I will start by describing how Linux handles these, as Linux is what we will be
-thoroughly examining this term.
+how they handle these core constructs. We will start by describing how Linux
+handles these, as Linux is the focus of this class.
 
 \section{Linux}
   \subsection{Processes}
+The first thing that should be defined, is simply what a process is: "A
+\textit{process} is a program (object code stored on some media) in the midst of
+execution."\cite{robertlove2010} Although the Linux kernel refers to processes
+as tasks, in this report (for uniformity) we will only refer to them as processes.
+
+A process in Linux is ultimately born, somewhere up the line, from the
+\texttt{init} process. The \texttt{init} is the absolute root of every process
+tree on any Linux machine. It has a process ID of 1.
+
+Each process has a process descriptor that describes every aspect of
+the process, the \texttt{task\_struct}. The \texttt{task\_struct} is contained
+in \texttt{<linux/sched.h>}. \texttt{Task\_struct} describes the current state
+of the process, the parent process ID, the process ID, exit code, priority, etc.
+Everything you could possibly want to know about a process in Linux is in that
+struct. I would include it in this report, but it is a very large struct.
+
+Processes have five states, each represented by flags in the
+\texttt{task\_struct}:
+
+\begin{description}
+  \item \texttt{TASK\_RUNNING}: The process is either running or in a run-queue
+  ready to be run (run-queues will be discussed in the CPU scheduling section).
+  \item \texttt{TASK\_INTERRUPTIBLE}: the process is sleeping (blocked) waiting
+  for a condition to un-block. Once the condition is met, it transitions to
+  \texttt{TASK\_RUNNING}.
+  \item \texttt{TASK\_UNINTERRRUPTIBLE}: The same state as \texttt{TASK\_INTERRUPTIBLE}
+  with the difference being that it does not wake once an interrupt is received.
+  \item \texttt{\_TASK\_TRACED}: This flag shows that the process is being traced
+  by another process. An example is GDB.
+  \item \texttt{\_TASK\_STOPPED}: Process execution has halted and it is not
+  possible to start running. This state is a result of a halting interrupt from
+  the CPU, or if a debugger sends it a signal.
+
+\end{description}
+
+ \begin{lstlisting}
+
+ \end{lstlisting}
+
   \subsection{Threads}
+As with processes, we will define what a thread is: "Threads of execution, often
+shortened to \textit{threads}, are the objects of activity within the process."
+\cite{robertlove2010} In Linux, threads are treated fundamentally the same as
+processes.
+
   \subsection{CPU Scheduling}
 
 \section{Windows}
@@ -60,10 +102,10 @@ thoroughly examining this term.
   \subsection{Processes}
   \subsection{Threads}
   \subsection{CPU Scheduling}
-  
+
 \clearpage
 \section{Bibliography}
-\cite{johnm.2014}
+
 \bibliographystyle{IEEEtran}
 \bibliography{writing_1}
 
