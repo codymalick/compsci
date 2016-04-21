@@ -66,10 +66,11 @@ the process, the \texttt{task\_struct}. The \texttt{task\_struct} is contained
 in \texttt{<linux/sched.h>}. \texttt{Task\_struct} describes the current state
 of the process, the parent process ID, the process ID, exit code, priority, etc.
 Everything you could possibly want to know about a process in Linux is in that
-struct. I would include it in this report, but it is a very large struct.
+struct. I've included the \texttt{Task\_struct} as Appendix A as it is a very
+large structure.
 
-Processes have five states, each represented by flags in the
-\texttt{task\_struct}:
+Processes, of course, must have states of execution. On Linux, processes have
+five states, each represented by flags in the \texttt{task\_struct}:
 
 \begin{description}
   \item \texttt{TASK\_RUNNING}: The process is either running or in a run-queue
@@ -86,16 +87,34 @@ Processes have five states, each represented by flags in the
   the CPU, or if a debugger sends it a signal.
 \end{description}
 
- \begin{lstlisting}
-
- \end{lstlisting}
-
   \subsection{Threads}
 As with processes, we will define what a thread is: "Threads of execution, often
 shortened to \textit{threads}, are the objects of activity within the process."
 \cite{robertlove2010} In Linux, threads are treated fundamentally the same as
 processes. The only difference is that they have a shared address space,
 filesystem resources, file descriptors, and signal handlers.
+
+Here is the \texttt{thread\_info} struct:\cite{robertlove2010}
+
+\begin{lstlisting}
+  struct thread_info {
+        struct task_struct    *task;
+        struct exec_domain    *exec_domain;
+        unsigned long         flags;
+        unsigned long         status;
+        __u32                 cpu;
+        __s32                 preempt_count;
+        mm_segment_t          addr_limit;
+        struct restart_block  restart_block;
+        unsigned long         previous_esp;
+        __u8                  supervisor_stack[0];
+};
+\end{lstlisting}
+
+Compared to the \texttt{task\_struct}, this is a realitively simple data structure.
+It has a pointer to the \texttt{task\_struct} that is unique to that thread,
+along with a few extra flags and sets of information that seperate threads from
+processes.
 
   \subsection{CPU Scheduling}
 Linux ships with a few different schedulers by default, including a real time
@@ -121,14 +140,130 @@ slow once this size is reached.
 % This is a good resource for indepth analysis of the scheduler
 
 \section{Windows}
+Windows is a very different beast. The process and thread structure are quite a
+bit different from Linux. The CPU scheduler Windows uses has the same basic idea
+as the CFS, but varies greatly when it comes to how it handles priority and division
+of CPU time.
   \subsection{Processes}
+Processes in Windows are similiar to Linux in only one way: the both have a
+process ID. Otherwise, processes in Windows handle very differently than Linux.
+Here is the basic process struct in Windows, \texttt{\_PROCESS\_INFORMATION}:
+\cite{msprocstruct2016}
+
+\begin{lstlisting}
+  typedef struct _PROCESS_INFORMATION {
+    HANDLE hProcess;
+    HANDLE hThread;
+    DWORD  dwProcessId;
+    DWORD  dwThreadId;
+  } PROCESS_INFORMATION, *LPPROCESS_INFORMATION;
+\end{lstlisting}
+
+The \texttt{HANDLE} data type is a 32-bit unique identifier stored in the Windows
+kernel to identify individual processes.\cite{mshandle2016} The \texttt{hThread}
+points to the primary thread a process is executing on. These first two of these
+identifying fields are used internally by the kernel to specify what functions
+are performing operations on the process and thread objects.
+
+The second set of identifiers, \texttt{dwProcessId} and \texttt{dwThreadId} are
+used as unique identifiers for the process and thread themselves. These are the
+equivalent of the PID used by the the Linux \texttt{tast\_struct}.
+
+  % https://msdn.microsoft.com/en-us/library/windows/desktop/ms681917(v=vs.85).aspx
   \subsection{Threads}
   \subsection{CPU Scheduling}
 \section{FreeBSD}
   \subsection{Processes}
   \subsection{Threads}
   \subsection{CPU Scheduling}
-
+  % https://msdn.microsoft.com/en-us/library/windows/desktop/ms685100(v=vs.85).aspx
+\clearpage
+\section{Appendix A}
+The \texttt{task\_struct}:\cite{linustorvalds2016}
+\begin{lstlisting}
+  struct task_struct {
+/* these are hardcoded - don't touch */
+  volatile long        state;          /* -1 unrunnable, 0 runnable, >0 stopped */
+  long                 counter;
+  long                 priority;
+  unsigned             long signal;
+  unsigned             long blocked;   /* bitmap of masked signals */
+  unsigned             long flags;     /* per process flags, defined below */
+  int errno;
+  long                 debugreg[8];    /* Hardware debugging registers */
+  struct exec_domain   *exec_domain;
+/* various fields */
+  struct linux_binfmt  *binfmt;
+  struct task_struct   *next_task, *prev_task;
+  struct task_struct   *next_run,  *prev_run;
+  unsigned long        saved_kernel_stack;
+  unsigned long        kernel_stack_page;
+  int                  exit_code, exit_signal;
+  /* ??? */
+  unsigned long        personality;
+  int                  dumpable:1;
+  int                  did_exec:1;
+  int                  pid;
+  int                  pgrp;
+  int                  tty_old_pgrp;
+  int                  session;
+  /* boolean value for session group leader */
+  int                  leader;
+  int                  groups[NGROUPS];
+  /*
+   * pointers to (original) parent process, youngest child, younger sibling,
+   * older sibling, respectively.  (p->father can be replaced with
+   * p->p_pptr->pid)
+   */
+  struct task_struct   *p_opptr, *p_pptr, *p_cptr,
+                       *p_ysptr, *p_osptr;
+  struct wait_queue    *wait_chldexit;
+  unsigned short       uid,euid,suid,fsuid;
+  unsigned short       gid,egid,sgid,fsgid;
+  unsigned long        timeout, policy, rt_priority;
+  unsigned long        it_real_value, it_prof_value, it_virt_value;
+  unsigned long        it_real_incr, it_prof_incr, it_virt_incr;
+  struct timer_list    real_timer;
+  long                 utime, stime, cutime, cstime, start_time;
+/* mm fault and swap info: this can arguably be seen as either
+   mm-specific or thread-specific */
+  unsigned long        min_flt, maj_flt, nswap, cmin_flt, cmaj_flt, cnswap;
+  int swappable:1;
+  unsigned long        swap_address;
+  unsigned long        old_maj_flt;    /* old value of maj_flt */
+  unsigned long        dec_flt;        /* page fault count of the last time */
+  unsigned long        swap_cnt;       /* number of pages to swap on next pass */
+/* limits */
+  struct rlimit        rlim[RLIM_NLIMITS];
+  unsigned short       used_math;
+  char                 comm[16];
+/* file system info */
+  int                  link_count;
+  struct tty_struct    *tty;           /* NULL if no tty */
+/* ipc stuff */
+  struct sem_undo      *semundo;
+  struct sem_queue     *semsleeping;
+/* ldt for this task - used by Wine.  If NULL, default_ldt is used */
+  struct desc_struct *ldt;
+/* tss for this task */
+  struct thread_struct tss;
+/* filesystem information */
+  struct fs_struct     *fs;
+/* open file information */
+  struct files_struct  *files;
+/* memory management info */
+  struct mm_struct     *mm;
+/* signal handlers */
+  struct signal_struct *sig;
+#ifdef __SMP__
+  int                  processor;
+  int                  last_processor;
+  int                  lock_depth;     /* Lock depth.
+                                          We can context switch in and out
+                                          of holding a syscall kernel lock... */
+#endif
+};
+\end{lstlisting}
 \clearpage
 \section{Bibliography}
 
