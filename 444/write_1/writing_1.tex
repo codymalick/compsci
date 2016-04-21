@@ -4,7 +4,6 @@
 \usepackage{color}
 \usepackage{longtable}
 \usepackage{tabu}
-\usepackage{url}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -92,9 +91,8 @@ As with processes, we will define what a thread is: "Threads of execution, often
 shortened to \textit{threads}, are the objects of activity within the process."
 \cite{robertlove2010} In Linux, threads are treated fundamentally the same as
 processes. The only difference is that they have a shared address space,
-filesystem resources, file descriptors, and signal handlers.
-
-Here is the \texttt{thread\_info} struct:\cite{robertlove2010}
+filesystem resources, file descriptors, and signal handlers. Here is the
+\texttt{thread\_info} struct:\cite{robertlove2010}
 
 \begin{lstlisting}
   struct thread_info {
@@ -163,17 +161,99 @@ The \texttt{HANDLE} data type is a 32-bit unique identifier stored in the Window
 kernel to identify individual processes.\cite{mshandle2016} The \texttt{hThread}
 points to the primary thread a process is executing on. These first two of these
 identifying fields are used internally by the kernel to specify what functions
-are performing operations on the process and thread objects.
+are performing operations on the process and thread objects. The second set of
+identifiers, \texttt{dwProcessId} and \texttt{dwThreadId} are used as unique
+identifiers for the process and thread themselves. These are the equivalent of
+the PID used by the the Linux \texttt{tast\_struct}.
 
-The second set of identifiers, \texttt{dwProcessId} and \texttt{dwThreadId} are
-used as unique identifiers for the process and thread themselves. These are the
-equivalent of the PID used by the the Linux \texttt{tast\_struct}.
+Process creation is also differnt in Windows. Instead of the constantly traceable
+tree of child-parent relationships, a function called \texttt{CreateProcess()} is
+invoked, resulting in a new process completely independent of the parent process.
+\cite{msproccreate2016}
+
+Process state in Windows is determined by thread state. Here are the possible
+thread states in Windows:\cite{msthreadstate2016}
+\begin{description}
+  \item \texttt{Initialized}: A state that indicates the thread has been initialized,
+  but has not yet started.
+  \item \texttt{Ready}: A state that indicates the thread is waiting to use a processor
+  because no processor is free. The thread is prepared to run on the next
+  available processor.
+  \item \texttt{Running}: A state that indicates the thread is currently using a processor.
+  \item \texttt{Standby}: A state that indicates the thread is about to use a processor.
+  Only one thread can be in this state at a time.
+  \item \texttt{Terminated}: A state that indicates the thread has finished executing
+  and has exited.
+  \item \texttt{Transition}: A state that indicates the thread is waiting for a resource, other than
+  the processor, before it can execute. For example, it might be waiting for its
+  execution stack to be paged in from disk.
+  \item \texttt{Unknown}: The state of the thread is unknown
+  \item \texttt{Wait}: A state that indicates the thread is not ready to use the processor
+  because it is waiting for a peripheral operation to complete or a resource to
+  become free. When the thread is ready, it will be rescheduled.
+\end{description}
+
+This is interesting for a few reasons. First, there is an 'unknown' thread state.
+In Linux, it is isn't possible for a thread or process to be in an unknown state,
+only the ones listed. Next, it's interesting to see how Windows has so many more
+states than Linux. One of the differences that sticks out most is that Windows
+has a state when a process is queued to enter the processor in the \texttt{Standby}
+state.
+By having all these different states available, you can really see the real time
+state of the process, as apposed to Linux where you have fewer states that cover
+less situations. Then again, this could just be a result of Linux having better
+processor and thread management, requiring less states.
+
 
   % https://msdn.microsoft.com/en-us/library/windows/desktop/ms681917(v=vs.85).aspx
   \subsection{Threads}
+Threads, in Windows, are handled as subcomponents of processes. They are grouped
+into thread pools, where multiple threads execute under one process. MSDN explains
+the idea behind this structure is to reduce the number of application threads, and
+provide management of worker threads. Threads are are spawned through the
+\texttt{CreateThread()} function call.\cite{msthreadcreate2016}
+
+% Here is the thread data structure:
+% \begin{lstlisting}
+%
+% \end{lstlisting}
+
   \subsection{CPU Scheduling}
+  The Windows CPU scheduler, by default, schedules processes in much the same way
+  that the CFS schedules processes. A process is given the default weight, and
+  the scheduler tries to divide the CPU time evenly among the running processes.
+  Once we introduce weights or priority, the scheduler's behavior is very different.
+
+  While the system is assigning CPU time slices to each process, if a higher priority
+  thread becomes available, the CPU stops the current running process, mid-time
+  slice, and starts running the higher priority threads.
+
+  This is vastly different from the CFS in that regard. The CFS will allow a current
+  running thread to complete it's time slice before moving it out of the processor.
+  By introducing this kind of behavior, the power of priority states becomes glaringly
+  clear.
+
+  Windows has thirty-two levels of priority, each divided into subdivisions:
+  \begin{description}
+    \item \texttt{IDLE\_PRIORITY\_CLASS}
+    \item \texttt{BELOW\_NORMAL\_PRIORITY\_CLASS}
+    \item \texttt{NORMAL\_PRIORITY\_CLASS}
+    \item \texttt{ABOVE\_NORMAL\_PRIORITY\_CLASS}
+    \item \texttt{HIGH\_PRIORITY\_CLASS}
+    \item \texttt{REALTIME\_PRIORITY\_CLASS}
+  \end{description}
+
+  Each of these classes has subdivisions inside of them, seven in each, that
+  has steadily increasing higher priority, starting from one, rising to thirty-two.
+  As a side note, the zero priority class is reserved for a thread that goes through
+  and zeroes out memory when a process terminates.\cite{msschedule2016} Besides
+  this large difference in priority, the two CPU schedulers are very similar.
+
 \section{FreeBSD}
+FreeBSD is an open source OS based off Unix, specifically the Berkeley variant,
+BSD.
   \subsection{Processes}
+FreeBSD has a process structure very similar to Linux.
   \subsection{Threads}
   \subsection{CPU Scheduling}
   % https://msdn.microsoft.com/en-us/library/windows/desktop/ms685100(v=vs.85).aspx
@@ -265,6 +345,107 @@ The \texttt{task\_struct}:\cite{linustorvalds2016}
 };
 \end{lstlisting}
 \clearpage
+\section{Appendix B}
+\begin{lstlisting}
+  /*
+ * Description of a process.
+ *
+ * This structure contains the information needed to manage a thread of
+ * control, known in UN*X as a process; it has references to substructures
+ * containing descriptions of things that the process uses, but may share
+ * with related processes.  The process structure and the substructures
+ * are always addressable except for those marked "(PROC ONLY)" below,
+ * which might be addressable only on a processor on which the process
+ * is running.
+ */
+struct  proc {
+        struct  proc *p_forw;           /* Doubly-linked run/sleep queue. */
+        struct  proc *p_back;
+        struct  proc *p_next;           /* Linked list of active procs */
+        struct  proc **p_prev;          /*    and zombies. */
+
+        /* substructures: */
+        struct  pcred *p_cred;          /* Process owner's identity. */
+        struct  filedesc *p_fd;         /* Ptr to open files structure. */
+        struct  pstats *p_stats;        /* Accounting/statistics (PROC ONLY). */        struct  plimit *p_limit;        /* Process limits. */
+        struct  vmspace *p_vmspace;     /* Address space. */
+        struct  sigacts *p_sigacts;     /* Signal actions, state (PROC ONLY). */
+
+#define p_ucred         p_cred->pc_ucred
+#define p_rlimit        p_limit->pl_rlimit
+
+        int     p_flag;                 /* P_* flags. */
+        char    p_stat;                 /* S* process status. */
+        char    p_pad1[3];
+
+        pid_t   p_pid;                  /* Process identifier. */
+        struct  proc *p_hash;    /* Hashed based on p_pid for kill+exit+... */
+        struct  proc *p_pgrpnxt; /* Pointer to next process in process group. */
+        struct  proc *p_pptr;    /* Pointer to process structure of parent. */
+        struct  proc *p_osptr;   /* Pointer to older sibling processes. */
+
+/* The following fields are all zeroed upon creation in fork. */
+#define p_startzero     p_ysptr
+        struct  proc *p_ysptr;   /* Pointer to younger siblings. */
+        struct  proc *p_cptr;    /* Pointer to youngest living child. */
+        pid_t   p_oppid;         /* Save parent pid during ptrace. XXX */
+        int     p_dupfd;         /* Sideways return value from fdopen. XXX */
+
+        /* scheduling */
+        u_int   p_estcpu;        /* Time averaged value of p_cpticks. */
+        int     p_cpticks;       /* Ticks of cpu time. */
+        fixpt_t p_pctcpu;        /* %cpu for this process during p_swtime */
+        void    *p_wchan;        /* Sleep address. */
+        char    *p_wmesg;        /* Reason for sleep. */
+        u_int   p_swtime;        /* Time swapped in or out. */
+        u_int   p_slptime;       /* Time since last blocked. */
+
+        struct  itimerval p_realtimer;  /* Alarm timer. */
+        struct  timeval p_rtime;        /* Real time. */
+        u_quad_t p_uticks;              /* Statclock hits in user mode. */
+        u_quad_t p_sticks;              /* Statclock hits in system mode. */
+        u_quad_t p_iticks;              /* Statclock hits processing intr. */
+
+        int     p_traceflag;            /* Kernel trace points. */
+        struct  vnode *p_tracep;        /* Trace to vnode. */
+
+        int     p_siglist;              /* Signals arrived but not delivered. */
+
+        struct  vnode *p_textvp;        /* Vnode of executable. */
+
+        char    p_lock;                 /* Process lock (prevent swap) count. */
+        char    p_pad2[3];              /* alignment */
+
+/* End area that is zeroed on creation. */
+#define p_endzero       p_startcopy
+
+/* The following fields are all copied upon creation in fork. */
+#define p_startcopy     p_sigmask
+
+        sigset_t p_sigmask;     /* Current signal mask. */
+        sigset_t p_sigignore;   /* Signals being ignored. */
+        sigset_t p_sigcatch;    /* Signals being caught by user. */
+
+        u_char  p_priority;     /* Process priority. */
+        u_char  p_usrpri;       /* User-priority based on p_cpu and p_nice. */
+        char    p_nice;         /* Process "nice" value. */
+        char    p_comm[MAXCOMLEN+1];
+
+        struct  pgrp *p_pgrp;   /* Pointer to process group. */
+
+        struct  sysentvec *p_sysent; /* System call dispatch information. */
+
+        struct  rtprio p_rtprio;        /* Realtime priority. */
+/* End area that is copied on creation. */
+#define p_endcopy       p_addr
+        struct  user *p_addr;   /* Kernel virtual addr of u-area (PROC ONLY). */
+        struct  mdproc p_md;    /* Any machine-dependent fields. */
+
+        u_short p_xstat;        /* Exit status for wait; also stop signal. */
+        u_short p_acflag;       /* Accounting flags. */
+        struct  rusage *p_ru;   /* Exit information. XXX */
+};
+\end{lstlisting}
 \section{Bibliography}
 
 \bibliographystyle{IEEEtran}

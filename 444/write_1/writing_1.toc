@@ -7,10 +7,11 @@
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Processes}{3}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Threads}{4}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-C}}CPU Scheduling}{4}
-\contentsline {section}{\numberline {IV}FreeBSD}{4}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Processes}{4}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Threads}{4}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}CPU Scheduling}{4}
-\contentsline {section}{\numberline {V}Appendix A}{5}
-\contentsline {section}{\numberline {VI}Bibliography}{8}
-\contentsline {section}{References}{8}
+\contentsline {section}{\numberline {IV}FreeBSD}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Processes}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Threads}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}CPU Scheduling}{5}
+\contentsline {section}{\numberline {V}Appendix A}{6}
+\contentsline {section}{\numberline {VI}Appendix B}{9}
+\contentsline {section}{\numberline {VII}Bibliography}{11}
+\contentsline {section}{References}{11}
