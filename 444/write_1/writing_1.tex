@@ -30,9 +30,9 @@
   \vspace*{4cm}
   \begin{abstract}
       \noindent Understanding how an operating system handles processes, threads,
-      and CPU scheduling are important topics for an aspiring kernel developer.
-      In this report, we will cover how Linux, Windows, and FreeBSD handle these
-      important structures in their respective kernels, and contrast them.
+      and CPU scheduling are important topics for an aspiring kernel developer to
+      understand. In this report, we will cover how Linux, Windows, and FreeBSD
+      handle these important tasks in their respective kernels, and contrast them.
   \end{abstract}
 \end{titlepage}
 
@@ -251,11 +251,77 @@ provide management of worker threads. Threads are are spawned through the
 
 \section{FreeBSD}
 FreeBSD is an open source OS based off Unix, specifically the Berkeley variant,
-BSD.
+BSD. It looks and feels similar to Linux in a few ways, but has some subtle
+differences in process and thread structure. The scheduler is quite a bit different
+from the CFS.
   \subsection{Processes}
-FreeBSD has a process structure very similar to Linux.
+Processes in FreeBSD are very similar to Linux's. Similiar to Linux's process
+struct, \texttt{task\_struct}, the FreeBSD \texttt{proc} struct is large and
+contains a lot of information. Processes are created using the same forking and
+exec process that Linux uses. After a process is forked, a new process that is
+identical, except for the PID, is created. The process has a copy of the parent's
+resources and addresses space.
+
+Process states are handled in a much more simplified manner than either Windows
+or Linux in FreeBSD. Instead of having eight or five different states for a process,
+it only has three:
+\begin{description}
+  \item \texttt{NEW}: Process is undergoing creation
+  \item \texttt{NORMAL}: Thread or threads will be runnable, sleeping, or stopped
+  \item \texttt{ZOMBIE}: The process is undergoing process termination
+\end{description}
+
+As per above, \texttt{NORMAL} embodies three subdivisions, runnable, sleeping,
+or stopped, but overall the classification is simplified. \cite{kirkgeorgebsd}
+
   \subsection{Threads}
+A notable difference between Linux and FreeBSD is that it does not treat threads
+and processes the same way. Threads are handle in a more simliar fashion to Windows.
+Each thread is attached to a parent process. If multiple threads are requested
+for one process, new processes are spawned, but they have the same PID. When a
+user looks for a process in the OS, they will only see the single entry representing
+the parent process.
+
+Thread states are dictated by the list in the processes section, but have a caviat.
+When a thread is not running on the processor, which there can only be one of,
+all threads are in one of three queues: the run queue, the sleep queue, or the
+turnstile queue. As the names dictate, the run queue contains threads that are
+in a runnable state. Threads that are blocked and are awaiting events are in the
+sleep queue or the turnstile queue.
+
+The turnstile queue is exclusively for short blocks on threads. In FreeBSD, short
+blocks are exclusively the result of read/write blocks. Because these kinds of
+blocks are common, each thread creates a turnstile queue when it is initialized,
+and creates a list of all threads that are blocked because of a read/write block
+on a certain piece of memory. When that block is lifted, the turnstile queue manages
+the order in which the blocked threads are resolved. Allocating turnstile queues
+on each thread as apposed to each lock results in lower memory usage by the kernel.
+
+Sleep queues are similar to turnstiles in that they contain lists of threads
+where blocking is occuring, but the sleep queue is exclusively for medium to long
+term locks that can send interrupts if the lock is held for too long. \cite{kirkgeorgebsd}
   \subsection{CPU Scheduling}
+The default CPU scheduler for FreeBSD is the ULE scheduler. ULE is not an acronym.
+\cite{kirkgeorgebsd} The scheduler is contained in the namespace
+\texttt{\/sys\/kern\/sched\_ule.c}, and if you remove the underscore in the namespace,
+you will see the reasoning behind the name.
+
+The ULE scheduler is split into two parts in FreeBS: a low-level scheduler, and
+a high-level scheduler. The low-level scheduler runs often, and the high-level
+scheduler runs a few times a second.
+
+The low-level scheduler runs extremely often, whenever a thread is blocked. When
+a block occurs, the low-level scheduler pulls the highest priority process from
+a set of run queues. These queues are organized from low to high priority. The
+high-level scheduler decides what the priority of each thread is, and sorts it
+into the appropriate run queue. Each core has it's own set of these run queues
+to prevent two cores from trying to access the same queue at the same time.
+
+The different cores run a round robin system on the threads in the queues. Each
+thread gets equal runtime in the form of time quantums. These time quantums are
+the same as time slices. If a process uses an entire time quantum, it is moved
+to the back of the the queue that it came from, and a context switch occurs to the
+next highest priority thread.\cite{kirkgeorgebsd}
   % https://msdn.microsoft.com/en-us/library/windows/desktop/ms685100(v=vs.85).aspx
 \clearpage
 \section{Appendix A}

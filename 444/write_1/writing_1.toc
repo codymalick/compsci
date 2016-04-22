@@ -10,8 +10,8 @@
 \contentsline {section}{\numberline {IV}FreeBSD}{5}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Processes}{5}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Threads}{5}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}CPU Scheduling}{5}
-\contentsline {section}{\numberline {V}Appendix A}{6}
-\contentsline {section}{\numberline {VI}Appendix B}{9}
-\contentsline {section}{\numberline {VII}Bibliography}{11}
-\contentsline {section}{References}{11}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}CPU Scheduling}{6}
+\contentsline {section}{\numberline {V}Appendix A}{7}
+\contentsline {section}{\numberline {VI}Appendix B}{10}
+\contentsline {section}{\numberline {VII}Bibliography}{12}
+\contentsline {section}{References}{12}
