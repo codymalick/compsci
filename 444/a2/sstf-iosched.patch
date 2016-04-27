@@ -1,0 +1,205 @@
+From 036de26a6481075a751ddac0c890521f0671409a Mon Sep 17 00:00:00 2001
+From: codymalick <cody.malick@gmail.com>
+Date: Tue, 26 Apr 2016 21:20:38 -0700
+Subject: [PATCH] added files to rebase
+
+---
+ block/sstf-iosched.c | 186 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 186 insertions(+)
+ create mode 100644 block/sstf-iosched.c
+
+diff --git a/block/sstf-iosched.c b/block/sstf-iosched.c
+new file mode 100644
+index 0000000..f00659a
+--- /dev/null
++++ b/block/sstf-iosched.c
+@@ -0,0 +1,186 @@
++/*
++ * SSTF IO Scheduler
++ */
++#include <linux/blkdev.h>
++#include <linux/elevator.h>
++#include <linux/bio.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/init.h>
++struct sstf_data {
++	struct list_head queue;
++};
++
++/*
++ * This function deletes merged requests
++ */
++static void sstf_merged_requests(struct request_queue *q, struct request *rq,
++				 struct request *next)
++{
++	list_del_init(&next->queuelist);
++}
++
++/*
++ * Find the end sector of the request
++ * Looking forward and backward for closest request
++ */
++int distance(struct request *rq, struct request *rq2) {
++	/* distance from current request */
++	int dist;
++	sector_t sector = blk_rq_pos(rq);
++	sector_t sector2 = blk_rq_pos(rq2);
++
++	/*estimates the total distance*/
++	if(sector2 >= sector) {
++		dist = sector2 - sector;
++	} else {
++		dist = sector - sector2;
++	}
++	
++	return dist;
++}
++
++/*
++ * This function actually adds a request to the dispatch queue
++ */
++static int sstf_dispatch(struct request_queue *q, int force)
++{
++	struct sstf_data *nd;
++	nd = q->elevator->elevator_data;
++
++	if(!list_empty(&nd->queue)) {
++		struct request *rq;
++		rq = list_entry(nd->queue.next, struct request, queuelist);
++		list_del_init(&rq->queuelist);
++		elv_dispatch_sort(q, rq);
++		printk(KERN_DEBUG "Dispatching...");
++		return 1;
++	}
++	return 0;
++}
++
++/*
++ * Insertion sort when adding a request
++ */
++static void sstf_add_request(struct request_queue *q, struct request *rq)
++{
++	printk(KERN_DEBUG "add_request called\n");
++	struct sstf_data *nd;
++        nd = q->elevator->elevator_data;
++	int dist;
++	int last_dist = -1;
++	/* Insert at the point where the difference in sectors is least */
++	if (!list_empty(&nd->queue)) {
++		struct request *nrq;
++		list_for_each_entry(nrq, &nd->queue, queuelist) {
++			dist = distance(rq, nrq);
++			printk(KERN_DEBUG "Dist = %i\n", dist);
++			if(!list_is_singular(&nd->queue) || dist <= last_dist) {
++				last_dist = dist;
++			} else {
++				list_add(&rq->queuelist, &nrq->queuelist);
++				return;
++				printk(KERN_DEBUG "This shouldn't print\n");
++			}
++		}
++	}
++	printk(KERN_DEBUG "Added to empty queue\n");	
++	list_add_tail(&rq->queuelist, &nd->queue);
++}
++
++
++
++/*
++ * 
++ */
++static struct request * sstf_former_request(struct request_queue *q, struct request *rq)
++{
++	/*printk(KERN_DEBUG "former_request called\n");*/
++
++	struct sstf_data *nd = q->elevator->elevator_data;
++
++	if (rq->queuelist.prev == &nd->queue)
++		return NULL;
++	return list_entry(rq->queuelist.prev, struct request, queuelist);
++}
++
++static struct request *
++sstf_latter_request(struct request_queue *q, struct request *rq)
++{
++	/*printk(KERN_DEBUG "latter_request called\n");*/
++
++	struct sstf_data *nd = q->elevator->elevator_data;
++
++	if (rq->queuelist.next == &nd->queue)
++		return NULL;
++	return list_entry(rq->queuelist.next, struct request, queuelist);
++}
++
++static int sstf_init_queue(struct request_queue *q, struct elevator_type *e)
++{
++	struct sstf_data *nd;
++	
++
++	struct elevator_queue *eq;
++
++	eq = elevator_alloc(q, e);
++	if (!eq)
++		return -ENOMEM;
++
++	nd = kmalloc_node(sizeof(*nd), GFP_KERNEL, q->node);
++	if (!nd) {
++		kobject_put(&eq->kobj);
++		return -ENOMEM;
++	}
++	eq->elevator_data = nd;
++
++	INIT_LIST_HEAD(&nd->queue);
++
++	spin_lock_irq(q->queue_lock);
++	q->elevator = eq;
++	spin_unlock_irq(q->queue_lock);
++	return 0;
++}
++
++static void sstf_exit_queue(struct elevator_queue *e)
++{
++	/*printk(KERN_DEBUG "exit_queue called\n");*/
++
++	struct sstf_data *nd = e->elevator_data;
++
++	BUG_ON(!list_empty(&nd->queue));
++	kfree(nd);
++}
++
++static struct elevator_type elevator_sstf = {
++	.ops = {
++		.elevator_merge_req_fn		= sstf_merged_requests,
++		.elevator_dispatch_fn		= sstf_dispatch,
++		.elevator_add_req_fn		= sstf_add_request,
++		.elevator_former_req_fn		= sstf_former_request,
++		.elevator_latter_req_fn		= sstf_latter_request,
++		.elevator_init_fn		= sstf_init_queue,
++		.elevator_exit_fn		= sstf_exit_queue,
++		/*.elevator_merge_fn		= sstf_merge_requests,*/
++	},
++	.elevator_name = "sstf",
++	.elevator_owner = THIS_MODULE,
++};
++
++static int __init sstf_init(void)
++{
++	return elv_register(&elevator_sstf);
++}
++
++static void __exit sstf_exit(void)
++{
++	elv_unregister(&elevator_sstf);
++}
++
++module_init(sstf_init);
++module_exit(sstf_exit);
++
++
++MODULE_AUTHOR("Cody Malick");
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("SSTF IO scheduler, based off Linux noop scheduler");
+-- 
+1.7.12.4
+
