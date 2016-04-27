@@ -38,8 +38,15 @@
 
 \section{Assignment 2}
   \subsection{Design}
+I plan to do the following to implement this I/O scheduler:
+\begin{description}
+	\item Research steps needed to add custom I/O scheduler in the kernel
+	\item Implmement an insertion sort on the request queue, sort is accomplished by finding the shortest distance to any request in the queue
+	\item Once the queue is sort, sort what gets sent to the dispatch queue by selecting next closest seek distance
+	\item Figure out how merging is done, get merging working
 
-\section{Version Control Log}
+\end{description}
+\section{Version Control and Work Log}
 Created with gitlog2latex
 \begin{center}
 \begin{longtabu} to \textwidth {|
@@ -47,22 +54,19 @@ Created with gitlog2latex
     X[3,c]|
     X[8,l]|}
     \hline
-    \textbf{Author} & \textbf{Date} & \textbf{Message} \\ \hline
-codymalick & 2016-04-26 & complete assignment 2 \\ \hline
-codymalick & 2016-04-25 & shortest seek distance first working, next, get direction fixed \\ \hline
-codymalick & 2016-04-25 & renamed everything in sstf-iosched.c \\ \hline
-codymalick & 2016-04-24 & added working qemu command \\ \hline
-codymalick & 2016-04-24 & sstf showing up in vm, vm is operational \\ \hline
-Cody Malick & 2016-04-24 & added files, working boot vm \\ \hline
-codymalick & 2016-04-23 & created sstf file \\ \hline
+    \textbf{Author} & \textbf{Date} & \textbf{Message} & \textbf{Time Spent} \\ \hline
+codymalick & 2016-04-26 & complete assignment 2 & 4 hours \\ \hline
+codymalick & 2016-04-25 & shortest seek distance first working, next, get direction fixed  & 3 hours \\ \hline
+codymalick & 2016-04-25 & renamed everything in sstf-iosched.c  & 20 minutes hours \\ \hline
+codymalick & 2016-04-24 & added working qemu command & 3 hours \\ \hline
+codymalick & 2016-04-24 & sstf showing up in vm, vm is operational & 1 hour \\ \hline
+Cody Malick & 2016-04-24 & added files, working boot vm & 30 minutes \\ \hline
+codymalick & 2016-04-23 & created sstf file & 1 hour \\ \hline
 
 \end{longtabu}
 \end{center}
 
-\clearpage
-\section{Bibliography}
+\section{Questions}
 
-\bibliographystyle{IEEEtran}
-\bibliography{assignment_2}
 
 \end{document}
