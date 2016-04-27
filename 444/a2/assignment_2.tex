@@ -40,10 +40,12 @@
   \subsection{Design}
 I plan to do the following to implement this I/O scheduler:
 \begin{description}
-	\item Research steps needed to add custom I/O scheduler in the kernel
-	\item Implmement an insertion sort on the request queue, sort is accomplished by finding the shortest distance to any request in the queue
-	\item Once the queue is sort, sort what gets sent to the dispatch queue by selecting next closest seek distance
-	\item Figure out how merging is done, get merging working
+	\item Implmement an insertion sort on the request queue, sort is
+		accomplished by finding the shortest distance to any request in
+		the queue
+	\item Once the queue is sorted, sort what gets sent to the dispatch
+		queue by selecting next closest seek distance
+	\item Merge adjacent requests
 
 \end{description}
 \section{Version Control and Work Log}
@@ -55,6 +57,9 @@ Created with gitlog2latex
     X[8,l]|}
     \hline
     \textbf{Author} & \textbf{Date} & \textbf{Message} & \textbf{Time Spent} \\ \hline
+codymalick & 2016-04-27 & added merging & 2 hours \\ \hline
+codymalick & 2016-04-27 & fixed if-else, updated .gitignore & 30 minutes \\ \hline
+codymalick & 2016-04-27 & added files to rebase & 20 minutes \\ \hline
 codymalick & 2016-04-26 & complete assignment 2 & 4 hours \\ \hline
 codymalick & 2016-04-25 & shortest seek distance first working, next, get direction fixed  & 3 hours \\ \hline
 codymalick & 2016-04-25 & renamed everything in sstf-iosched.c  & 20 minutes hours \\ \hline
@@ -67,6 +72,55 @@ codymalick & 2016-04-23 & created sstf file & 1 hour \\ \hline
 \end{center}
 
 \section{Questions}
+\subsection{Assignment Purpose}
+	I believe the purpose of this assignment was to get the students familiarized 
+	with the function and operation of the IO elevator, how it interacts with the
+	scheduler, and how different approaches behave. 
+
+\subsection{Problem Approach}
+	This was a very interesting assignment for me. Not only am I not familiar
+	with the code in the kernel, as this is the first time we've actually worked
+	with it, but it's my first time touching code at this level in the kernel.
+
+	The first thing I did was research how the noop scheduler worked, not just
+	overall, but internally. I then based my code on a working version of the 
+	noop scheduler. Before I did anything, I worked out how to get the renamed
+	noop scheduler working with qemu, and once I had successfuly set the default
+	scheduler for the kernel, I began work on the code.
+
+	Once I had it working, I studied what exactly was needed for the assignment.
+	I really struggled with the second merge, and I didn't end up writing my own.
+	I used the merge that the elevator called when it send a request from the
+	request queue to the dispatch queue. I realize this isn't what the assignment
+	asked for, but it was the best I had.
+
+	After getting the sorting working, I worked on understanding how merge worked.
+	Merging is a great idea, and the trouble was getting the actual merge working.
+	The other issue was that merges occur once in a while. So testing is not
+	consistent. Once I had figured out how to merge, I had to run a lot of IO
+	to get my debugging statement to pop up in the VM.
+
+	I ended up writing this assignment twice, once in the 
+	\texttt{dispatch\_request()} function, and once in the \
+	texttt{add\_request()} function. The reason for this was the conversation
+	that Kevin had with the class that the dispatch function shouldn't be touched.
+
+	\subsection{Testing}
+	Testing this poject was very straightforward. I added \texttt{printk()} inside
+	every function that I modified and called. When I ran the vm with my scheduler
+	set as the default, it was very obvious that my scheduler was being called.
+
+	The other thing I had to confirm was that my requests were being queued properly.
+	I did this by printing out whenever I iterated over the entire request queue.
+	The output is the distance from each request, and it works pretty well.
+
+	\subsection{What did I learn?"
+	I learned quite a bit on this assignment. It was a challenge, and although
+	I didn't completely fulfill the requirements, it was fun to work on.
+
+	I learned how IO schedulers function, how different implementations differ,
+	and how to actually modify, implement, and patch a kernel to use a custom
+	scheduler.
 
 
 \end{document}
