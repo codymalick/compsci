@@ -6,13 +6,12 @@ XDVI	= xdvi -gamma 4
 GH		= gv
 
 EXAMPLES = $(wildcard *.h)
-SRC	:= assignment_1.tex #$(shell egrep -l '^[^%]*\\begin\{document\}' *.tex)
+SRC	:= assignment_2.tex #$(shell egrep -l '^[^%]*\\begin\{document\}' *.tex)
 TRG	= $(SRC:%.tex=%.dvi)
 PSF	= $(SRC:%.tex=%.ps)
 PDF	= $(SRC:%.tex=%.pdf)
 
-all: concur.c
-	g++ -o c -pthread -g concur.c
+all: pdf
 
 pdf: $(PDF)
 

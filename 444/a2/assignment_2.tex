@@ -1,0 +1,529 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{tabu}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C,
+  columns=flexible,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+\begin{document}
+\begin{titlepage}
+  \title{CS 444 - Spring 2016 - Assignment 2}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{April 26, 2016}
+  \maketitle
+  \vspace*{2cm}
+  \begin{abstract}
+      \noindent Concurrency is an important issue when working with shared resources,
+      especially resources being actively used by the kernel.
+      The problem with sharing resources across threads is safely
+      accessing the resources without causing a race condition. This problem is
+      solved by using a mutex in order to lock down the resource until the thread
+      is done with it's task, then releasing it for other threads. By using this
+      process, we can create multithreaded programs that can safely access shared
+      resources. Following are the details on how I approached this problem.
+  \end{abstract}
+
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\section{Concurrency Assignment 1}
+  \subsection{Assignment Purpose}
+    I think this assignment was used a primer for working with the kernel, where
+    multithreading and shared resource management are important. Being able to
+    write programs that don't deadlock or cause race conditions is important
+    when working with a kernel.
+  \subsection{Problem Approach}
+    The over assignment wasn't that difficult to conceptualize. A producer and
+    a consumer were needed, and the synchronization construct could be a simple
+    data structure.
+    \noindent I used a queue structure for my buffer. The main reason was
+    simplicity, first-in first-out made sense in this situation. I thought about
+    using a stack, but that created a problem where the first message may never
+    be reached once burried under new messages.
+    \noindent I used a very simple layout for the buffer: an array of the message
+    struct, and an int to track the current size of the buffer.
+
+    \begin{lstlisting}
+      struct message {
+      	int number;
+      	int wait_period;
+      };
+
+      /*buffer is a basic queue, first in, first out implementation*/
+      struct buffer {
+      	struct message b[32];
+      	int size;
+      };
+    \end{lstlisting}
+
+    \noindent The queue has two mutator functions: push and pop. Push would put
+    a new message on the queue, while pop would take the first message out, and
+    move all following messages forward.
+
+    \noindent To handle the producer function, I spawn my threads using
+    \texttt{pthread\_create()} and handing the threads a producer function and consumer
+    function. Once the threads enter these functions, they enter the infinite
+    loops that are the assigned program. Here are the producer and consumer
+    functions I used:
+
+    \begin{lstlisting}
+      void *producer_function(void *ptr)
+      {
+      	/*cast void pointer to buffer pointer*/
+      	struct buffer *buff = (buffer *)ptr;
+      	struct message item;
+
+      	char prod[ ] = "Producer";
+
+      	while(1) {
+      		/*check if buffer is full*/
+      		if(buff->size < (sizeof(buff->b)/sizeof(struct message))) {
+      			pthread_mutex_lock(&mutex);
+            /*UP, LO, CUP, CLO, PUP, and PLO, are constants declared to avoid magic numbers*/
+      			item.number = rand_gen(UP, LO);
+      			item.wait_period = rand_gen(CUP, CLO);
+
+      			buff_push(buff, item);
+
+      			print_column(prod, item.number, item.wait_period, buff->size);
+      			pthread_mutex_unlock(&mutex);
+
+      			sleep(rand_gen(PUP, PLO));
+      			}
+      		}
+      }
+
+      void *consumer_function(void *ptr)
+      {
+      	/*cast void pointer to buffer pointer*/
+      	struct buffer *buff = (buffer*)ptr;
+      	struct message item;
+
+      	char cons[ ] = "Consumer";
+
+      	int wait_time = 0;
+      	while(1) {
+
+      		if(buff->size > 0) {
+
+      			pthread_mutex_lock(&mutex);
+
+      			item = buff->b[0];
+      			buff_pop(buff);
+
+      			print_column(cons, item.number, item.wait_period, buff->size);
+      			pthread_mutex_unlock(&mutex);
+
+      			sleep(item.wait_period);
+      		}
+      	}
+      }
+    \end{lstlisting}
+
+    \noindent The producer and consumer functions each lock the shared buffer
+    with \texttt{pthread\_mutex\_lock(\&mutex)} and unlock with
+    \texttt{pthread\_mutex\_unlock(\&mutex)} when they're done accessing it.
+    I decided to include the \texttt{printf()} statement within the mutex locks
+    so that I could actively print out the status of the queue's size.
+
+    \noindent To handle the rdrand requirement, I took code from Intel's online
+    guide to rdrand \cite{johnm.2014}. Using that code, I had to do a check in
+    the main function and set a global flag, \texttt{int rdrand}, so that when
+    my random function \texttt{rand\_gen()} is called it knows which generator
+    to use. If rdrand is not supported, it calls Mersenne Twister with the
+    \texttt{genrand\_int32()} function call. Here is my random generator function:
+
+    \begin{lstlisting}
+      int rand_gen(int upr_bound, int lwr_bound)
+      {
+      	if(rdrand) {
+      		/*rdrand required unsigned 32 bit int*/
+      		uint32_t num = 0;
+      		if(rdrand32_step(&num))
+      			return abs((int)num) % upr_bound + lwr_bound;
+      	}
+      	/*abs to solve negative numbers from generator*/
+      	return abs((int)genrand_int32()) % upr_bound + lwr_bound;
+      }
+    \end{lstlisting}
+
+    \noindent Lastly, to show that program is operating properly, my output does
+    the following: lists if it's the producer or consumer, what the randomly
+    generated number is, what the wait time of that message is, and how many items
+    are in the buffer after that production or consumption is complete.
+
+
+    \noindent Example:
+
+    \noindent \texttt{Producer | Number:587 | Wait: 6 | buffer:  1 |} \\
+    \texttt{Consumer | Number:587 | Wait: 6 | buffer:  0 |}
+
+  \subsection{Testing}
+  I did some manual testing to ensure that my pthread implementation was working.
+  The first was to run the program multiple times and see that different printf
+  statements printed at different times, a good indicator that the threads were
+  in fact spawning and running properly.
+
+  \noindent The other manual test I did was to move my mutex locks outside my
+  producer and consumer function infinite loops. When I did that, in the producer's
+  case, the producer would never release the mutex on the buffer, and the consumer
+  would never be able to access the buffer. In the opposite case, the producer
+  would produce zero or one messages, put them in the buffer, and the consumer
+  would then lock the buffer for the rest of the program runtime. This resulted
+  in nothing happening as the producer couldn't put anything in the buffer, and
+  the consumer would never consume.
+
+  \subsection{What did I learn?}
+  I learned quite a bit in this assignment! I learned how to use pthreads (as this
+  was not covered in my OS I class), how to use mutex to control which thread
+  has access to a resource, how to implement some basic inline assembly, and
+  gave myself a basic refresher on the C language and its caveats.
+
+  \noindent I also learned the basics needed to build and implement a linux kernel,
+  how to connect to and debug a Qemu VM, and how to use \LaTeX{}!
+
+\section{Qemu Flags}
+  The command we are told to use is the following:
+
+  \noindent \texttt{qemu-system-i386 -gdb tcp::5500086 -S -nographic -kernel
+      bzImage-qemux86.bin -drive file=core-\\image-lsb-sdk-qemux86.ext3,if=virtio
+      -enable-kvm -net none -usb -localtime --no-reboot --append\\ "root=/dev/vda
+      rw console=ttyS0 debug"}
+
+      \noindent Here's the breakdown of the flags \cite{anthonyl.2010}:
+      \begin{description}
+          \item \texttt{-gdb tcp::xxx}: Wait for gdb connection on device, in
+          this case, tcp port xxx
+          \item \texttt{-S}: Do not start CPU at startup
+          \item \texttt{-nographic}: Disables graphical output, and redirects it
+          to a virtual port
+          \item \texttt{-kernel bzImage-qemux96.bin}: Use specified file as the
+          kernel image
+          \item \texttt{-drive}: Define a new drive
+          \begin{description}
+            \item \texttt{file=} Defines which disk image to use with the drive
+            \item \texttt{if=} Defines which type of interface the drive is connected
+            through. Types are ide, scsi, sd, mtd, floppy, pflash, virtio
+          \end{description}
+          \item \texttt{-enable-kvm} Enable KVM full virtualization support. KVM
+          == Kernel-based Virtual Machine
+          \item \texttt{-net}: Creates a new network interface card and connects
+          it to VLAN n
+          \item \texttt{-usb}: Enables USB driver
+          \item \texttt{-localtime}: Sets current machine time to current local
+          time
+          \item \texttt{--no-reboot}: Exit instead of rebooting
+          \item \texttt{--append} Gives the kernel command line arguments
+          \begin{description}
+            \item \texttt{root=/dev/vda rw} Gives read/write access to the vda
+            (Virtualization-Aware Disk)
+            \item \texttt{console=ttyS0 debug} Directs the kernel to use serial
+            port ttyS0 in debug mode
+          \end{description}
+      \end{description}
+\section{Work Log}
+
+Work log of time spent and on what:
+\begin{description}
+  \item \texttt{qemu}: \date{April 3} - 4 hours
+  \item \texttt{concurrency, pthreads}: \date{April 5} - 2 hours
+  \item \texttt{concurrency}: \date{April 6} - 1 hours
+  \item \texttt{Latex}: \date{April 7} - 2 hours
+  \item \texttt{pthreads termination problem}: \date{April 8} - 2 hours
+  \item \texttt{mutex setup}: \date{April 8} - 1 hour
+  \item \texttt{Linux Kernel Coding Standars, fixed code}: \date{April 8} - 1 hour
+  \item \texttt{Twister setup and debugging}: \date{April 8} - 3 hours
+  \item \texttt{mutex setup}: \date{April 8} - 1 hour
+  \item \texttt{RdRand research and debugging}: \date{April 9} 2 hours
+  \item \texttt{Latex \& Report}: \date{April 10} - 8 hours -- yes really --
+\end{description}
+Total time: 27 hours
+
+\section{Command Log}
+
+Here is my history for the Qemu part of the assignment:
+\lstset{frame=tb,
+  language=bash,
+  columns=flexible,
+  numberstyle=\tiny\color{black},
+  keywordstyle=\color{black},
+  commentstyle=\color{black},
+  stringstyle=\color{black},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+\begin{lstlisting}
+455  git clone git://git.yoctoproject.org/linux-yocto-3.14
+456  ls
+457  cp linux-yocto-3.14/ /scratch/spring2016/cs444-086/
+458  cp -r linux-yocto-3.14/ /scratch/spring2016/cs444-086/
+459  cd /scratch/spring2016/cs444-086
+460  ls
+461  git remote
+462  git origin
+463  git --help
+464  git config remote
+465  git config origin
+466  git config
+467  git config --get-all
+468  git config --local --get-all
+469  git config --global --get-all
+470  git status
+471  git remote -v
+472  git remote rm origin
+473  git remote
+474  git remote -v
+475  git status
+476  git pull
+477  git push
+478  git log
+479  git log --color
+480  source /scratch/opt/environment-setup-i586-poky-linux
+481  cp /scratch/opt/environment-setup-i586-poky-linux .
+482  ls
+483  git add .
+484  git commit -m "Copied env script to local repo"
+485  git log
+486  ls
+487  cp /scratch/spring2016/files/bzImage-qemux86.bin .
+488  cp /scratch/spring2016/files/core-image-lsb-sdk-qemux86.ext3 .
+489  cp /scratch/spring2016/files/config-3.14.26-yocto-qemu .
+490  ls
+491  git add .
+492  git status
+493  git add bzImage-qemux86.bin
+494  cat .gitignore
+495  cat .gitignore | grep .bin
+496  ls
+497  mkdir vmfiles
+498  mv bzImage-qemux86.bin vmfiles/
+499  mv -t vmfiles/ core-image-lsb-sdk-qemux86.ext3
+500  mv config-3.14.26-yocto-qemu vmfiles/
+501  git add .
+502  git status
+503  git commit -m "added vm files"
+504  printenv
+505  cd vmfiles/
+506  git checkout v3.14.26
+507  ls
+508  cd ..
+509  ls
+510  git branch
+511  git checkout master
+512  cat README
+513  ls
+514  rm .
+515  rm ./*
+516  rm -rf ./*
+517  ls
+518  cp ~/git/linux-yocto-3.14/ .
+519  cp ~/git/linux-yocto-3.14/ . -r
+520  ls
+521  mv linux-yocto-3.14/* .
+522  ls
+523  rm linux-yocto-3.14/
+524  cd linux-yocto-3.14/
+525  ls
+526  cd ..
+527  rm -r linux-yocto-3.14/
+528  cd linux-yocto-3.14/
+529  ls -a
+530  mv .git ../
+531  mv .git ../ -rf
+532  mv .git ../
+533  cd ..
+534  ls
+535  rm -rf ./*
+536  ls -a
+537  rm .git -rf
+538  rm .gitignore -rf
+539  rm .mailmap -rf
+540  ls
+541  ls -a
+542  cp ~/git/linux-yocto-3.14/* .
+543  cp ~/git/linux-yocto-3.14/* . -r
+544  ls -la
+545  cd .git
+546  ls ~/git/linux-yocto-3.14/
+547  ls ~/git/linux-yocto-3.14/ -la
+548  ls -la
+549  cp ~/git/linux-yocto-3.14/.git . -r
+550  cp ~/git/linux-yocto-3.14/.gitignore . -r
+551  ls
+552  git status
+553  cp ~/git/linux-yocto-3.14/.mailmap .
+554  git status
+555  git checkout v3.14.26
+556  git checkout master
+557  git branch
+558  cp /scratch/spring2016/files/* ./vmfiles/
+559  mkdir vmfiles
+560  cp /scratch/spring2016/files/* ./vmfiles/
+561  ls vmfiles/
+562  git branch -a
+563  git ls-remote
+564  git reset --hard
+565  git status
+566  git checkout tags/v3.14.26
+567  git checkout master
+568  git checkout refs/tags/v3.14.26
+569  git checkout master
+570  git tag -l
+571  git checkout -b v3.14.26 v3.14.26
+572  git status
+573  git describe --tags
+574  ls vmfiles/
+575  gitgit remote -l
+576  git remote -v
+577  git remote rm origin
+578  git remote -v
+579  git status
+580  git add . -f
+581  git status
+582  git add --help
+583  git add vmfiles/ -f
+584  git checkout -b assignment0
+585  git branch
+586  git checkout master
+587  git branch -D assignment0
+588  git checkout v3.14.26
+589  git checkout -b a0 v3.14.26
+590  git checkout a0
+591  git branch
+592  git branch a0 v3.14.26
+593  git status
+594  git commit -m "Added vm files"
+595  git status
+596  git branch a0 v3.14.26
+597  git checkout master
+598  ls -a
+599  git branch -D v3.14.26
+600  git branch
+601  git branch a0 v3.14.26
+602  git branch
+603  git checkout a0
+604  git status
+605  git log
+606  mkdir vmfiles
+607  cp /scratch/spring2016/files/* vmfiles/
+608  cp /scratch/opt/environment-setup-i586-poky-linux vmfiles/
+609  git add vmfiles/ -f
+610  git log
+611  git status
+612  git commit -m "added vm files"
+613  git remote -v
+614  git log
+615  ls
+616  cd vmfiles/
+617  ls
+618  source environment-setup-i586-poky-linux
+619  qemu-system-i386 -gdb tcp::5586 -S -nographic -kernel bzImage-qemux86.bin -drive file=core-image-lsb-sdk-qemux86.ext3,if=virtio -enable-kvm -net none -usb -localtime --no-reboot --append "root=/dev/vda rw console=ttyS0 debug"
+620  qemu-system-i386 -gdb tcp::5500086 -S -nographic -kernel bzImage-qemux86.bin -drive file=core-image-lsb-sdk-qemux86.ext3,if=virtio -enable-kvm -net none -usb -localtime --no-reboot --append "root=/dev/vda rw console=ttyS0 debug"
+621  top
+622  qemu-system-i386 -gdb tcp::5500086 -S -nographic -kernel ../arch/x86/boot/bzImage -drive file=core-image-lsb-sdk-qemux86.ext3,if=virtio -enable-kvm -net none -usb -localtime --no-reboot --append "root=/dev/vda rw console=ttyS0 debug"
+623  history
+624  vim ~/.bashrc
+625  source ~/.bashrc
+626  cat ~/.bashrc
+627  startq
+628  cd
+629  ls
+630  cd cs
+631  ls
+632  mkdir 444
+633  cd 444/
+634  history > commands.log
+\end{lstlisting}
+
+
+\section{Version Control Log}
+Created with gitlog2latex
+\begin{center}
+\begin{longtabu} to \textwidth {|
+    X[4,l]|
+    X[3,c]|
+    X[8,l]|}
+    \hline
+    \textbf{Author} & \textbf{Date} & \textbf{Message} \\ \hline
+codymalick & 2016-04-05 & threads working \\ \hline
+codymalick & 2016-04-06 & removed duplicate directories \\ \hline
+codymalick & 2016-04-06 & added data structure \\ \hline
+codymalick & 2016-04-07 & latex hello world \\ \hline
+codymalick & 2016-04-07 & working make file and example.tex \\ \hline
+Cody Malick & 2016-04-07 & Merge pull request \#6 from codymalick/latex \\ \hline
+codymalick & 2016-04-08 & Working weekly template \\ \hline
+codymalick & 2016-04-08 & working on debug \\ \hline
+codymalick & 2016-04-08 & resolved barrier issue \\ \hline
+codymalick & 2016-04-08 & mutex lock working, consumer and producer working \\ \hline
+codymalick & 2016-04-08 & fixed some styling \\ \hline
+codymalick & 2016-04-08 & random function with twister working \\ \hline
+codymalick & 2016-04-08 & prep for rdrand \\ \hline
+codymalick & 2016-04-08 & summary 1 done \\ \hline
+Cody Malick & 2016-04-08 & Merge pull request \#7 from codymalick/summary\_1 \\ \hline
+codymalick & 2016-04-08 & fixed typo \\ \hline
+codymalick & 2016-04-08 & fixed stuff \\ \hline
+codymalick & 2016-04-09 & added new directory for summary 2 \\ \hline
+codymalick & 2016-04-09 & completed summary 2 \\ \hline
+codymalick & 2016-04-09 & fixed summary 1 \\ \hline
+codymalick & 2016-04-09 & typos fixed \\ \hline
+Cody Malick & 2016-04-09 & Merge pull request \#8 from codymalick/summary\_2 \\ \hline
+codymalick & 2016-04-09 & fixed spaces -\textgreater{} tabs, debug message added \\ \hline
+codymalick & 2016-04-09 & Twister and rdrand working \\ \hline
+codymalick & 2016-04-09 & rdrand correction, confirmed working on surfacebook \\ \hline
+codymalick & 2016-04-09 & removed binary \\ \hline
+codymalick & 2016-04-09 & removed binary \\ \hline
+codymalick & 2016-04-09 & removed duplicate file \\ \hline
+codymalick & 2016-04-09 & removed rdseed as it isn't supported on OS class \\ \hline
+codymalick & 2016-04-10 & removed external readme \\ \hline
+codymalick & 2016-04-10 & fixed output formatting, cleaned code, updated makefile \\ \hline
+codymalick & 2016-04-10 & combined makefile working \\ \hline
+codymalick & 2016-04-10 & layout done, toc working \\ \hline
+codymalick & 2016-04-10 & IEEtran working, added reference \\ \hline
+codymalick & 2016-04-10 & Added reference to bibtex, updated .tex, added listings.dtx \\ \hline
+codymalick & 2016-04-10 & qemu flag descriptions done \\ \hline
+codymalick & 2016-04-10 & done with report \\ \hline
+Cody Malick & 2016-04-10 & Merge pull request \#10 from codymalick/con1\_writeup \\ \hline
+
+\end{longtabu}
+\end{center}
+
+os-class linux repo, only one commit on this repo:
+
+\begin{center}
+\begin{longtabu} to \textwidth {|
+    X[4,l]|
+    X[3,c]|
+    X[8,l]|}
+    \hline
+    \textbf{Author} & \textbf{Date} & \textbf{Message} \\ \hline
+codymalick & 2016-04-03 & added vm files \\ \hline
+\end{longtabu}
+\end{center}
+
+
+\clearpage
+\section{Bibliography}
+
+\bibliographystyle{IEEEtran}
+\bibliography{assignment_2}
+
+\end{document}
