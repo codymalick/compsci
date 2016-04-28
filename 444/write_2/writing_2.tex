@@ -1,0 +1,63 @@
+\documentclass[10pt,letterpaper,onecolumn,draftclsnofoot]{IEEEtran}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{tabu}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C,
+  columns=flexible,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+\begin{document}
+\begin{titlepage}
+  \title{CS 444 - Spring 2016 - Writing Assignment 1}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{April 21, 2016}
+  \maketitle
+  \vspace*{4cm}
+  \begin{abstract}
+      \noindent Understanding how an operating system handles input and output
+      to devices and how I/O is scheduled are important topics for an aspiring
+      kernel developer. In this report, we will cover how Linux, Windows, and
+      FreeBSD handle these important tasks in their respective kernels, 
+      and contrast them.
+  \end{abstract}
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+\section{Introduction}
+ % Actually write an introduction, including why the reader should carev
+
+\section{Linux}
+  \subsection{Processes}
+  \subsection{Threads}
+\section{Windows}
+ \subsection{Processes}
+ \subsection{Threads}
+ \subsection{CPU Scheduling}
+section{FreeBSD}
+ \subsection{Processes}
+ \subsection{Threads}
+ \subsection{CPU Scheduling}
+clearpage
+\section{Appendix A}
+section{Bibliography}
+
+\bibliographystyle{IEEEtran}
+\bibliography{writing_2}
+
+\end{document}
