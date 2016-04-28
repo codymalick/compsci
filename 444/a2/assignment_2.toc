@@ -1,8 +1,8 @@
-\contentsline {section}{\numberline {1}Assignment 2}{2}
-\contentsline {subsection}{\numberline {1.1}Design}{2}
-\contentsline {section}{\numberline {2}Version Control and Work Log}{2}
-\contentsline {section}{\numberline {3}Questions}{2}
-\contentsline {subsection}{\numberline {3.1}Assignment Purpose}{2}
-\contentsline {subsection}{\numberline {3.2}Problem Approach}{2}
-\contentsline {subsection}{\numberline {3.3}Testing}{3}
-\contentsline {subsection}{\numberline {3.4}What did I learn?}{3}
+\contentsline {section}{\numberline {I}Assignment 2}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {I-A}}Design}{2}
+\contentsline {section}{\numberline {II}Version Control and Work Log}{2}
+\contentsline {section}{\numberline {III}Questions}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Assignment Purpose}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Problem Approach}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-C}}Testing}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-D}}What did I learn?}{3}

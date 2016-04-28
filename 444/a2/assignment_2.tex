@@ -1,4 +1,4 @@
-\documentclass[10pt,letterpaper]{article}
+\documentclass[10pt,letterpaper,onecolumn,draftclsnofoot]{IEEEtran}
 \usepackage[margin=0.75in]{geometry}
 \usepackage{listings}
 \usepackage{color}
@@ -29,7 +29,9 @@
   \maketitle
   \vspace*{2cm}
   \begin{abstract}
-      \noindent   \end{abstract}
+      \noindent The report details implementation details for the second assignment.
+      It contains a brief description of how I planned to implement the assignment,
+      the work log, and my response to the questions asked on the assignment. \end{abstract}
 
 \end{titlepage}
 
@@ -39,7 +41,7 @@
 \section{Assignment 2}
   \subsection{Design}
 I plan to do the following to implement this I/O scheduler:
-\begin{description}
+\begin{itemize}
 	\item Implmement an insertion sort on the request queue, sort is
 		accomplished by finding the shortest distance to any request in
 		the queue
@@ -47,7 +49,7 @@ I plan to do the following to implement this I/O scheduler:
 		queue by selecting next closest seek distance
 	\item Merge adjacent requests
 
-\end{description}
+\end{itemize}
 \section{Version Control and Work Log}
 Created with gitlog2latex
 \begin{center}
@@ -73,9 +75,9 @@ codymalick & 2016-04-23 & created sstf file & 1 hour \\ \hline
 
 \section{Questions}
 	\subsection{Assignment Purpose}
-	I believe the purpose of this assignment was to get the students familiarized 
+	I believe the purpose of this assignment was to get the students familiarized
 	with the function and operation of the IO elevator, how it interacts with the
-	scheduler, and how different approaches behave. 
+	scheduler, and how different approaches behave.
 
 	\subsection{Problem Approach}
 	This was a very interesting assignment for me. Not only am I not familiar
@@ -83,16 +85,14 @@ codymalick & 2016-04-23 & created sstf file & 1 hour \\ \hline
 	with it, but it's my first time touching code at this level in the kernel.
 
 	The first thing I did was research how the noop scheduler worked, not just
-	overall, but internally. I then based my code on a working version of the 
+	overall, but internally. I then based my code on a working version of the
 	noop scheduler. Before I did anything, I worked out how to get the renamed
 	noop scheduler working with qemu, and once I had successfuly set the default
 	scheduler for the kernel, I began work on the code.
 
 	Once I had it working, I studied what exactly was needed for the assignment.
-	I really struggled with the second merge, and I didn't end up writing my own.
-	I used the merge that the elevator called when it send a request from the
-	request queue to the dispatch queue. I realize this isn't what the assignment
-	asked for, but it was the best I had.
+	I really struggled with the second merge. After drawing on a board for several
+  hours I finally understood what was needed, and implemented it.
 
 	After getting the sorting working, I worked on understanding how merge worked.
 	Merging is a great idea, and the trouble was getting the actual merge working.
@@ -100,7 +100,7 @@ codymalick & 2016-04-23 & created sstf file & 1 hour \\ \hline
 	consistent. Once I had figured out how to merge, I had to run a lot of IO
 	to get my debugging statement to pop up in the VM.
 
-	I ended up writing this assignment twice, once in the 
+	I ended up writing this assignment twice, once in the
 	\texttt{dispatch\_request()} function, and once in the \
 	texttt{add\_request()} function. The reason for this was the conversation
 	that Kevin had with the class that the dispatch function shouldn't be touched.
@@ -112,15 +112,12 @@ codymalick & 2016-04-23 & created sstf file & 1 hour \\ \hline
 
 	The other thing I had to confirm was that my requests were being queued properly.
 	I did this by printing out whenever I iterated over the entire request queue.
-	The output is the distance from each request, and it works pretty well.
 
 	\subsection{What did I learn?}
-	I learned quite a bit on this assignment. It was a challenge, and although
-	I didn't completely fulfill the requirements, it was fun to work on.
+	I learned quite a bit on this assignment. It was a challenge!
 
 	I learned how IO schedulers function, how different implementations differ,
 	and how to actually modify, implement, and patch a kernel to use a custom
 	scheduler.
-
 
 \end{document}
