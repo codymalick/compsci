@@ -30,9 +30,9 @@
   \vspace*{4cm}
   \begin{abstract}
       \noindent Understanding how an operating system handles input and output
-      to devices and how I/O is scheduled are important topics for an aspiring
+      to devices and how they are scheduled are important topics for an aspiring
       kernel developer. In this report, we will cover how Linux, Windows, and
-      FreeBSD handle these important tasks in their respective kernels, 
+      FreeBSD handle these important tasks in their respective kernels,
       and contrast them.
   \end{abstract}
 \end{titlepage}
@@ -40,23 +40,150 @@
 \tableofcontents
 \clearpage
 \section{Introduction}
- % Actually write an introduction, including why the reader should carev
-
+ % Actually write an introduction, including why the reader should care
+Every computer, whether it's a mobile phone or a digital watch, needs to be able
+to read and write to storage. For general desktop computers, they have to be able
+to communicate with a vast variety of devices from hard drives to MicroSD cards.
+In this paper, we will discuss how Linux, Windows, and FreeBSD handle input and
+output, how they make it efficient, and contrast them to each other.
 \section{Linux}
-  \subsection{Processes}
-  \subsection{Threads}
-\section{Windows}
- \subsection{Processes}
- \subsection{Threads}
- \subsection{CPU Scheduling}
-section{FreeBSD}
- \subsection{Processes}
- \subsection{Threads}
- \subsection{CPU Scheduling}
-clearpage
-\section{Appendix A}
-section{Bibliography}
+  \subsection{Virtual Filesystem}
+  At the top layer of our input-output system, we have the virtual filesystem,
+  otherwise known as the VFS. The virtual filesystem allows user-space programs
+  to use standard unix systems calls such \texttt{read()} and \texttt{write()}
+  regardless of storage medium. This is setup is only possible because Linux
+  adds a layer of abstraction around the low-level filesystem. Although we take
+  such functionality for granted, it is a very important system to have.
+  \cite{robertlove2010}
 
+  The VFS provides an abstraction of the filesystem, or multiple filesystems
+  through a few specific interfaces. Specifically, the VFS provides the
+  following abstractions:
+  \begin{description}
+    \item Files: an ordered string of bytes.
+    \item Dentries: Files that contain directory information. For example,
+    '\textbackslash this\textbackslash is\textbackslash a\textbackslash path'
+    has four dentries on the path to that directory. This is how the VFS contains
+    directories as files.
+    \item Inodes: Otherwise known as an 'index node,' these files contain metadata
+    about other files such as permissions, size, owner, etc.
+    \item Superblock: A file containing all the relevant information about a filesystem
+    as a whole. This is a metadata file for an entire FS.
+  \end{description}
+
+  Each of these interfaces have sizable data structures, along with a corresponding
+  operations struct that complements them, containing function pointers to give the
+  VFS the great functionality it has.\cite{robertlove2010}
+
+  These interfaces are critical to how we use Linux every day. Without them, we
+  would have to make manual calls to the different filesystems that managed different
+  devices, in the protocols they require. Sounds like a mess!
+
+  \subsection{Block IO Layer}
+  The Block IO layer is where the dirty work actually gets done. This layer
+  manages how data is actual written to and retreived from the storage device.
+  Any device that contains storage is considerd a block device to the kernel.
+  Usually, these block devices contain segments called \textit{sectors}, which
+  are the smallest size that data can be stored in. The standard size is usually
+  512 bytes, but it's possible for these sizes to vary.
+
+  After a sector, we have the \textit{block}. The block is the smallest addressable
+  unit by the kernel. This is an abstraction imposed by the filesystem. The block
+  can be the same size as a single sector, but not smaller, and a block must also
+  contain a multiple of the sector size. If the sector size is 512 bytes, then the
+  block cannot be 800 bytes, it must be 1024, or 2048 bytes. It cannot contain
+  anything but whole sectors.
+
+  The actual reading and writing is handled by buffers and buffer heads. These
+  buffers contain blocks that they are mapped to while they are pending to read
+  or write from any given block. Buffer heads are the kernels way of having a
+  descriptor pointing at these buffers. A buffer head contains all the information
+  needed for the kernel to control and manipulate these buffers. \cite{robertlove2010}
+
+  \begin{lstlisting}
+    struct buffer_head {
+          unsigned long b_state; /* buffer state flags */
+          struct buffer_head *b_this_page; /* list of page’s buffers */
+          struct page *b_page; /* associated page */
+          sector_t b_blocknr; /* starting block number */
+          size_t b_size; /* size of mapping */
+          char *b_data; /* pointer to data within the page */
+          struct block_device *b_bdev; /* associated block device */
+          bh_end_io_t *b_end_io; /* I/O completion */
+          void *b_private; /* reserved for b_end_io */
+          struct list_head b_assoc_buffers; /* associated mappings */
+          struct address_space *b_assoc_map; /* associated address space */
+          atomic_t b_count; /* use count */
+    };
+\end{lstlisting}
+  As you can see from the above code, the \texttt{buffer\_head} struct contains
+  all the information the kernel needs. It has \texttt{b\_state} to track the
+  state of the buffer, \texttt{buffer\_head} to track the page's buffers,  a pointer
+  the the page associated with this buffer, and more. With this struct, the kernel
+  can have direct control over what information is handled in the Block IO layer.
+
+  \subsection{Scheduling}
+  Along with actually getting IO done, the kernel must decide what order these
+  operations need to be done in. The kernel also needs to reduce the total
+  number of requests by efficiently merging requests that can be merged. This is
+  handled by the IO scheduler. There are many different approaches to different
+  schedulers. It is a very fascinating area for that reason.
+
+  For example the noop (no operations) scheduler is the most basic one out there.
+  All it does is maintain a request queue that is a first-in first-out data structure. It's
+  only other responsibility is merging requests that are adjacent to other requests.
+  This scheduler is the default scheduler for solid state drives and any sort of
+  flash memory. The reason for this being that solid state devices have no moving
+  parts, no head constantly seeking for different sectors. All read and write locations
+  are self-sorting, and instant to read and write from. This scheduler performs
+  absolutely poorly, however, when confronted with a spinning drive.
+
+  A spinning drive requires a scheduler to group requests by location. This is
+  needed because if we simply serviced requests in a FIFO manner, then the head
+  would spend enormous amounts of time seeking for sectors, and slow down the OS
+  tremendously. For this reason, the default scheduler for disk devices on Linux
+  is the CFQ scheduler.
+
+  The Completely Fair Queuing IO Scheduler has the following functionality: it
+  maintains a seperate qeuue for each process, it services these requests in a round
+  robin fashion, and performs merging of adjacent requests. This works very well
+  for a number of reasons. The first of which, is each process gets the IO it needs
+  done in a fairly prompt manner, but also prevents any one process from being
+  starved out of IO by another read or write heavy operation. Another is that
+  if the system is a multiple user sytem, which almost every computer is these
+  days, then each user will get their IO serviced in a prompt manner.
+
+  This is a basic overview of how Linux handles IO. Next, we'll examine how Windows
+  and FreeBSD handle these same tasks, and compare them to how Linux operates.
+
+\section{Windows}
+ \subsection{Virtual File System}
+ \subsection{Block IO Layer}
+ \subsection{Scheduling}
+\section{FreeBSD}
+ \subsection{Virtual File System}
+ \subsection{Block IO Layer}
+ \subsection{Scheduler}
+clearpage
+\section{Appendix A - Linux Structs}
+All following structs have been pulled from the classroom text. \cite{robertlove2010}
+\begin{lstlisting}
+
+
+\end{lstlisting}
+
+\section{Appendix B - Windows Structs}
+\begin{lstlisting}
+
+
+\end{lstlisting}
+\section{Appendix C - FreeBSD Structs}
+\begin{lstlisting}
+
+
+\end{lstlisting}
+
+section{Bibliography}
 \bibliographystyle{IEEEtran}
 \bibliography{writing_2}
 
