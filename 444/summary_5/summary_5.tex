@@ -1,0 +1,27 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.75in]{geometry}
+
+\begin{document}
+
+  \title{Weekly Summary 5}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{April 30, 2016}
+  \maketitle
+
+    In Robert Love's eighth and twelfth chapters, \textit{Bottom Halves and Deffering Work}
+    and \textit{Memory Management} (\date{2010}), Love explains
+    that the kernel uses different functions and structures to manage memory,
+    how they differ, and how deffering work in the second 'half' of an interrupt works.
+    Love does this by explaining the basic structure of memory management in the
+    kernel through pages and zones, what functions to use when allocating and freeing
+    memory, and how softirqs and tasklets are used to pass additional data to the
+    CPU. Love's purpose for explaining these is to help the reader understand how
+    basic IO is handled between hardware and the cpu, and to educate the user on
+    the basics of memory handling in the kernel using \texttt{kmalloc()} and
+    \texttt{kfree()}. The in-depth explanations of the interrupt structure,
+    memory pages and zones, and functions used, imply that Love is writing for
+    aspiring kernel developers.
+
+\end{document}
