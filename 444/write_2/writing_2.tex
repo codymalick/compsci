@@ -151,7 +151,33 @@ output, how they make it efficient, and contrast them to each other.
   done in a fairly prompt manner, but also prevents any one process from being
   starved out of IO by another read or write heavy operation. Another is that
   if the system is a multiple user sytem, which almost every computer is these
-  days, then each user will get their IO serviced in a prompt manner.
+  days, then each user will get their IO serviced in a prompt manner. \cite{robertlove2010}
+
+  \subsection{Interrupts}
+  Interrupts are how a peice of hardware communicates with the cpu, letting it
+  know that it has some data ready for it. An interrupt must have an interrupt
+  handler associated with it in order to have the communication handled properly.
+  These interrupt handlers are contained in a devices driver. This is pretty
+  universal across operating systems. What we are going to look at specifically
+  is the structure of interrupts that Linux handles. \cite{robertlove2010}
+
+  \subsubsection{Interrupt Structure}
+  Interrupts are split into two parts in Linux: top halves, and bottom halves.
+  These names are quite misleading as top halves and bottom halves are not halves
+  at all. The top half is usually closer to a fifth or even an eighth. The reason
+  for this is that interrupt handlers have to be very fast! Interrupts, as they
+  are aptly named, stop everything the cpu is doing in order to communicate with
+  hardware. When this interrupt is called, all the code in the top half of the
+  interrupt has to be handled extremely quickly. Because of this, only time sensitive
+  information can be stored in the top half, and all information in the top half
+  is handled by the interrupt handler.
+
+  The bottom half, on the other hand, can contain any extra information needed
+  to process the request from the hardware. Because this information is not deemed
+  time critical, it is queued up with the other requests that the CPU needs to handle
+  and is put off until its time to be processed has come. \cite{robertlove2010}
+
+
 
   This is a basic overview of how Linux handles IO. Next, we'll examine how Windows
   and FreeBSD handle these same tasks, and compare them to how Linux operates.
@@ -161,7 +187,28 @@ output, how they make it efficient, and contrast them to each other.
  \subsection{Block IO Layer}
  \subsection{Scheduling}
 \section{FreeBSD}
+  FreeBSD is very similar to Linux in how it handles many of these processes. As
+  both borrowed ideas from a purely unix operating system, we will see that things
+  such as the VFS handle things similiarly.
+
  \subsection{Virtual File System}
+ The VFS in FreeBSD has a few structs that are similiar to the Linux VFS structs.
+ Something interesting about the FreeBSD VFS versus the Linux VFS is that FreeBSD
+ makes explicit statements about how a file's existence is defined. For example,
+ a file in FreeBSD exists until no references or descriptors are open in the OS.
+ Linux may have similiar functions, but the rules for these are not explicitly
+ defined. Here are the basic objects that make up the FreeBSD file system:
+ \cite{freebsd2016}
+ \begin{description}
+   \item Files: ``A linear array of bytes with at least one name. A file exists
+   until all its names are deleted explicitly and no process holds a descriptor
+   for it. A process acquires a descriptor for a file by opening that file's name
+   with the \texttt{open} system call. IO devices are accessed as files.''
+   \item Pipes: ``''
+   \item Socket: ``''
+ \end{description}
+
+
  \subsection{Block IO Layer}
  \subsection{Scheduler}
 clearpage
