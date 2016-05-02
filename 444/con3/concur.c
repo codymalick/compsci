@@ -11,11 +11,13 @@ pthread_mutex_t delete_mutex;
 
 struct node {
 	int data;
+	pthread_mutex_t node_mutex;
 	struct node *next;
 };
 
 struct list {
 	struct node *head;
+	pthread_mutex_t list_mutex;
 	int size;
 };
 
@@ -25,6 +27,7 @@ void* del(void *ptr);
 
 void print_status();
 struct node* create_node();
+void delete_node(int index);
 
 int main(int argc, char *argv[])
 {
@@ -56,16 +59,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	for(int i = 0; i < 2; i++) {
-		err_check = pthread_create(delete_threads[i], NULL, del,
-						 (void*)l_list);
 
-		if(err_check) {
-			fprintf(stderr, "Error, a thread failed to create -"
-								"exit: %i\n", err_check);
-			exit(err_check);
-		}
-	}
 	for(int i = 0; i < 2; i++) {
 		err_check = pthread_create(read_threads[i], NULL, read,
 			       (void*)l_list);
@@ -73,6 +67,16 @@ int main(int argc, char *argv[])
 		if(err_check) {
 			fprintf(stderr, "Error, a thread failed to create -"
 				       	"exit: %i\n", err_check);
+			exit(err_check);
+		}
+	}
+	for(int i = 0; i < 2; i++) {
+		err_check = pthread_create(delete_threads[i], NULL, del,
+						 (void*)l_list);
+
+		if(err_check) {
+			fprintf(stderr, "Error, a thread failed to create -"
+								"exit: %i\n", err_check);
 			exit(err_check);
 		}
 	}
@@ -96,32 +100,73 @@ struct node* create_node() {
 	return node;
 }
 
+void delete_node(int index, struct list *l_list) {
+	struct node *rem_node;
+	rem_node = l_list->head;
+
+	if(index == 0) {
+		//Move the list head forward
+		l_list->head = rem_node->next;
+	} else {
+		int i = 1;
+		struct node *prev_node;
+		while(i != index) {
+			prev_node = rem_node;
+			rem_node = rem_node->next;
+			i++;
+		}
+		//fix the list
+		if(rem_node->next == NULL) {
+			prev_node->next = NULL;
+		} else {
+			prev_node->next = rem_node->next;
+		}
+
+	}
+	//free the node
+	free(rem_node);
+}
+
 void* read(void *ptr) {
 	struct list *l_list = (struct list*)ptr;
 	printf("read thread!\n");
 	while(1) {
+		if(l_list->size != 0) {
+			struct node *cur_node = l_list->head;
+			while(cur_node->next != NULL) {
+				pthread_mutex_lock(&read_mutex);
+				printf("->%i", cur_node->data);
+				cur_node = cur_node->next;
+				pthread_mutex_unlock(&read_mutex);
+			}
+			printf(" \n");
 
+			sleep(3);
+		}
 	}
 }
 void* write(void *ptr) {
 	struct list *l_list = (struct list*)ptr;
 	printf("write thread!\n");
 	while(1) {
-		pthread_mutex_lock(&write_mutex);
+
+		printf("Write Start\n");
 		struct node *new_node = create_node();
 		if(l_list->size == 0) {
 			l_list->head = new_node;
 		} else {
 			struct node *cur_node = l_list->head;
 			while(cur_node->next != NULL) {
+				pthread_mutex_lock(&write_mutex);
 				cur_node = cur_node->next;
+				pthread_mutex_unlock(&write_mutex);
 			}
 			cur_node->next = new_node;
 			printf("Added a node with value %i\n", cur_node->data);
 		}
 		l_list->size++;
-		pthread_mutex_unlock(&write_mutex);
 
+		sleep(2);
 	}
 }
 
@@ -129,6 +174,14 @@ void* del(void *ptr) {
 	struct list *l_list = (struct list*)ptr;
 	printf("delete thread!\n");
 	while(1) {
-
+		if(l_list->size != 0) {
+			pthread_mutex_lock(&l_list->list_mutex);
+			int del_index = rand() % l_list->size;
+			printf("deleting node %i\n", del_index);
+			delete_node(del_index, l_list);
+			l_list->size--;
+			pthread_mutex_unlock(&l_list->list_mutex);
+		}
+		sleep(5);
 	}
 }
