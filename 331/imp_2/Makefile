@@ -1,5 +1,5 @@
 CXX = clang++
-CXXFLAGS = -std=c++0x
+CXXFLAGS = -std=c++0x -g
 SRCS = Board.cpp OthelloBoard.cpp Player.cpp HumanPlayer.cpp GameDriver.cpp MinimaxPlayer.cpp
 HEADERS = Board.h OthelloBoard.h Player.h HumanPlayer.h GameDriver.h MinimaxPlayer.h 
 OBJS = Board.o OthelloBoard.o Player.o HumanPlayer.o GameDriver.o MinimaxPlayer.o 
