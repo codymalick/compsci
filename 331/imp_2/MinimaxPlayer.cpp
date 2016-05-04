@@ -37,8 +37,6 @@ MinimaxPlayer::~MinimaxPlayer() {
 
 }
 
-
-
 void print_vec(tuple<int,int> moves) {
 	printf("(%i,%i)\n", std::get<0>(moves), std::get<1>(moves));
 }
@@ -54,9 +52,6 @@ p_moves find_possible_moves(OthelloBoard* b, char symbol) {
 			}
 		}
 	}
-	//std::cout << "wohoo" << std::endl;
-	//debug
-	//std::for_each(moves.begin(), moves.end(), print_vec);
 	return moves;
 }
 
@@ -220,10 +215,6 @@ void MinimaxPlayer::get_move(OthelloBoard* b, int& col, int& row) {
 		  tree->pop();
 		}
 
-		// for(int i = 0; i < leaf_nodes.size(); i++) {
-		// 		for_each(leaf_nodes[i]->moves.begin(), leaf_nodes[i]->moves.end(), print_vec);
-		// }
-
 		node *best_node = new node;
 		best_node = minimax_func(leaf_nodes, root);
 
@@ -237,16 +228,6 @@ void MinimaxPlayer::get_move(OthelloBoard* b, int& col, int& row) {
 			}
 		}
 
-		// for(int i = 0; i < leaf_nodes.size(); i++) {
-		// 	if(leaf_nodes[i]->score >= best_node->score) {
-		// 		best_node = leaf_nodes[i];
-		// 	}
-		// }
-
-		// while(best_node->parent != root && best_node->parent != NULL) {
-		// 	best_node = best_node->parent;
-		// }
-
 		// Set the move as the origin, the move that created the node.
 		tuple<int,int> selection = best_node->origin;
 		printf("(%i,%i)\n", get<0>(selection), get<1>(selection));
@@ -254,7 +235,6 @@ void MinimaxPlayer::get_move(OthelloBoard* b, int& col, int& row) {
 		// Set the move value, no return
 		col = get<0>(selection);
 		row = get<1>(selection);
-		//free(moves);
 }
 
 MinimaxPlayer* MinimaxPlayer::clone() {
