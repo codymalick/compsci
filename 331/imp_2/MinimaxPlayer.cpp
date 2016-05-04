@@ -91,39 +91,43 @@ void generate_successors(tree_queue *tree, node *next, char symbol) {
 		}
 }
 
-vector<node*>* evaluate_scores(vector<node*> start_set) {
-	vector<node*> *next_set;
-	node *eval = new node;
+vector<struct node*> evaluate_scores(vector<node*> start_set) {
+	vector<struct node*> *next_set = new vector<struct node*>;
+	struct node *eval = new node;
 
 	for(int i = 0; i < start_set.size(); i++) {
 		eval = start_set[i]->parent;
-		// check behavior of player
-		if(eval->minmax) {
-			// Grab the best outcome for the max player
-			for(int j = 0; j < eval->children.size(); j++) {
-				if(eval->children[j]->score > eval->score) {
-					eval->score = eval->children[j]->score;
+		if(eval) {
+			// check behavior of player
+			if(eval->minmax) {
+				// Grab the best outcome for the max player
+				for(int j = 0; j < eval->children.size(); j++) {
+					if(eval->children[j]->score > eval->score) {
+						eval->score = eval->children[j]->score;
+					}
+				}
+			} else {
+				// Grab the best outcome for the min player
+				for(int j = 0; j < eval->children.size(); j++) {
+					if(eval->children[j]->score < eval->score) {
+						eval->score = eval->children[j]->score;
+					}
 				}
 			}
-		} else {
-			// Grab the best outcome for the min player
-			for(int j = 0; j < eval->children.size(); j++) {
-				if(eval->children[j]->score < eval->score) {
-					eval->score = eval->children[j]->score;
-				}
-			}
+			// add this node to the next set to be evaluated
+			next_set->push_back(eval);
 		}
-		// add this node to the next set to be evaluated
-		next_set->push_back(eval);
 	}
-	return next_set;
+
+	return *next_set;
 }
 
-node* minimax_func(vector<struct node*> leaf_nodes, node root) {
+struct node* minimax_func(vector<struct node*> leaf_nodes, struct node* root) {
 		// For each node in the leaf_nodes vector
-		vector<node*> next_set0 = leaf_nodes;
-		vector<node*> next_set1;
-		vector<node*> root_children;
+		vector<struct node*> next_set0 = leaf_nodes;
+		vector<struct node*> next_set1;
+		vector<struct node*> root_children;
+
 
 		while(true) {
 				// For each round of parents, set scores from children
@@ -131,7 +135,7 @@ node* minimax_func(vector<struct node*> leaf_nodes, node root) {
 				for(int i = 0; i < next_set1.size(); i++) {
 					if(next_set1[i]->parent == root) {
 						root_children.push_back(next_set1[i]);
-						next_set1.erase(i);
+						next_set1.erase(next_set1.begin(), next_set1.begin()+i);
 					}
 				}
 				// If we only have root nodes left, break
@@ -143,15 +147,15 @@ node* minimax_func(vector<struct node*> leaf_nodes, node root) {
 				next_set0 = next_set1;
 
 				// Set next_set1 to empty
-				for(int i = 0; i < next_set1.size(); i++) {
-					next_set1.erase(i);
-				}
+				next_set1.erase(next_set1.begin(), next_set1.begin()+next_set1.size());
+
 		}
 
 		node* return_node = new node;
 		return_node->score = -500;
 
 		for(int i = 0; i < root_children.size(); i++) {
+			//printf("(%i,%i)\n", get<0>(root_children[i]->origin), get<1>(root_children[i]->origin));
 			if(root_children[i]->score > return_node->score) {
 				return_node = root_children[i];
 			}
@@ -169,7 +173,7 @@ void MinimaxPlayer::get_move(OthelloBoard* b, int& col, int& row) {
 		char symbol = b->get_p2_symbol();
 
 		// Create root node
-		struct node *root = create_node(b, NULL, symbol);
+		node *root = create_node(b, NULL, symbol);
 		// Set board condition for this node
 		root->b = b;
 		// Set minmax status
@@ -221,10 +225,17 @@ void MinimaxPlayer::get_move(OthelloBoard* b, int& col, int& row) {
 		// }
 
 		node *best_node = new node;
-		best_node->score = -500;
-
-		//return up the tree
 		best_node = minimax_func(leaf_nodes, root);
+
+		//Only gets called on the last move
+		if(best_node->parent == NULL) {
+			p_moves last_move = find_possible_moves(root->b, symbol);
+			if(last_move.size() == 0) {
+				exit(1);
+			} else {
+				best_node->origin = tuple<int,int>(last_move.front());
+			}
+		}
 
 		// for(int i = 0; i < leaf_nodes.size(); i++) {
 		// 	if(leaf_nodes[i]->score >= best_node->score) {
@@ -232,9 +243,9 @@ void MinimaxPlayer::get_move(OthelloBoard* b, int& col, int& row) {
 		// 	}
 		// }
 
-		while(best_node->parent != root && best_node->parent != NULL) {
-			best_node = best_node->parent;
-		}
+		// while(best_node->parent != root && best_node->parent != NULL) {
+		// 	best_node = best_node->parent;
+		// }
 
 		// Set the move as the origin, the move that created the node.
 		tuple<int,int> selection = best_node->origin;
