@@ -69,7 +69,7 @@ node* create_node(OthelloBoard *b, node *parent, char symbol) {
 }
 
 void generate_successors(tree_queue *tree, node *next, char symbol) {
-		node *successor;
+		node *successor = new node;
 		for(int i = 0; i < next->moves.size(); i++) {
 			// Create a copy of the game board
 			OthelloBoard *nb = new OthelloBoard(*next->b);
@@ -177,12 +177,13 @@ void MinimaxPlayer::get_move(OthelloBoard* b, int& col, int& row) {
 		//Add root node to queue
 		tree->push(root);
 
-		struct node *next, *successor;
+		struct node *next = new node;
+	        struct node *successor = new node;
 		// For each possible move, search for leaf nodes
 		while(true) {
 			next = tree->front();
 			// If the tree is empty, exit the loop
-			if(!next) {
+			if(!next)  {
 				break;
 			}
 
@@ -222,8 +223,10 @@ void MinimaxPlayer::get_move(OthelloBoard* b, int& col, int& row) {
 		if(best_node->parent == NULL) {
 			p_moves last_move = find_possible_moves(root->b, symbol);
 			if(last_move.size() == 0) {
+				// Something went wrong
 				exit(1);
 			} else {
+				
 				best_node->origin = tuple<int,int>(last_move.front());
 			}
 		}
