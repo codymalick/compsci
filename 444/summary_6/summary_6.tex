@@ -1,0 +1,27 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.75in]{geometry}
+
+\begin{document}
+
+  \title{Weekly Summary 6}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{May 7, 2016}
+  \maketitle
+
+    In Robert Love's fifteenth and seventeenth chapters, \textit{The Process Address Space}
+    and \textit{Devices and Modules} (\date{2010}), Love explains
+    that the kernel uses memory descriptors and virtual memory areas to manage
+    process memory, and that the kernel can be augmented using modules.
+    Love does this by explaining the how process address space is managed using the
+    \texttt{mm\_struct} and associated functions, and by explaining how modules
+    are built from hello world through passing parameters.
+    Love's purpose for explaining these is to help the reader understand how
+    the kernel manages process and thread memory, and to enable the reader
+    to start working on his own extensions to the kernel using modules.
+    The in-depth explanations of process address space structure and usage, as
+    well as the basic outline of module creation, imply that Love is writing for
+    aspiring kernel developers.
+
+\end{document}
