@@ -4,6 +4,9 @@
 #include<omp.h>
 #include<unistd.h>
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #define NUMT 4
 
 int	NowYear;		// 2016 - 2021
@@ -29,6 +32,8 @@ void GrainDeer();
 void Grain();
 void Watcher();
 void MyAgent();
+int Ranf(int ilow, int ihigh);
+float Ranf(float low, float high);
 
 int main(int argc, char *argv[])
 {
@@ -39,7 +44,17 @@ int main(int argc, char *argv[])
 	// starting state (feel free to change this if you want):
 	NowNumDeer = 1;
 	NowHeight =  1.;
-	
+
+	float ang = (  30.*(float)NowMonth + 15.  ) * ( M_PI / 180. );
+
+	float temp = AVG_TEMP - AMP_TEMP * cos( ang );
+	NowTemp = temp + Ranf( -RANDOM_TEMP, RANDOM_TEMP );
+
+	float precip = AVG_PRECIP_PER_MONTH + AMP_PRECIP_PER_MONTH * sin( ang );
+	NowPrecip = precip + Ranf( -RANDOM_PRECIP, RANDOM_PRECIP );
+	if( NowPrecip < 0. )
+		NowPrecip = 0.;
+
 	omp_set_num_threads(NUMT);
 	while(true) {
 		double time0 = omp_get_wtime();
@@ -113,4 +128,20 @@ void MyAgent() {
 	#pragma omp barrier
 	#pragma omp barrier
 
+}
+
+float Ranf( float low, float high )
+{
+	        float r = (float) rand( );               // 0 - RAND_MAX
+
+		        return(   low  +  r * ( high - low ) / (float)RAND_MAX   );
+}
+
+
+int Ranf( int ilow, int ihigh )
+{
+	        float low = (float)ilow;
+		        float high = (float)ihigh + 0.9999f;
+
+			        return (int)(  Ranf(low,high) );
 }
