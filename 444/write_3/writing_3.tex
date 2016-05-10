@@ -1,0 +1,125 @@
+\documentclass[10pt,letterpaper,onecolumn,draftclsnofoot]{IEEEtran}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{tabu}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C,
+  columns=flexible,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+\begin{document}
+\begin{titlepage}
+  \title{CS 444 - Spring 2016 - Writing Assignment 3}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{May 10, 2016}
+  \maketitle
+  \vspace*{4cm}
+  \begin{abstract}
+      \noindent Understanding how an operating system handles interrupts is key
+        to understanding the overall flow of data through an OS. In this report,
+         we will cover how Linux, Windows, and FreeBSD handle this important job
+         in their respective kernels, and contrast them.
+  \end{abstract}
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+\section{Introduction}
+    Interrupts are how hardware communicates with the CPU, letting it know it
+    has information of some kind to share with it. Interrupts are taken care
+    of by interrupt handlers. This report will examine what the structure of
+    interrupts are in Linux, Windows, and FreeBSD, the general procedure of
+    how they are handled, and where these interrupt handlers live in their
+    respective OS. 
+ % Actually write an introduction, including why the reader should care
+\section{Linux}
+  \subsection{Interrupts}
+  Interrupts are how a piece of hardware communicates with the cpu, letting it
+  know that it has some data ready for it. An interrupt must have an interrupt
+  handler associated with it in order to have the communication handled properly.
+  These interrupt handlers are contained in a devices driver. This is pretty
+  universal across operating systems. What we are going to look at specifically
+  is the structure of interrupts that Linux handles. \cite{robertlove2010}
+
+  \subsection{Interrupt Structure}
+  Interrupts are split into two parts in Linux: top halves, and bottom halves.
+  These names are quite misleading as top halves and bottom halves are not halves
+  at all. The top half is usually closer to a fifth or even an eighth. The reason
+  for this is that interrupt handlers have to be very fast! Interrupts, as they
+  are aptly named, stop everything the cpu is doing in order to communicate with
+  hardware. When this interrupt is called, all the code in the top half of the
+  interrupt has to be handled extremely quickly. Because of this, only time sensitive
+  information can be stored in the top half, and all information in the top half
+  is handled by the interrupt handler.
+
+  The bottom half, on the other hand, can contain any extra information needed
+  to process the request from the hardware. Because this information is not deemed
+  time critical, it is queued up with the other requests that the CPU needs to handle
+  and is put off until its time to be processed has come. \cite{robertlove2010}
+
+\section{Windows}
+ \subsection{Interrupts}
+ \subsection{Drivers}
+ Drivers are important in every OS, but in Windows they have a very specific
+ structure. Drivers have a few responsibilities besides handling interrupts as
+ they do in Linux. They have the responsibility to start IO requests to the hardware,
+ handle plug-and-play behavior, cancel IO routines, unload routines, and more.
+ Drivers are much more of entire modules instead of specifically interrupt handlers
+ as they are in Linux. \cite{internals2}
+
+ This view of drivers makes the handling of IO much more of the drivers responsibility
+ than it does in Linux. In Linux, the driver simply handles the interrupt and hands
+ other information off to the OS. In Windows, the driver is more robust and has
+ more responsibility on how things are communicated.
+
+\section{FreeBSD}
+ \subsection{Interrupts}
+ Interrupts are handled almost identically to Linux's interrupt setup. Each
+ interrupt must be registered via a device driver. FreeBSD has two types of
+ interrupts: hardware interrupts and software interrupts. These are the equivalent
+ of Linux's top and bottom halves. If a piece of information is time critical,
+ it is put in a hardware interrupt, otherwise they are handed to a software
+ interrupt. \cite{freebsd2016}
+ \subsection{Interrupt Handler}
+
+\section{Conclusion}
+
+\clearpage
+\section{Appendix A - Linux Structs}
+All following structs have been pulled from the classroom text. \cite{robertlove2010}
+\begin{lstlisting}
+
+for future code samples
+
+\end{lstlisting}
+
+\section{Appendix B - Windows Structs}
+\begin{lstlisting}
+
+for future code samples
+\end{lstlisting}
+\section{Appendix C - FreeBSD Structs}
+\begin{lstlisting}
+for future code samples
+
+\end{lstlisting}
+
+\section{Bibliography}
+\bibliographystyle{IEEEtran}
+\bibliography{writing_3}
+
+\end{document}
