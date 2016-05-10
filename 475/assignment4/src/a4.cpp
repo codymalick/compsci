@@ -28,6 +28,8 @@ const float AVG_TEMP =				50.0;
 const float AMP_TEMP =				20.0;
 const float RANDOM_TEMP =			10.0;
 
+const float e = 2.71828182845904523536;
+
 void GrainDeer();
 void Grain();
 void Watcher();
@@ -45,89 +47,109 @@ int main(int argc, char *argv[])
 	NowNumDeer = 1;
 	NowHeight =  1.;
 
-	float ang = (  30.*(float)NowMonth + 15.  ) * ( M_PI / 180. );
-
-	float temp = AVG_TEMP - AMP_TEMP * cos( ang );
-	NowTemp = temp + Ranf( -RANDOM_TEMP, RANDOM_TEMP );
-
-	float precip = AVG_PRECIP_PER_MONTH + AMP_PRECIP_PER_MONTH * sin( ang );
-	NowPrecip = precip + Ranf( -RANDOM_PRECIP, RANDOM_PRECIP );
-	if( NowPrecip < 0. )
-		NowPrecip = 0.;
-
 	omp_set_num_threads(NUMT);
-	while(true) {
 		double time0 = omp_get_wtime();
 
-		#pragma omp parallel sections
+	#pragma omp parallel sections
+	{
+		#pragma omp section
 		{
-			#pragma omp section
-			{
-				GrainDeer( );
-			}
-			#pragma omp section
-			{
-				Grain( );
-			}
-			#pragma omp section
-			{
-				Watcher( );
-			}
-			#pragma omp section
-			{	
-				MyAgent( );
-			}
-		}       // implied barrier -- all functions must return in order to allow any of them to get past here
-		double time1 = omp_get_wtime( );
-		//double megaoperations = (double)(someBigNumber)/(time1-time0)/1000000.0;
-		//printf("|Num Threads: %2i|MMults: %5f| padding: %3i | Time: %8f |\n", NUMT, megaoperations, 1, (time1-time0));
+			GrainDeer( );
+		}
+		#pragma omp section
+		{
+			Grain( );
+		}
+		#pragma omp section
+		{
+			Watcher( );
+		}
+		#pragma omp section
+		{	
+			MyAgent( );
+		}
+	}       // implied barrier -- all functions must return in order to allow any of them to get past here
+	double time1 = omp_get_wtime( );
+	//double megaoperations = (double)(someBigNumber)/(time1-time0)/1000000.0;
+	//printf("|Num Threads: %2i|MMults: %5f| padding: %3i | Time: %8f |\n", NUMT, megaoperations, 1, (time1-time0));
 
-		sleep(1);
-	}
+
 	return 0;
 }
 
 void GrainDeer() {
-	//Compute into tmp variables
-	printf("GrainDeer() function called\n");
-	#pragma omp barrier
-	//copy into global variables
-	#pragma omp barrier
-	//do nothing
-	#pragma omp barrier
+	while( NowYear <= 2021 ) {
+		
+		//Compute into tmp variables
+		
 
+		#pragma omp barrier
+		//copy into global variables
+		#pragma omp barrier
+		//do nothing
+		#pragma omp barrier
+	}
 }
-
+// Grain growth
 void Grain() {
-	printf("Grain() function called\n");
-	//compute into tmp variables
-	#pragma omp barrier
-	//copy into global variables
-	#pragma omp barrier
-	//do nothing
-	#pragma omp barrier
+	while( NowYear <= 2021 ) {
+		float temp_fact = pow(e, -1*(pow(2,((NowTemp - AVG_TEMP)/10))));
+		float temp_prec = pow(e, -1*(pow(2,((NowPrecip - AVG_PRECIP_PER_MONTH)/10))));
+		printf("temp_fact: %f, Prec_fact: %f\n", temp_fact, temp_prec);
 
+		//compute into tmp variables
+		float temp_height = temp_fact * temp_prec * GRAIN_GROWS_PER_MONTH;
+		temp_height -= (float)NowNumDeer * ONE_DEER_EATS_PER_MONTH;
+
+		//handle zero case
+		if(temp_height < 0)
+			temp_height = 0;
+		#pragma omp barrier
+		//copy into global variables
+		NowHeight = temp_height;
+
+		#pragma omp barrier
+		//do nothing
+		#pragma omp barrier
+	}
 }
 
 void Watcher() {
-	//Barrier
-	#pragma omp barrier
-	//do nothing
-	#pragma omp barrier
-	//print results and increment month
-	printf("#Deer: %3i | Height: %3f | Precip: %3f | Temp: %3f\n", NowNumDeer, NowHeight, NowPrecip, NowTemp);
-	//Calculate new temperature and precipitation
-	//do stuff here
-	#pragma omp barrier
+	while( NowYear <= 2021 ) {
+		//Barrier
+		#pragma omp barrier
+		//do nothing
+		#pragma omp barrier
+		//print results and increment month
+		printf("Date: %2i/%4i | #Deer: %3i | Height: %3f | Precip: %10f | Temp: %3f\n", 
+				NowMonth, NowYear, NowNumDeer, NowHeight, NowPrecip, NowTemp);
+		if(NowMonth == 11) {
+			NowMonth = 0;
+			NowYear++;
+		} else {
+			NowMonth++;
+		}
+		//Calculate new temperature and precipitation
+		float ang = (  30.*(float)NowMonth + 15.  ) * ( M_PI / 180. );
 
+		float temp = AVG_TEMP - AMP_TEMP * cos( ang );
+		NowTemp = temp + Ranf( -RANDOM_TEMP, RANDOM_TEMP );
+
+		float precip = AVG_PRECIP_PER_MONTH + AMP_PRECIP_PER_MONTH * sin( ang );
+		NowPrecip = precip + Ranf( -RANDOM_PRECIP, RANDOM_PRECIP );
+		if( NowPrecip < 0. )
+			NowPrecip = 0.;
+	
+		#pragma omp barrier
+	}
 }
 
 void MyAgent() {
-	printf("MyAgent() function called\n");
-	#pragma omp barrier
-	#pragma omp barrier
-	#pragma omp barrier
-
+	while( NowYear <= 2021 ) {
+		#pragma omp barrier
+		#pragma omp barrier
+		#pragma omp barrier
+	}
 }
 
 float Ranf( float low, float high )
