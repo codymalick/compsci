@@ -49,7 +49,6 @@ int main(int argc, char *argv[])
 	NowHeight =  1.;
 
 	omp_set_num_threads(NUMT);
-		double time0 = omp_get_wtime();
 
 	#pragma omp parallel sections
 	{
@@ -70,9 +69,6 @@ int main(int argc, char *argv[])
 			MyAgent( );
 		}
 	}       // implied barrier -- all functions must return in order to allow any of them to get past here
-	double time1 = omp_get_wtime( );
-	//double megaoperations = (double)(someBigNumber)/(time1-time0)/1000000.0;
-	//printf("|Num Threads: %2i|MMults: %5f| padding: %3i | Time: %8f |\n", NUMT, megaoperations, 1, (time1-time0));
 
 
 	return 0;
@@ -109,7 +105,7 @@ void Grain() {
 	while( NowYear <= 2021 ) {
 		float temp_fact = exp(-1*(pow(((NowTemp - AVG_TEMP)/10),2)));
 		float temp_prec = exp(-1*(pow(((NowPrecip - AVG_PRECIP_PER_MONTH)/10),2)));
-		printf("temp_fact: %f, Prec_fact: %f\n", temp_fact, temp_prec);
+		//printf("temp_fact: %f, Prec_fact: %f\n", temp_fact, temp_prec);
 
 		//compute into tmp variables
 		float temp_height = temp_fact * temp_prec * GRAIN_GROWS_PER_MONTH;
@@ -135,7 +131,7 @@ void Watcher() {
 		//do nothing
 		#pragma omp barrier
 		//print results and increment month
-		printf("Date: %2i/%4i | #Deer: %3i | Height: %3f | Precip: %10f | Temp: %3f\n", 
+		printf("%i,%i,%i,%f,%f,%f\n", 
 				NowMonth, NowYear, NowNumDeer, NowHeight, NowPrecip, NowTemp);
 		if(NowMonth == 11) {
 			NowMonth = 0;
@@ -163,7 +159,7 @@ void MyAgent() {
 		int alien_chance = Ranf(0, 10);
 		if(alien_chance < 4 && NowNumDeer > 1) {
 			ALIENS = true;
-			printf("Aliens are coming\n");
+			//printf("Aliens are coming\n");
 		} else {
 			ALIENS = false;
 		}
