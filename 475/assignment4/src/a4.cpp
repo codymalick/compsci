@@ -102,8 +102,8 @@ void GrainDeer() {
 // Grain growth
 void Grain() {
 	while( NowYear <= 2021 ) {
-		float temp_fact = pow(e, -1*(pow(2,((NowTemp - AVG_TEMP)/10))));
-		float temp_prec = pow(e, -1*(pow(2,((NowPrecip - AVG_PRECIP_PER_MONTH)/10))));
+		float temp_fact = pow(-1*(pow(((NowTemp - AVG_TEMP)/10),2)),e);
+		float temp_prec = pow(-1*(pow(((NowPrecip - AVG_PRECIP_PER_MONTH)/10),2)),e);
 		printf("temp_fact: %f, Prec_fact: %f\n", temp_fact, temp_prec);
 
 		//compute into tmp variables
