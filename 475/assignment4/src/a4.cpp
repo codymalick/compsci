@@ -81,9 +81,18 @@ void GrainDeer() {
 	while( NowYear <= 2021 ) {
 		
 		//Compute into tmp variables
+		int tempNumDeer = NowNumDeer;
+		if (NowNumDeer*ONE_DEER_EATS_PER_MONTH > NowHeight)
+			tempNumDeer--;
 		
+		if (NowNumDeer*ONE_DEER_EATS_PER_MONTH < NowHeight)
+			tempNumDeer++;
+		
+		if (tempNumDeer < 0)
+			tempNumDeer = 0;
 
 		#pragma omp barrier
+		NowNumDeer = tempNumDeer;	
 		//copy into global variables
 		#pragma omp barrier
 		//do nothing
