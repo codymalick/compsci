@@ -16,6 +16,7 @@ float	NowPrecip;		// inches of rain per month
 float	NowTemp;		// temperature this month
 float	NowHeight;		// grain height in inches
 int	NowNumDeer;		// number of deer in the current population
+bool	ALIENS = 0;
 
 const float GRAIN_GROWS_PER_MONTH =		8.0;
 const float ONE_DEER_EATS_PER_MONTH =		0.5;
@@ -87,7 +88,11 @@ void GrainDeer() {
 		
 		if (NowNumDeer*ONE_DEER_EATS_PER_MONTH < NowHeight)
 			tempNumDeer++;
-		
+		else if(1*ONE_DEER_EATS_PER_MONTH < NowHeight)
+			tempNumDeer++;
+
+		if(ALIENS)
+			tempNumDeer--;	
 		if (tempNumDeer < 0)
 			tempNumDeer = 0;
 
@@ -102,8 +107,8 @@ void GrainDeer() {
 // Grain growth
 void Grain() {
 	while( NowYear <= 2021 ) {
-		float temp_fact = pow(-1*(pow(((NowTemp - AVG_TEMP)/10),2)),e);
-		float temp_prec = pow(-1*(pow(((NowPrecip - AVG_PRECIP_PER_MONTH)/10),2)),e);
+		float temp_fact = exp(-1*(pow(((NowTemp - AVG_TEMP)/10),2)));
+		float temp_prec = exp(-1*(pow(((NowPrecip - AVG_PRECIP_PER_MONTH)/10),2)));
 		printf("temp_fact: %f, Prec_fact: %f\n", temp_fact, temp_prec);
 
 		//compute into tmp variables
@@ -155,6 +160,13 @@ void Watcher() {
 
 void MyAgent() {
 	while( NowYear <= 2021 ) {
+		int alien_chance = Ranf(0, 10);
+		if(alien_chance < 4 && NowNumDeer > 1) {
+			ALIENS = true;
+			printf("Aliens are coming\n");
+		} else {
+			ALIENS = false;
+		}
 		#pragma omp barrier
 		#pragma omp barrier
 		#pragma omp barrier
