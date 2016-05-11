@@ -9,46 +9,52 @@
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
 \lstset{frame=tb,
-  language=C,
-  columns=flexible,
-  numberstyle=\tiny\color{gray},
-  keywordstyle=\color{blue},
-  commentstyle=\color{dkgreen},
-  stringstyle=\color{mauve},
-  breaklines=true,
-  breakatwhitespace=true,
-  tabsize=4
+language=C,
+columns=flexible,
+numberstyle=\tiny\color{gray},
+keywordstyle=\color{blue},
+commentstyle=\color{dkgreen},
+stringstyle=\color{mauve},
+breaklines=true,
+breakatwhitespace=true,
+tabsize=4
 }
 
 \begin{document}
-\begin{titlepage}
-  \title{CS 444 - Spring 2016 - Writing Assignment 3}
-  \author{Cody Malick\\
-  \texttt{malickc@oregonstate.edu}}
-  \date{May 10, 2016}
-  \maketitle
-  \vspace*{4cm}
-  \begin{abstract}
+  \begin{titlepage}
+    \title{CS 444 - Spring 2016 - Writing Assignment 3}
+    \author{Cody Malick\\
+    \texttt{malickc@oregonstate.edu}}
+    \date{May 10, 2016}
+    \maketitle
+    \vspace*{4cm}
+    \begin{abstract}
       \noindent Understanding how an operating system handles interrupts is key
-        to understanding the overall flow of data through an OS. In this report,
-         we will cover how Linux, Windows, and FreeBSD handle this important job
-         in their respective kernels, and contrast them.
-  \end{abstract}
-\end{titlepage}
+      to understanding the overall flow of data through an OS. In this report,
+      we will cover how Linux, Windows, and FreeBSD handle this important job
+      in their respective kernels, and contrast them.
+    \end{abstract}
+  \end{titlepage}
 
-\tableofcontents
-\clearpage
-\section{Introduction}
-    Interrupts are how hardware communicates with the CPU, letting it know it
-    has information of some kind to share with it. Interrupts are taken care
-    of by interrupt handlers. This report will examine what the structure of
-    interrupts are in Linux, Windows, and FreeBSD, the general procedure of
-    how they are handled, and where these interrupt handlers live in their
-    respective OS. 
- % Actually write an introduction, including why the reader should care
-\section{Linux}
+  \tableofcontents
+  \clearpage
+  \section{Introduction}
+  Interrupts are how hardware communicates with the CPU, letting it know it
+  has information of some kind to share with it. Once the interrupt is received,
+  the CPU interrupts the kernel, handing off the information it has. Interrupts
+  are taken care of by interrupt handlers. This report will examine what the structure of
+  interrupts are in Linux, Windows, and FreeBSD, the general procedure of
+  how they are handled, and where these interrupt handlers live in their
+  respective OS.
+  % Actually write an introduction, including why the reader should care
+  \section{Linux}
+  Linux has a fairly straightfoward way of handling interrupts. It has the interrupt
+  structure of top and bottom halves, and each type of interrupt is registered
+  to a unique handler in the kernel. The handler is defined by the driver, and
+  is called when its unique handler ID appears.
+
   \subsection{Interrupts}
-  Interrupts are how a piece of hardware communicates with the cpu, letting it
+  Interrupts are how a piece of hardware communicates with the CPU, letting it
   know that it has some data ready for it. An interrupt must have an interrupt
   handler associated with it in order to have the communication handled properly.
   These interrupt handlers are contained in a devices driver. This is pretty
@@ -71,55 +77,104 @@
   time critical, it is queued up with the other requests that the CPU needs to handle
   and is put off until its time to be processed has come. \cite{robertlove2010}
 
-\section{Windows}
- \subsection{Interrupts}
- \subsection{Drivers}
- Drivers are important in every OS, but in Windows they have a very specific
- structure. Drivers have a few responsibilities besides handling interrupts as
- they do in Linux. They have the responsibility to start IO requests to the hardware,
- handle plug-and-play behavior, cancel IO routines, unload routines, and more.
- Drivers are much more of entire modules instead of specifically interrupt handlers
- as they are in Linux. \cite{internals2}
+  \subsection{Drivers}
+  Drivers are where interrupt handlers exist in Linux. A handler ID is reserved
+  by the system when a driver is installed. When an interrupt is called, the
+  kernel goes and finds the appropriate handler, and calls the function to resolve
+  the interrupt.
 
- This view of drivers makes the handling of IO much more of the drivers responsibility
- than it does in Linux. In Linux, the driver simply handles the interrupt and hands
- other information off to the OS. In Windows, the driver is more robust and has
- more responsibility on how things are communicated.
+  Here is an example of how an interrupt handler is requested by a driver:
+  \begin{lstlisting}
+      if(request_irq(irqn, my_interrupt, IRQF_SHARED, "my_device", my_dev)) {
+        printk(KERN_ERR "my_device: cannot register IRQ %d\n", irqn);
+        return -EIO;
+      }
+  \end{lstlisting}
 
-\section{FreeBSD}
- \subsection{Interrupts}
- Interrupts are handled almost identically to Linux's interrupt setup. Each
- interrupt must be registered via a device driver. FreeBSD has two types of
- interrupts: hardware interrupts and software interrupts. These are the equivalent
- of Linux's top and bottom halves. If a piece of information is time critical,
- it is put in a hardware interrupt, otherwise they are handed to a software
- interrupt. \cite{freebsd2016}
- \subsection{Interrupt Handler}
+  In the above example, the requested interrupt line is \texttt{irqn}, the
+  interrupt handler \texttt{my\_interrupt}, and the device \texttt{my\_device}.
+  If the request is handled properly, it returns zero, otherwise it returns the
+  code prints an error and returns an error code, \texttt{-EIO}, an IO error.
+  \cite{robertlove2010}
 
-\section{Conclusion}
+  Next we'll look at how Windows handles these same ideas, and explore what
+  interesting differences there are.
 
-\clearpage
-\section{Appendix A - Linux Structs}
-All following structs have been pulled from the classroom text. \cite{robertlove2010}
-\begin{lstlisting}
+  \section{Windows}
+  Windows has a similiar setup to Linux only in that drivers are where interrupt
+  handlers are defined. There are some interesting differences in what device
+  drivers are responsible for, and how fundamental system IO is handled in Windows
+  as compared to Linux.
+  \subsection{Interrupts}
+  Windows has two different types of interrupts: general IO interrupts, and
+  exceptions. Interrupts are asynchronus while exceptions are synchronus. Windows
+  refers to catching these interrupts as traps, as they cause the kernel to differ
+  from normal paths of execution. A trap is the equivilent of an interrupt handler.
+  \cite{internals1}
+  \subsection{Drivers}
+  Drivers are important in every OS, but in Windows they have a very specific
+  structure. Drivers have a few responsibilities besides handling interrupts as
+  they do in Linux. They have the responsibility to start IO requests to the hardware,
+  handle plug-and-play behavior, cancel IO routines, unload routines, and more.
+  Drivers are much more of entire modules instead of specifically interrupt handlers
+  as they are in Linux. \cite{internals2}
 
-for future code samples
+  This view of drivers makes the handling of IO much more of the drivers responsibility
+  than it does in Linux. In Linux, the driver simply handles the interrupt and hands
+  other information off to the OS. In Windows, the driver is more robust and has
+  more responsibility on how things are communicated.
 
-\end{lstlisting}
+  Now that we've explored the basics of interrupts in Windows, we can look at
+  FreeBSD, and see what similiarities and differences there are in its core structure.
 
-\section{Appendix B - Windows Structs}
-\begin{lstlisting}
+  \section{FreeBSD}
+  FreeBSD shares a very similiar interrupt structure and handling pattern with
+  Linux. There are a few minute differences that should be pointed out.
+  \subsection{Interrupts}
+  Interrupts are handled almost identically to Linux's interrupt setup. Each
+  interrupt must be registered via a device driver. FreeBSD has two types of
+  interrupts: hardware interrupts and software interrupts. These are the equivalent
+  of Linux's top and bottom halves. If a piece of information is time critical,
+  it is put in a hardware interrupt, otherwise they are handed to a software
+  interrupt. \cite{freebsd2016}
+  \subsection{Interrupt Handler}
+  Interestingly enough, interrupt handlers are also called traps in FreeBSD, the
+  same as it is in Windows. Although they're name is the same, they handle fundamentally
+  different structures. The FreeBSD interrupt handling model is almost identical
+  to the Linux model. Interrupts are handled asynchronously, and have to be registered
+  with a unique ID so that the kernel can find which driver needs to handle the
+  interrupt. \cite{freebsd2016}
 
-for future code samples
-\end{lstlisting}
-\section{Appendix C - FreeBSD Structs}
-\begin{lstlisting}
-for future code samples
+  \section{Conclusion}
 
-\end{lstlisting}
+  Interrupts are a key part of any OS. It is a fundamental in handling IO from
+  external or internal devices. As apposed to other topics we've covered, it's
+  interesting to see that the three operating systems have a lot in common in this
+  area, as opposed to their individual unique approaches to other parts of the
+  kernel.
 
-\section{Bibliography}
-\bibliographystyle{IEEEtran}
-\bibliography{writing_3}
+  \clearpage
+  \section{Appendix A - Linux Structs}
+  All following structs have been pulled from the classroom text. \cite{robertlove2010}
+  \begin{lstlisting}
+
+    for future code samples
+
+  \end{lstlisting}
+
+  \section{Appendix B - Windows Structs}
+  \begin{lstlisting}
+
+    for future code samples
+  \end{lstlisting}
+  \section{Appendix C - FreeBSD Structs}
+  \begin{lstlisting}
+    for future code samples
+
+  \end{lstlisting}
+
+  \section{Bibliography}
+  \bibliographystyle{IEEEtran}
+  \bibliography{writing_3}
 
 \end{document}

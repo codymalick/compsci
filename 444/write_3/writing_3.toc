@@ -2,15 +2,16 @@
 \contentsline {section}{\numberline {II}Linux}{2}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-A}}Interrupts}{2}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-B}}Interrupt Structure}{2}
-\contentsline {section}{\numberline {III}Windows}{2}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Interrupts}{2}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Drivers}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-C}}Drivers}{2}
+\contentsline {section}{\numberline {III}Windows}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Interrupts}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Drivers}{3}
 \contentsline {section}{\numberline {IV}FreeBSD}{3}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Interrupts}{3}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Interrupt Handler}{3}
-\contentsline {section}{\numberline {V}Conclusion}{3}
-\contentsline {section}{\numberline {VI}Appendix A - Linux Structs}{4}
-\contentsline {section}{\numberline {VII}Appendix B - Windows Structs}{4}
-\contentsline {section}{\numberline {VIII}Appendix C - FreeBSD Structs}{4}
-\contentsline {section}{\numberline {IX}Bibliography}{4}
-\contentsline {section}{References}{4}
+\contentsline {section}{\numberline {V}Conclusion}{4}
+\contentsline {section}{\numberline {VI}Appendix A - Linux Structs}{5}
+\contentsline {section}{\numberline {VII}Appendix B - Windows Structs}{5}
+\contentsline {section}{\numberline {VIII}Appendix C - FreeBSD Structs}{5}
+\contentsline {section}{\numberline {IX}Bibliography}{5}
+\contentsline {section}{References}{5}
