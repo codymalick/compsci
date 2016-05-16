@@ -4,5 +4,5 @@
 \contentsline {section}{\numberline {III}Questions}{2}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Assignment Purpose}{2}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Problem Approach}{2}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-C}}Testing}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-C}}Testing}{2}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-D}}What did I learn?}{3}

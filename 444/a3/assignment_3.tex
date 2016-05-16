@@ -47,7 +47,6 @@
 	to encrypt and decrypt the data. I will also use a seperate read and write
 	key so as to demostrate the data is unreadable with the wrong key.
 
-\end{itemize}
 \section{Version Control and Work Log}
 Created with gitlog2latex
 \begin{center}
@@ -58,16 +57,10 @@ Created with gitlog2latex
     X[4,1]|}
     \hline
     \textbf{Author} & \textbf{Date} & \textbf{Message} & \textbf{Time Spent} \\ \hline
-codymalick & 2016-04-27 & added merging & 2 hours \\ \hline
-codymalick & 2016-04-27 & fixed if-else, updated .gitignore & 30 minutes \\ \hline
-codymalick & 2016-04-27 & added files to rebase & 20 minutes \\ \hline
-codymalick & 2016-04-26 & complete assignment 2 & 4 hours \\ \hline
-codymalick & 2016-04-25 & shortest seek distance first working, next, get direction fixed  & 3 hours \\ \hline
-codymalick & 2016-04-25 & renamed everything in sstf-iosched.c  & 20 minutes hours \\ \hline
-codymalick & 2016-04-24 & added working qemu command & 3 hours \\ \hline
-codymalick & 2016-04-24 & sstf showing up in vm, vm is operational & 1 hour \\ \hline
-Cody Malick & 2016-04-24 & added files, working boot vm & 30 minutes \\ \hline
-codymalick & 2016-04-23 & created sstf file & 1 hour \\ \hline
+codymalick & 2016-05-16 & assignment complete & 2 hours \\ \hline
+codymalick & 2016-05-15 & encryption working & 3 minutes \\ \hline
+codymalick & 2016-05-15 & progress & 1.5 minutes \\ \hline
+codymalick & 2016-05-12 & ramdisk working & 2 hours \\ \hline
 \end{longtabu}
 \end{center}
 
@@ -88,22 +81,20 @@ codymalick & 2016-04-23 & created sstf file & 1 hour \\ \hline
 	I intially tried to directly call some of the Linux crypto files, which turned
 	out to be a mistake. I got all sorts of wonderful errors when I was doing that.
 	I then figured out how to call the \texttt{crypto.h} and had a much better experience.
-	Once I had actually figured out how to call the crypto API using \texttt{crypto\_alloc\_cipher},
-	actually using the crypto wasn't that bad.
+	Once I had actually figured out how to call the crypto API using 
+	\texttt{crypto\_alloc\_cipher}, and the other calls, actually
+	using the crypto wasn't that bad.
 	
 	\subsection{Testing}
-	Testing this poject was very straightforward. I added \texttt{printk()} inside
-	every function that I modified and called. When I ran the vm with my scheduler
-	set as the default, it was very obvious that my scheduler was being called.
-
-	The other thing I had to confirm was that my requests were being queued properly.
-	I did this by printing out whenever I iterated over the entire request queue.
+	Testing this poject was very straightforward. I manually print out the data
+	from the buffer. The read data is gibberish before decryption. When I read from
+	the file directly, it's readable. I also added two keys for my encrypt
+	and decrypt functions, so my module's paramters are easily adjustable.
 
 	\subsection{What did I learn?}
 	I learned quite a bit on this assignment. It was a challenge!
 
-	I learned how IO schedulers function, how different implementations differ,
-	and how to actually modify, implement, and patch a kernel to use a custom
-	scheduler.
+	I learned how to build and inject a module, call some basic crypto API 
+	functions, and build and use that module in the VM. I enjoyed this assignment.
 
 \end{document}
