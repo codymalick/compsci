@@ -1,5 +1,5 @@
-all: concur.c
-	clang -o c -pthread -g concur.c
+all: prob1.c
+	gcc -o p1 -pthread -g prob1.c -std=c99
 
 clean:
-	rm -f c
+	rm -f p1
