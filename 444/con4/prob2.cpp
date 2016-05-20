@@ -8,7 +8,6 @@
 #define CHAIRS 4
 sem_t chair_limit;
 sem_t barb_sleep;
-sem_t current_job;
 
 pthread_mutex_t run_mutex;
 
@@ -16,19 +15,29 @@ pthread_mutex_t run_mutex;
 struct customer {
 	int id;
 	int hair_length;
+	struct chair *c;
+	sem_t customer_s;
 };
 struct chair {
 	struct customer *c;
 };
+struct queue {
+	struct chair *chairs[4];
+	int size;
+};
 struct barber_shop {
 	struct chair *w_chairs[CHAIRS];
 	struct chair *b_chair;
+	struct queue *q;
 };
 struct c_args {
 	struct customer *c;
 	struct barber_shop *bs;
 };
 /* functions */
+void queue_push(struct queue *q, struct chair *c);
+void queue_pop(struct queue *q);
+
 void* barber_func(void *ptr);
 void* customer_func(void *ptr);
 
@@ -57,17 +66,20 @@ int main(int argc, char *argv[])
 	struct customer *c7 = new struct customer;
 
 	struct customer *customers[7] = {c1, c2, c3, c4, c5, c6, c7};
-	for(int i = 0; i < 7; i++)
+	for(int i = 0; i < 7; i++) {
 		customers[i]->id = i+1;
+		sem_init(&customers[i]->customer_s, 0, 0);
+	}
 
 	struct barber_shop *bs = new struct barber_shop;
 	for(int i = 0; i < CHAIRS; i++)
 		bs->w_chairs[i] = new struct chair;
 	
 	bs->b_chair = new struct chair;
+	bs->q = new struct queue;
+	bs->q->size = 0;
 
 	sem_init(&chair_limit, 0, CHAIRS);
-	sem_init(&current_job, 0, 0);
 	sem_init(&barb_sleep, 0, 0);
 
 	pthread_mutex_init(&run_mutex, NULL);
@@ -114,30 +126,38 @@ int main(int argc, char *argv[])
 		delete bs->w_chairs[i];
 	}
 	delete bs->b_chair;
+	delete bs->q;
 	delete bs;
 
 	return 0;
 }
 
+void queue_push(struct queue *q, struct chair *c) {
+	q->chairs[q->size] = c;
+	q->size++;
+}
+
+void queue_pop(struct queue *q) {
+	for(int i = 1; i < q->size; i++) {
+		q->chairs[i-1] = q->chairs[i];
+	}
+	q->size--;
+}
+
 void* barber_func(void *ptr) {
 	struct barber_shop *bs = (struct barber_shop *)ptr;
 	int chair_cut = 0;
+	sem_t current_job;
 	while(true) {
 		/* will sleep until sem_post */
 		sem_wait(&barb_sleep);
-
+		
+		current_job = bs->q->chairs[0]->c->customer_s;
 		/* start next job */
 		sem_post(&current_job);
 
 		/* cut hair */
 		cut_hair(bs->w_chairs[chair_cut]->c->hair_length);
-		remove_customer(bs, chair_cut);
-
-		/* iterate chair location */
-		if(chair_cut == 3)
-			chair_cut = 0;
-		else
-			chair_cut++;
 	}
 
 }
@@ -145,10 +165,11 @@ void* customer_func(void *ptr) {
 	struct c_args *c_a = (struct c_args *) ptr;
 	struct customer *c = c_a->c;
 	struct barber_shop *bs = c_a->bs;
+	sem_t c_s;
 	while(true) {
 		/* maximum hair length 8, min 2 */
 		c->hair_length = rand() % 8 + 2;
-		printf("Customer %i, length %i\n", c->id, c->hair_length);
+		//printf("Customer %i, length %i\n", c->id, c->hair_length);
 
 		/* try and sit in the waiting room */
 		if(sem_trywait(&chair_limit)) {
@@ -156,14 +177,15 @@ void* customer_func(void *ptr) {
 			/* sleep for some time before resetting */
 			sleep(5);
 		} else {
+			c_s = c->customer_s;
 			sit_customer(bs, c);
 			printf("Customer %i is sitting\n", c->id);
-
+			
 			/* if the barber is asleep, wake him, also customer counter */
 			sem_post(&barb_sleep);
-			wait(current_job);
+			wait(c_s);
 			get_hair_cut(c->hair_length, c->id);
-				
+						
 
 		}
 	}
@@ -173,9 +195,12 @@ void sit_customer(struct barber_shop *bs, struct customer *c) {
 	for(int i = 0; i < CHAIRS; i++) {
 		if(bs->w_chairs[i]->c == NULL) {
 			bs->w_chairs[i]->c = c;
+			c->c = bs->w_chairs[i];
+			queue_push(bs->q, c->c);
 			break;
 		}
 	}
+	
 }
 
 void remove_customer(struct barber_shop *bs, int chair) {
