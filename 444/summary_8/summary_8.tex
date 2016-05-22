@@ -1,0 +1,27 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.75in]{geometry}
+
+\begin{document}
+
+  \title{Weekly Summary 8}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{May 22, 2016}
+  \maketitle
+
+    In Robert Love's eleventh and sixteenth chapters, \textit{Timers and Time Management}
+    and \textit{The Page Cache and Page Writeback} (\date{2010}), Love explains
+    that the kernel uses timers to maintain an internal state of relative time, and
+    page caching to increase performance and reduce overall disk IO. 
+    Love does this by explaining how time is maintained in the kernel using
+    ticks and the timer interrupt handler to maintain internal state, and by
+    explaining how Linux caches IO request results in RAM to increase performance.
+    Love's purpose for explaining these is to help the reader understand how
+    the kernel manages time and how the user can use timers in their own code,
+    and to show the reader why caching is important for performance and reduced
+    power usage. The in-depth explanations of timer functionality and how they
+    are used, as well as the detailed explaination of caching, imply that Love
+    is writing for aspiring kernel developers.
+
+\end{document}
