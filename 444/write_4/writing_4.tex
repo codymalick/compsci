@@ -1,0 +1,139 @@
+\documentclass[10pt,letterpaper,onecolumn,draftclsnofoot]{IEEEtran}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{tabu}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+language=C,
+columns=flexible,
+numberstyle=\tiny\color{gray},
+keywordstyle=\color{blue},
+commentstyle=\color{dkgreen},
+stringstyle=\color{mauve},
+breaklines=true,
+breakatwhitespace=true,
+tabsize=4
+}
+
+\begin{document}
+  \begin{titlepage}
+    \title{CS 444 - Spring 2016 - Writing Assignment 4}
+    \author{Cody Malick\\
+    \texttt{malickc@oregonstate.edu}}
+    \date{May 23, 2016}
+    \maketitle
+    \vspace{4cm}
+    \begin{abstract}
+      \noindent Understanding how an operating system handles memory is key
+      to understanding the overall flow of data through an OS. In this report,
+      we will cover how Linux, Windows, and FreeBSD handle this important job
+      in their respective kernels, and contrast them.
+    \end{abstract}
+  \end{titlepage}
+
+  \tableofcontents
+  \clearpage
+  \section{Introduction}
+  Memory management is the bedrock of any operating system used in the real
+  world. Memory allows processes near instant access to the data storage they
+  need, and in large quantities! How operating systems handle memory is a simple
+  concept, but are expanded on differently by different operating systems. In 
+  this report, we will look at how different operating systems handle the
+  cornerstone that is memory management, and compare them to each other. 
+  
+ % Actually write an introduction, including why the reader should care
+  \section{Linux}
+	Linux handles memory in fairly straightforward, simplistic way. It
+	starts out with pages. Pages are the simplest unit of memory in the OS.
+	The kernel is actually unable to address any unit of measurement smaller
+	than a page. The kernel also divides the sum total of pages into zones.
+	Finally, we'll talk about the slab layer, allowing easy allocation of
+	large amounts of data.
+  \subsection{Pages}
+  	Pages are the simplest and smallest addressable unit of memory usable
+	by the kernel. The size of the page is dependant on the architecture
+	the OS is running on. If it is a thirty-two bit system, the size of the
+	page is usually four kilobytes, while a sixty-four bit system usually
+	has a size of eight kilobytes. \cite{robertlove2010}
+
+	It's important to point out that the kernel does not directly manage the
+	physical pages on the hardware. This is left to the MMU (memory
+	management unit). The kernel's job is to communicate with the MMU in
+	sizes it understands (pages), and work together with the hardware to
+	get the job done. 
+
+	The page struct is very short, and simple. This is important because it
+	is used constantly, and you don't want a large structure you have to 
+	pass around constantly. \cite{robertlove2010}
+
+	\begin{lstlisting}
+		struct page {
+			unsigned long	flags;
+			atomic_t	_count;
+			atomic_t	_mapcount;
+			unsigned long	private;
+			struct address_space	*mapping;
+			pgoff_t		index;
+			struct list_head	lru;
+			void 		*virtual;
+		};
+	\end{lstlisting}
+	
+	We will briefly go over what the important fields in the struct do.
+	First is the \texttt{flags} field. This field simply describes the
+	status of the page. This includes describing if the page is locked or
+	dirty (memory that may need to written to disk). \texttt{\_count}
+	stores the number of references using a given page. When the count is
+	greater than negative one, then the page is still being used, and should
+	not be reused. The caching mechanism in Linux uses the \texttt{private},
+	\texttt{mapping} variables to use the page as a caching point. The
+	\texttt{private} variable indicates that the memory pointed to is private,
+	and the \texttt{mapping} variable holds an address space being used by
+	the page cache. Lastly, \texttt{virtual} holds the virtual address that
+	points at the physical page. This field is particularlly important to
+	users, as it enables easy and quick use of the memory space.
+
+	Now that we know how Linux handles its basic memory unit, lets look at
+	how it classifies these into zones. 
+  \subsection{Zones}
+
+  \subsection{Slabs}
+
+  \section{Windows}
+  \subsection{}
+  \subsection{}
+  \section{FreeBSD}
+  \subsection{}
+  \subsection{}
+  \section{Conclusion}
+
+  \clearpage
+  \section{Appendix A - Linux Structs}
+  All following structs have been pulled from the classroom text. \cite{robertlove2010}
+  \begin{lstlisting}
+
+    for future code samples
+
+  \end{lstlisting}
+
+  \section{Appendix B - Windows Structs}
+  \begin{lstlisting}
+
+    for future code samples
+  \end{lstlisting}
+  \section{Appendix C - FreeBSD Structs}
+  \begin{lstlisting}
+    for future code samples
+
+  \end{lstlisting}
+
+  \section{Bibliography}
+  \bibliographystyle{IEEEtran}
+  \bibliography{writing_4}
+
+\end{document}
