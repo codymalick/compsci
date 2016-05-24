@@ -101,9 +101,28 @@ tabsize=4
 	Now that we know how Linux handles its basic memory unit, lets look at
 	how it classifies these into zones. 
   \subsection{Zones}
+	Linux uses zones to divide memory pages into subsections in order to
+	deal with specific hardware limitations. Specifically, some hardware
+	devices can only directly access certain physical memory, and some 
+	operating systems can map more memory than they actually have. This is
+	called virtual memory. We will talk more about this later. There are
+	four primary zones in Linux:
+	\begin{description}
+		\item \texttt{ZONE\_DMA}: Memory that is directly accessed by
+			hardware, bypassing the MMU. 
+		\item \texttt{ZONE\_DMA32}: The same as \texttt{ZONE\_DMA} but
+			restricts direct memory access to 32-bit devices. 
+		\item \texttt{ZONE\_NORMAL}: This contains the standard size
+			page, with standard mapping. Should not allow DMA. This
+			is where general use memory lives.
+		\item \texttt{ZONE\_HIGHMEM}: Contains memory wich is not 
+			permanently mapped to the kernel's address space.
+	\end{description}
+	
+	
 
   \subsection{Slabs}
-
+  \subsection{Virtual Memory}
   \section{Windows}
   \subsection{}
   \subsection{}
