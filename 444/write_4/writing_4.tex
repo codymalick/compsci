@@ -181,8 +181,24 @@ tabsize=4
   \subsection{}
   \subsection{}
   \section{FreeBSD}
-  \subsection{}
-  \subsection{}
+  FreeBSD often shares very simliar implementations with Linux. In terms of memory
+  management, it is still the case. Memory allocation and deallocation are comperable. 
+  \subsection{Pages}
+  At the bottom of FreeBSD, we still have pages. Pages are the smallest addressable
+  unit usable by the FreeBSD kernel. And again, FreeBSD interacts and works with the 
+  onbaord MMU to manage memory. 
+  \subsection{Memory Allocation and Deallocation}
+  FreeBSD implements a general use memory manager interface simliar to the C 
+  functions \texttt{malloc()} and 
+  \texttt{free()} functions to help manage its memory. Specifically requesting 
+  a certain number of pages does not seem to be a feature of the FreeBSD kernel.
+  Linux also uses simliar implementations that are almost identical to \texttt{malloc}.
+  This is not very surprising as Linux and FreeBSD stick very closely to their C
+  based roots. \cite{freebsd2016}
+ 
+  As we can see, FreeBSD has an even more straightforward memory management system
+  than Linux. As surprising as this is, it makes developing services and applications
+  for this OS very simple as far as memory management goes.
   \section{Conclusion}
 
   \clearpage
