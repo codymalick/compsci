@@ -105,8 +105,7 @@ tabsize=4
 	deal with specific hardware limitations. Specifically, some hardware
 	devices can only directly access certain physical memory, and some 
 	operating systems can map more memory than they actually have. This is
-	called virtual memory. We will talk more about this later. There are
-	four primary zones in Linux:
+	called virtual memory. There are four primary zones in Linux:
 	\begin{description}
 		\item \texttt{ZONE\_DMA}: Memory that is directly accessed by
 			hardware, bypassing the MMU. 
@@ -118,11 +117,66 @@ tabsize=4
 		\item \texttt{ZONE\_HIGHMEM}: Contains memory wich is not 
 			permanently mapped to the kernel's address space.
 	\end{description}
-	
-	
-
+	\cite{robertlove2010}
+	Next up is the slab layer, which allows the quick and simple allocation
+	and deallocation of memory for data structures. 
   \subsection{Slabs}
-  \subsection{Virtual Memory}
+	Linux has a slab layer that facilitates a very important function: the
+	quick and easy allocation and deallocation of memory for data
+	structures. The slab layer maintains someting called a \textit{free list}.
+	The job of the free list is to hold memory that's already been allocated
+	for the purpose of quickly allocate a data structure's memory. This is
+	done for data structures that are frequently used, and provides a nice
+	performance increase. Essentially, the slab layer caches data structures.
+	\cite{robertlove2010}
+	
+	Know all of this, next is examining how exactly all this wonderful
+	infrastructure is used, with basic allocation and deallocation of memory.
+
+   \subsection{Basic Allocation and Deallocation}
+	\subsubsection{Allocation}
+	Allocation is the bedrock of using memory. If you couldn't put something
+	there, it would be useless! Here are the basics of allocating memory in
+	Linux. At the simplest level, Linux provides the \texttt{alloc\_pages()}
+	function. This function allows you to allocate two to the nth power pages,
+	where \texttt{order} is a parameter of \texttt{alloc\_pages}. Here is an
+	the actual prototype of the \texttt{alloc\_pages} function:
+	\begin{lstlisting}
+		struct page * alloc_pages(gfp_t gfp_mask, unsigned int order)
+	\end{lstlisting}
+	\texttt{gfp\_t gfp\_mask} is a flag that is needed to get pages from memory.
+	\texttt{gfp} stands for \texttt{\_\_get\_free\_pages()}, and the different
+	flag types allow for allocation of memory in specific ways.\cite{robertlove2010}
+	\texttt{order} is simply the number of pages we want allocated as a power
+	of two.
+
+	Although it is a useful function, as users, we more often want to obtain
+	memory in terms of bytes. We can do this in the kernel by using the
+	\texttt{kmalloc()} function. This function is simliar to \texttt{malloc()},
+	but it has a flags parameter that is identical to the \texttt{gfp\_t gfp}
+	flag from \texttt{alloc\_pages}. \texttt{kmalloc} is very useful if we
+	know the exact size of the structure we are allocating for using the C
+	function \texttt{sizeof()}. 
+
+	\subsubsection{Deallocation}
+	Deallocation is equally as important as allocation. We need to be able
+	to free the space we allocated in order to reuse it! Here are some basic
+	deallocation functions that are used in Linux. To directly free a page,
+	you can use any of the following functions:
+	\begin{lstlisting}
+		void __free_pages(struct page *page, unsigned int order)
+		void free_pages(unsigned long addr, unsigned int order)
+		void free_page(unsigned long addr)
+	\end{lstlisting}
+	Any of these functions would free the pages allocated with \texttt{alloc\_pages()}.
+
+	The counterpart to \texttt{kmalloc()} is \texttt{kfree()}. You can pass
+	in the object that you have given memory to, and the \texttt{kfree()} function
+	will return that piece of memory back to the pool of available memory.
+
+	Linux keeps things fairly straightforward and easy to understand in its
+	memory management layer. Next, we will examine how Windows and FreeBSD
+	implement the same interfaces to handle	memory.
   \section{Windows}
   \subsection{}
   \subsection{}

@@ -3,16 +3,18 @@
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-A}}Pages}{2}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-B}}Zones}{3}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-C}}Slabs}{3}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-D}}Virtual Memory}{3}
-\contentsline {section}{\numberline {III}Windows}{3}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}}{3}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}}{3}
-\contentsline {section}{\numberline {IV}FreeBSD}{3}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}}{3}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}}{3}
-\contentsline {section}{\numberline {V}Conclusion}{3}
-\contentsline {section}{\numberline {VI}Appendix A - Linux Structs}{4}
-\contentsline {section}{\numberline {VII}Appendix B - Windows Structs}{4}
-\contentsline {section}{\numberline {VIII}Appendix C - FreeBSD Structs}{4}
-\contentsline {section}{\numberline {IX}Bibliography}{4}
-\contentsline {section}{References}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-D}}Basic Allocation and Deallocation}{3}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}1}Allocation}{3}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}2}Deallocation}{3}
+\contentsline {section}{\numberline {III}Windows}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}}{4}
+\contentsline {section}{\numberline {IV}FreeBSD}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}}{4}
+\contentsline {section}{\numberline {V}Conclusion}{4}
+\contentsline {section}{\numberline {VI}Appendix A - Linux Structs}{5}
+\contentsline {section}{\numberline {VII}Appendix B - Windows Structs}{5}
+\contentsline {section}{\numberline {VIII}Appendix C - FreeBSD Structs}{5}
+\contentsline {section}{\numberline {IX}Bibliography}{5}
+\contentsline {section}{References}{5}
