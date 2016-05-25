@@ -174,19 +174,93 @@ tabsize=4
 	in the object that you have given memory to, and the \texttt{kfree()} function
 	will return that piece of memory back to the pool of available memory.
 
+   \subsection{Virtual Memory}
+   	Linux, as other major operating systems do, gives each of its processes
+	a virtual memory space to operate out of. This simplifys things on many
+	levels for the developer on that OS, but also in the management of what
+	process is using what bit of memory at a time. Instead of having each
+	developer and each program written worry about what memory they are 
+	directly accessing, they instead work with a set of virtual memory that
+	they can play around with, and blow things up in.
+
+	In Linux, we can allocate virtual memory using \texttt{vmalloc()}. This
+	function is the same as \texttt{kmalloc()} or even C's classic \texttt{malloc()}
+	function, but the major difference is that it allocates a virtually
+	continguous set of memory, but not gaurenteed contiguous virtual memory.
+	This makes things much easier for the average developer, as they do not
+	need in-depth knowledge of how the OS works with memory in order to write
+	programs for that platform.
+
 	Linux keeps things fairly straightforward and easy to understand in its
 	memory management layer. Next, we will examine how Windows and FreeBSD
 	implement the same interfaces to handle	memory.
   \section{Windows}
-  \subsection{}
-  \subsection{}
+  Windows does things vastly differently than Linux or FreeBSD. Windows implements
+  a large module called the Memory Manager to handle all things memory. The memory
+  manager's job is, specifically, to manage allocation and deallocation of virtual
+  memory. This layer handles dealing with each process in their virtual memory space
+  and mapping each to their respective physical memory.
+  \subsection{Memory Manager Components}
+  Memory management at the physical level in Windows is simliar to Linux in that it
+  works with a MMU to do the physical reading and writing from disk. The big
+  differences that we start to see are when we look at the software implementation
+  of Windows memory manager.
+
+  The memory manager has several important components that keep it functioning as a
+  whole. Following are a brief description of what each of those pieces are, and what
+  they do: \cite{internals2}
+  \begin{description}
+	  \item A set of system services that allocate, deallocate, and manage virtual
+		  memory. These exist in the kernel.
+	  \item A fault handler for memory management exceptions
+	  \item Six top level routines running in six seperate threads that compose
+		  the active memory management protocols
+
+		  \begin{description}
+			  \item \texttt{balance set manager}: Responsible for overall
+				  memory management policies
+			  \item \texttt{process/stack swapper}: Performs process and
+				  kernel thread stack inswapping and outswapping.
+			  \item \texttt{modified page writer}: Writes dirty pages to
+				  disk.
+			  \item \texttt{mapped page writer}: writes dirty pages in 
+				  mapped files to disk. 
+			  \item \texttt{segment dereference thread}: Responsible for
+				  cache reduction and page file growth and shrinkage.
+			  \item \texttt{zero page thread}: Responsible for zeroing
+				  out pages in memory for reuse.
+		  \end{description}
+  \end{description}
+  Each of these pieces of the module make up the Windows memory management system.
+  These different memory management functions are similar to how Linux has different
+  flusher threads to help manage what gets written to disk and when.
+
+  Although Linux does have flusher threads, it contrasts the design philosophies behind
+  the two different OSes greatly when you look at how the modules were put together to
+  manage the different systems. 
+
+  \subsection{Virtual Memory}
+	As stated above, the virtual memory space in Windows is managed by the balance
+	set manager. The balance set manager is responsible for driving all access
+	to virtual memory. Each process gets its own chunk of two gigabyte memory on thirty-
+	two bit systems, and four gigabytes on sixty-four bit systems. In virtual memory,
+	a process can grow to roughly eight thousand gigabytes in virtual memory space on
+	sixty four bit systems.\cite{internals2}
+
+	As you can see, Windows does things fairly differently than Linux. It has a much
+	more hands-on approach to managing memory, and actively has up to six different
+	threads policing memory at a time. Following this, FreeBSD will be compared to
+	Linux, and the differences will be much less vivid than Linux to Windows.
+
   \section{FreeBSD}
   FreeBSD often shares very simliar implementations with Linux. In terms of memory
   management, it is still the case. Memory allocation and deallocation are comperable. 
+
   \subsection{Pages}
   At the bottom of FreeBSD, we still have pages. Pages are the smallest addressable
   unit usable by the FreeBSD kernel. And again, FreeBSD interacts and works with the 
   onbaord MMU to manage memory. 
+
   \subsection{Memory Allocation and Deallocation}
   FreeBSD implements a general use memory manager interface simliar to the C 
   functions \texttt{malloc()} and 
@@ -196,10 +270,22 @@ tabsize=4
   This is not very surprising as Linux and FreeBSD stick very closely to their C
   based roots. \cite{freebsd2016}
  
+  \subsection{Virtual Memory}
+	FreeBSD also provides a virtual address space for processes to execute in
+	and provide the quality of life improvement to not need to directly manage
+	memory. FreeBSD implements its virtual memory system very much like Linux.
+	It gives each process a large section of memory entirely belonging to the
+	process. Then it manages where the memory gets allocated and attached to
+	physical memory.
+
   As we can see, FreeBSD has an even more straightforward memory management system
   than Linux. As surprising as this is, it makes developing services and applications
   for this OS very simple as far as memory management goes.
+  
   \section{Conclusion}
+	Memory management is the bedrock for any operating system. Understanding
+	how they work, and how they work with virtual memory to make developer's
+	lives easier, is important to developing modules and programs for them.
 
   \clearpage
   \section{Appendix A - Linux Structs}
