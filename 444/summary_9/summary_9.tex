@@ -1,0 +1,28 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.75in]{geometry}
+
+\begin{document}
+
+  \title{Weekly Summary 9}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{May 29, 2016}
+  \maketitle
+
+    In Robert Love's tenth and thirteenth chapters, \textit{Kernel Synchronization Methods}
+    and \textit{The Virtual File System} (\date{2010}), Love explains
+    that the kernel uses synchronization structures and atomic operations to
+    prevent race conditions, and the VFS to abstract the labor of manual file
+    system tracking from the user. 
+    Love does this by explaining how operations are made uninterruptable using
+    atomic types, how synchronization is maintained using semaphores and spinlocks,
+    and how the four major building blocks of the VFS (superbloc, inode, dentry, file)
+    are used to make the user's life easier.
+    Love's purpose for explaining these is to help the reader understand how
+    the kernel manages to stay synchronized with its many threads, and how we use the
+    VFS structures and their operations to manage the file system.
+    The in-depth explanations of kernel synchronization structures and VFS structures
+    and their operations, imply that Love is writing for aspiring kernel developers.
+
+\end{document}
