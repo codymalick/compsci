@@ -58,13 +58,13 @@ int main(int argc, char *argv[])
 			       	"exit: %i\n", err_check);
 		exit(err_check);
 	}
-	err_check = pthread_create(&t_2, NULL, tobacco_smoker, (void*)useless);	
+	err_check = pthread_create(&t_2, NULL, match_smoker, (void*)useless);	
 	if(err_check) {
 		fprintf(stderr, "Error, a thread failed to create -"
 			       	"exit: %i\n", err_check);
 		exit(err_check);
 	}	
-	err_check = pthread_create(&t_3, NULL, tobacco_smoker, (void*)useless);
+	err_check = pthread_create(&t_3, NULL, paper_smoker, (void*)useless);
 	if(err_check) {
 		fprintf(stderr, "Error, a thread failed to create -"
 			       	"exit: %i\n", err_check);
@@ -247,5 +247,6 @@ void* match_smoker(void *tmp) {
 }
 
 void smoke(int input) {
-	printf("%i Dank\n", input);
+	printf("#%i is smoking\n", input);
+	sleep(2);
 }
