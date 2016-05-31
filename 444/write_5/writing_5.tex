@@ -1,0 +1,155 @@
+\documentclass[10pt,letterpaper,onecolumn,draftclsnofoot]{IEEEtran}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{tabu}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C,
+  columns=flexible,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+\begin{document}
+\begin{titlepage}
+  \title{CS 444 - Spring 2016 - Writing Assignment 5}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{May 30, 2016}
+  \maketitle
+  \vspace*{4cm}
+  \begin{abstract}
+      \noindent Understanding how an operating system handles its virtual file system,
+      and how that helps make the user's life easier by abstracting the physical
+      system is an important topic for an aspiring kernel developer. In this report,
+      we will cover how Linux, Windows, and FreeBSD handle the VFS in their respective
+      kernels.
+  \end{abstract}
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+\section{Introduction}
+ % Actually write an introduction, including why the reader should care
+As a general user, you don't want to have to deal directly with a systems file
+system. It can be tiresome and tedious. To solve this problem, the file system
+was abstracted in the virtual file system, or VFS. Following is an examination
+of the VFS in Linux, Windows, and FreeBSD. 
+\section{Linux}
+  \subsection{Virtual Filesystem}
+  The VFS lies at the top layer of the OS input-output system. The virtual
+  filesystem allows user-space programs to use standard unix systems calls
+  such \texttt{read()} and \texttt{write()} regardless of storage medium.
+  This is setup is only possible because Linux adds a layer of abstraction
+  around the low-level filesystem. Although we take such functionality for 
+  granted, it is a very important system to have. The VFS is divide into
+  two overall pieces: structures, and their associated operations. 
+  \cite{robertlove2010}
+
+  \subsection{VFS Structures}
+  The VFS provides an abstraction of the filesystem, or multiple filesystems
+  through a few specific interfaces. Specifically, the VFS provides the
+  following abstractions:
+  \begin{description}
+    \item Files: an ordered string of bytes.
+    \item Dentries: Files that contain directory information. For example,
+    '\textbackslash this\textbackslash is\textbackslash a\textbackslash path'
+    has four dentries on the path to that directory. This is how the VFS contains
+    directories as files.
+    \item Inodes: Otherwise known as an 'index node,' these files contain metadata
+    about other files such as permissions, size, owner, etc.
+    \item Superblock: A file containing all the relevant information about a filesystem
+    as a whole. This is a metadata file for an entire FS.
+  \end{description}
+
+  Each of these interfaces have sizable data structures, along with a corresponding
+  operations struct that complements them, containing function pointers to give the
+  VFS the great functionality it has.\cite{robertlove2010}
+
+  \subsection{VFS Structure Operations}
+
+
+
+  These interfaces are critical to how we use Linux every day. Without them, we
+  would have to make manual calls to the different filesystems that managed different
+  devices, in the protocols they require. Sounds like a mess!
+section{Windows}
+Windows does things quite a bit different from Linux, as we would expect. Because
+it is not originally a Unix based or Unix inspired operating system, we get to
+see a very different approach to solving similiar problems.
+\subsection{IO Manager}
+
+\section{FreeBSD}
+  FreeBSD is very similar to Linux in how it handles many of these processes. As
+  both borrowed ideas from a purely unix operating system, we will see that things
+  such as the VFS handle things similiarly.
+
+ \subsection{Basic IO}
+ The IO in FreeBSD has a few structs that are similiar to the Linux IO structs.
+ Something interesting about the FreeBSD versus the Linux is that FreeBSD
+ makes explicit statements about how a file's existence is defined. For example,
+ a file in FreeBSD exists until no references or descriptors are open in the OS.
+ Linux may have similiar functions, but the rules for these are not explicitly
+ defined. Here are the basic objects that make up the FreeBSD basic IO system:
+ \cite{freebsd2016}
+ \begin{description}
+   \item Files: A Linear array of bytes with at least one name. A file exists
+   until all its names are explicitly deleted explicitly and no process holds a
+   descriptor of that file. All IO devices are treated as files.
+   \item Directory Entry: A file that contains information about itself and
+   other files and directory entries.
+   \item Pipes: Pipes are also a linear array of bytes, but are used exclusively
+   for one direction data transfer through the use of an IO stream. If you need
+   to read and write from a file at the same time, two pipes will need to be open.
+   \item Socket: An object that is used for interprocess communication, it exists
+   only as long as some process holds the descriptor for it.
+ \end{description}
+
+ This setup is almost identical to how Linux handles things, but with one big
+ difference: other files sytems mounted inside of the virtual file system are treated simply
+ as directories, not as whole units like Linux's superblocks. This simplifies
+ the handling of the entire filesystem structure. A root directory of a filesystem
+ is set so that the OS knows where everything starts.
+
+ \section{Conclusion}
+Linux, Windows, and FreeBSD all have their own way of doing things. Although Linux
+and FreeBSD share a lot of the same ideas, they are unique. Windows is another beast
+entirely with its modules and driver structures. Understanding how all these systems
+work are important as a developer working in the each of their respective kernels.
+I am looking forward to diving into this topic more.
+
+\clearpage
+\section{Appendix A - Linux Structs}
+All following structs have been pulled from the classroom text. \cite{robertlove2010}
+\begin{lstlisting}
+
+for future code samples
+
+\end{lstlisting}
+
+\section{Appendix B - Windows Structs}
+\begin{lstlisting}
+
+for future code samples
+\end{lstlisting}
+\section{Appendix C - FreeBSD Structs}
+\begin{lstlisting}
+for future code samples
+
+\end{lstlisting}
+
+section{Bibliography}
+\bibliographystyle{IEEEtran}
+\bibliography{writing_5}
+
+\end{document}
