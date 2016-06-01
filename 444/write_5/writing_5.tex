@@ -110,19 +110,38 @@ it is not originally a Unix based or Unix inspired operating system, we get to
 see a very different approach to solving similiar problems. In the following
 section, we will examine the Windows file system, \texttt{NTFS}, and its virtual
 file system layer.
-\subsection{NTFS}
-  Windows' file system is called \texttt{NTFS}, or New Technology File System. 
-  \texttt{NTFS} is
-  comperable to 
+  \subsection{NTFS}
+  Windows has a few different file systems available by default. The native file
+  system, however, is called \texttt{NTFS}, or New Technology File System. 
+  \texttt{NTFS} is fairly comperable to \texttt{EXT4} in maximum partition and 
+  file size. \texttt{NTFS} theoretically supports up to exabyte volume sizes, but
+  Windows currently limits support to 256 terrabyte volume sizes with 64 kilobyte
+  cluster sizes. \texttt{NTFS} has the normal array of features that standard file
+  systems ship with, along with file and directory security, alternate data streams,
+  file compression, symbolic and hard links, encryption, and transactional semantics.
   \cite{internals2}
+  \subsection{NTFS Driver}
+  Windows implements the virtual file system layer using the file system module itself.
+  In this, Windows doesn't have a distinct VFS layer. It implements the file system
+  and the VFS in one module, the \texttt{NTFS} module. This is a hard contract between
+  Linux and Windows. Linux seperates the VFS layer entirely, and then has the FS plug
+  into the VFS and integrate. If you wanted to plug another file system in to Windows,
+  it would use a distinctly different set of interfaces from another. So if you wanted
+  to use a \texttt{FAT32} file system type, it would not easily integrate with a 
+  \texttt{NTFS} file system. \cite{internals2}
+
+  Now that we've examined how Windows handles its filesystem layer, and saw how
+  different its monolithic approach is Linux' abstracted layers approach, we will
+  examine how FreeBSD handles these same concepts.
 
 \section{FreeBSD}
-  FreeBSD is very similar to Linux in how it handles many of these processes. As
-  both borrowed ideas from a purely unix operating system, we will see that things
-  such as the VFS handle things similiarly.
+  FreeBSD is very similar to Linux in how it handles many things. The file system
+  is no exception to this rule. FreeBSD is very similiar to Linux in this department,
+  and we examine the subtle differences it has.
+ \subsection{File System}
 
- \subsection{Basic IO}
- The IO in FreeBSD has a few structs that are similiar to the Linux IO structs.
+ \subsection{Virtual File System}
+ The VFS setup in FreeBSD has a few structs that are similiar to the Linux structs.
  Something interesting about the FreeBSD versus the Linux is that FreeBSD
  makes explicit statements about how a file's existence is defined. For example,
  a file in FreeBSD exists until no references or descriptors are open in the OS.
@@ -153,7 +172,6 @@ Linux, Windows, and FreeBSD all have their own way of doing things. Although Lin
 and FreeBSD share a lot of the same ideas, they are unique. Windows is another beast
 entirely with its modules and driver structures. Understanding how all these systems
 work are important as a developer working in the each of their respective kernels.
-I am looking forward to diving into this topic more.
 
 \clearpage
 \section{Appendix A - Linux Structs}
