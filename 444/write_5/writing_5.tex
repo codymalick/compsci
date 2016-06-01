@@ -141,7 +141,10 @@ file system layer.
  \subsection{The Fast File System}
  The Fast File System is FreeBSD's default file system. It is fairly standard as
  File systems come, and is well tested and stable. The FS has features like directory
- structure, file names, journaling, etc. The standard set of features.
+ structure, file names, journaling, etc. The standard set of features. It does not
+ do file and directory security, like Windows. Permissions are managed, but not access
+ to specific files and directories.
+
  \subsection{Virtual File System}
  The VFS setup in FreeBSD has a few structs that are similiar to the Linux structs.
  Something interesting about the FreeBSD versus the Linux is that FreeBSD
