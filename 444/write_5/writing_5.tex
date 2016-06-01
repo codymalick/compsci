@@ -25,15 +25,15 @@
   \title{CS 444 - Spring 2016 - Writing Assignment 5}
   \author{Cody Malick\\
   \texttt{malickc@oregonstate.edu}}
-  \date{May 30, 2016}
+  \date{May 31, 2016}
   \maketitle
   \vspace*{4cm}
   \begin{abstract}
-      \noindent Understanding how an operating system handles its virtual file system,
-      and how that helps make the user's life easier by abstracting the physical
-      system is an important topic for an aspiring kernel developer. In this report,
-      we will cover how Linux, Windows, and FreeBSD handle the VFS in their respective
-      kernels.
+      \noindent Understanding how an operating system handles its file systems and
+      virtual file systems, and how that helps make the user's life easier by abstracting
+      the physical system is an important topic for an aspiring kernel developer.
+      In this report, we will cover how Linux, Windows, and FreeBSD handle the
+      VFS in their respective kernels.
   \end{abstract}
 \end{titlepage}
 
@@ -41,20 +41,43 @@
 \clearpage
 \section{Introduction}
  % Actually write an introduction, including why the reader should care
-As a general user, you don't want to have to deal directly with a systems file
-system. It can be tiresome and tedious. To solve this problem, the file system
-was abstracted in the virtual file system, or VFS. Following is an examination
-of the VFS in Linux, Windows, and FreeBSD. 
+As a general user, you don't want to have to deal directly with a computers
+input and output systems. It would be tiresome and tedious. To solve this
+problem, the file system and virtual file systems are wrappers around these
+arduous tasks that make it simple, and user friendly. The VFS is the unification
+of two ideas: making the user's life easy, while providing a generic interface
+that allows different types of file systems the same interfaces. Following is
+an examination of the FS and VFS implementations in Linux, Windows, and FreeBSD. 
 \section{Linux}
+  \subsection{File Systems}
+  A file system, simply, is an abstraction of the IO layer that allows ease of
+  use for the user in tracking, reading, and writing to disk. Instead of forcing
+  the user to remember where a file is, what its size is, what type of file it
+  is, etc., the file system provides interfaces that make this a, relatively,
+  easy task. There are many different types of file systems. They are 
+  differentiated by minimum and maximum file size, journaling capability, and
+  maximum partition size. 
+  \subsubsection{Linux Default File Systems}
+  There are a few default file systems available in Linux. A few of them are
+  all from the \texttt{EXT} family, like \texttt{EXT2}, \texttt{EXT3}, and
+  \texttt{EXT4}. \texttt{EXT3} is considered the standard FS for stable Linux
+  builds, but \texttt{EXT4} is the latest and greatest release from that family.
+  The biggest difference between \texttt{EXT4} and its previous version is the
+  maximum file and partition size.\cite{anthonyjsimon2015}
+  One the great things about Linux is the number of options for file systems.
+  If there are features you're looking for, but don't have, then you can pick
+  one that works better for your needs. If you want a bleeding edge system, you
+  can also grab your favorite choice from the internet. 
+
   \subsection{Virtual Filesystem}
   The VFS lies at the top layer of the OS input-output system. The virtual
   filesystem allows user-space programs to use standard unix systems calls
-  such \texttt{read()} and \texttt{write()} regardless of storage medium.
-  This is setup is only possible because Linux adds a layer of abstraction
-  around the low-level filesystem. Although we take such functionality for 
-  granted, it is a very important system to have. The VFS is divide into
-  two overall pieces: structures, and their associated operations. 
-  \cite{robertlove2010}
+  such \texttt{read()} and \texttt{write()} regardless of storage medium or
+  underlying file system. This is setup is only possible because Linux adds
+  a layer of abstraction around the low-level filesystem. Although we take
+  such functionality for granted, it is a very important system to have.
+  The VFS is divide into two overall pieces: structures, and their associated
+  operations. \cite{robertlove2010}
 
   \subsection{VFS Structures}
   The VFS provides an abstraction of the filesystem, or multiple filesystems
@@ -76,18 +99,22 @@ of the VFS in Linux, Windows, and FreeBSD.
   operations struct that complements them, containing function pointers to give the
   VFS the great functionality it has.\cite{robertlove2010}
 
-  \subsection{VFS Structure Operations}
-
-
-
   These interfaces are critical to how we use Linux every day. Without them, we
   would have to make manual calls to the different filesystems that managed different
   devices, in the protocols they require. Sounds like a mess!
-section{Windows}
-Windows does things quite a bit different from Linux, as we would expect. Because
+
+\section{Windows}
+Windows does things quite a bit different than Linux as far as file systems go.
+This comes as no surprise as Windows has a trend of doing its own thing. Because
 it is not originally a Unix based or Unix inspired operating system, we get to
-see a very different approach to solving similiar problems.
-\subsection{IO Manager}
+see a very different approach to solving similiar problems. In the following
+section, we will examine the Windows file system, \texttt{NTFS}, and its virtual
+file system layer.
+\subsection{NTFS}
+  Windows' file system is called \texttt{NTFS}, or New Technology File System. 
+  \texttt{NTFS} is
+  comperable to 
+  \cite{internals2}
 
 \section{FreeBSD}
   FreeBSD is very similar to Linux in how it handles many of these processes. As
