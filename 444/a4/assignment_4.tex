@@ -1,0 +1,100 @@
+\documentclass[10pt,letterpaper,onecolumn,draftclsnofoot]{IEEEtran}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{tabu}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C,
+  columns=flexible,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+\begin{document}
+\begin{titlepage}
+  \title{CS 444 - Spring 2016 - Assignment 3}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{May 16, 2016}
+  \maketitle
+  \vspace*{2cm}
+  \begin{abstract}
+      \noindent This report details implementation details for the third assignment.
+      It contains a brief description of how I planned to implement the assignment,
+      the work log, and my response to the questions asked on the assignment. \end{abstract}
+
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\section{Assignment 3}
+  \subsection{Design}
+	My approach for this problem is fairly straightforward: I'm going to use
+	the sbd (simple block device) driver as a skeleton for my code, and then
+	I simply plan on modifying the read and write functions to encrypt and
+	decrypt as necessary. I plan on using AES (Advanced Encryption Standard)
+	to encrypt and decrypt the data. I will also use a seperate read and write
+	key so as to demostrate the data is unreadable with the wrong key.
+
+\section{Version Control and Work Log}
+Created with gitlog2latex
+\begin{center}
+\begin{longtabu} to \textwidth {|
+    X[4,l]|
+    X[3,c]|
+    X[8,l]|
+    X[4,1]|}
+    \hline
+    \textbf{Author} & \textbf{Date} & \textbf{Message} & \textbf{Time Spent} \\ \hline
+codymalick & 2016-05-16 & assignment complete & 2 hours \\ \hline
+codymalick & 2016-05-15 & encryption working & 3 minutes \\ \hline
+codymalick & 2016-05-15 & progress & 1.5 minutes \\ \hline
+codymalick & 2016-05-12 & ramdisk working & 2 hours \\ \hline
+\end{longtabu}
+\end{center}
+
+\section{Questions}
+	\subsection{Assignment Purpose}
+	I believe the purpose of this assignment is to give student experience working
+	with modules, as well as touching the crypto API, and working with the block
+	layer directly. Working with modules allows students to directly implement
+	their own changes into Linux, as well as give them the tools they need to
+	directly contribute to the feature set of Linux.
+
+	\subsection{Problem Approach}
+	I approached the problem initially the way I had planned in my design. I 
+	acquired my basic block device driver using sbd. After getting the basic
+	ramdisk working, I then started readin up on the crypto API, trying to find
+	a basic implementation of encryption and decryption.
+
+	I intially tried to directly call some of the Linux crypto files, which turned
+	out to be a mistake. I got all sorts of wonderful errors when I was doing that.
+	I then figured out how to call the \texttt{crypto.h} and had a much better experience.
+	Once I had actually figured out how to call the crypto API using 
+	\texttt{crypto\_alloc\_cipher}, and the other calls, actually
+	using the crypto wasn't that bad.
+	
+	\subsection{Testing}
+	Testing this poject was very straightforward. I manually print out the data
+	from the buffer. The read data is gibberish before decryption. When I read from
+	the file directly, it's readable. I also added two keys for my encrypt
+	and decrypt functions, so my module's paramters are easily adjustable.
+
+	\subsection{What did I learn?}
+	I learned quite a bit on this assignment. It was a challenge!
+
+	I learned how to build and inject a module, call some basic crypto API 
+	functions, and build and use that module in the VM. I enjoyed this assignment.
+
+\end{document}
