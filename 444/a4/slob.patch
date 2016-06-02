@@ -1,0 +1,117 @@
+From f4715ea9271e5c696f7c37366a54d30e2f2e3d1f Mon Sep 17 00:00:00 2001
+From: codymalick <cody.malick@gmail.com>
+Date: Thu, 2 Jun 2016 12:08:55 -0700
+Subject: [PATCH 1/2] Added some code, untested as of yet
+
+---
+ mm/slob.c | 46 ++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 42 insertions(+), 4 deletions(-)
+
+diff --git a/mm/slob.c b/mm/slob.c
+index 4bf8809..e4dd34b 100644
+--- a/mm/slob.c
++++ b/mm/slob.c
+@@ -73,6 +73,11 @@
+ #include <linux/atomic.h>
+ 
+ #include "slab.h"
++#include <linux/syscalls.h>
++
++unsigned long page_count = 0;
++unsigned long unused_units = 0;
++
+ /*
+  * slob_block has a field 'units', which indicates size of block if +ve,
+  * or offset of next block if -ve (in SLOB_UNITs).
+@@ -273,6 +278,11 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
+ 	slob_t *b = NULL;
+ 	unsigned long flags;
+ 
++	/* Additional Variables */
++	struct page *alt_page = NULL;
++	struct list_head *tmp_head;
++	unused_units = 0;
++
+ 	if (size < SLOB_BREAK1)
+ 		slob_list = &free_slob_small;
+ 	else if (size < SLOB_BREAK2)
+@@ -295,19 +305,47 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
+ 		if (sp->units < SLOB_UNITS(size))
+ 			continue;
+ 
++		if(alt_page == NULL) {
++			alt_page = sp;
++		}
++
++		/* Get the smallest page */
++		if(sp->units < alt_page->units) {
++			alt_page = sp;
++		}
++
+ 		/* Attempt to alloc */
+-		prev = sp->list.prev;
++		if(alt_page != NULL) {
++			b = slob_page_alloc(alt_page, size, align);
++		}
++
++		/* Find the free space available in each list for performance */
++		tmp_head = &free_slob_small;
++		list_for_each_entry(sp, tmp_head, list) {
++			unused_units += sp->units;
++		}
++		tmp_head = &free_slob_medium;
++		list_for_each_entry(sp, tmp_head, list) {
++			unused_units += sp->units;
++		}
++		tmp_head = &free_slob_large;
++		list_for_each_entry(sp, tmp_head, list) {
++			unused_units += sp->units;
++		}
++
++		/*prev = sp->list.prev;
++		printk("Size %i\n", size);
+ 		b = slob_page_alloc(sp, size, align);
+ 		if (!b)
+-			continue;
++			continue;*/
+ 
+ 		/* Improve fragment distribution and reduce our average
+ 		 * search time by starting our next search here. (see
+ 		 * Knuth vol 1, sec 2.5, pg 449) */
+-		if (prev != slob_list->prev &&
++		/*if (prev != slob_list->prev &&
+ 				slob_list->next != prev->next)
+ 			list_move_tail(slob_list, prev->next);
+-		break;
++		break;*/
+ 	}
+ 	spin_unlock_irqrestore(&slob_lock, flags);
+ 
+-- 
+1.7.12.4
+
+
+From de588641dd498b66f4545f16e0130e3c226c3e8f Mon Sep 17 00:00:00 2001
+From: codymalick <cody.malick@gmail.com>
+Date: Thu, 2 Jun 2016 15:37:53 -0700
+Subject: [PATCH 2/2] added variable, not working
+
+---
+ mm/slob.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/mm/slob.c b/mm/slob.c
+index e4dd34b..cf2cdef 100644
+--- a/mm/slob.c
++++ b/mm/slob.c
+@@ -223,6 +223,7 @@ static void *slob_page_alloc(struct page *sp, size_t size, int align)
+ {
+ 	slob_t *prev, *cur, *aligned = NULL;
+ 	int delta = 0, units = SLOB_UNITS(size);
++	int best_fit = 0;
+ 
+ 	for (prev = NULL, cur = sp->freelist; ; prev = cur, cur = slob_next(cur)) {
+ 		slobidx_t avail = slob_units(cur);
+-- 
+1.7.12.4
+

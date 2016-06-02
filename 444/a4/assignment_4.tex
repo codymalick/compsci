@@ -22,14 +22,14 @@
 
 \begin{document}
 \begin{titlepage}
-  \title{CS 444 - Spring 2016 - Assignment 3}
+  \title{CS 444 - Spring 2016 - Assignment 4}
   \author{Cody Malick\\
   \texttt{malickc@oregonstate.edu}}
-  \date{May 16, 2016}
+  \date{June 2, 2016}
   \maketitle
   \vspace*{2cm}
   \begin{abstract}
-      \noindent This report details implementation details for the third assignment.
+      \noindent This report details implementation details for the fourth assignment.
       It contains a brief description of how I planned to implement the assignment,
       the work log, and my response to the questions asked on the assignment. \end{abstract}
 
@@ -38,63 +38,52 @@
 \tableofcontents
 \clearpage
 
-\section{Assignment 3}
+\section{Assignment 4}
   \subsection{Design}
-	My approach for this problem is fairly straightforward: I'm going to use
-	the sbd (simple block device) driver as a skeleton for my code, and then
-	I simply plan on modifying the read and write functions to encrypt and
-	decrypt as necessary. I plan on using AES (Advanced Encryption Standard)
-	to encrypt and decrypt the data. I will also use a seperate read and write
-	key so as to demostrate the data is unreadable with the wrong key.
+	My approach for this problem is fairly straightforward: I'm going to change
+	how the individual block allocator iterates over each block from first to
+	best fit, then iterate over every available block and find first best fit
+	over all of them. I plan on measuring efficiency by counting the number of
+	blocks that each method yields, and graphing that.
 
-\section{Version Control and Work Log}
-Created with gitlog2latex
-\begin{center}
-\begin{longtabu} to \textwidth {|
-    X[4,l]|
-    X[3,c]|
-    X[8,l]|
-    X[4,1]|}
-    \hline
-    \textbf{Author} & \textbf{Date} & \textbf{Message} & \textbf{Time Spent} \\ \hline
-codymalick & 2016-05-16 & assignment complete & 2 hours \\ \hline
-codymalick & 2016-05-15 & encryption working & 3 minutes \\ \hline
-codymalick & 2016-05-15 & progress & 1.5 minutes \\ \hline
-codymalick & 2016-05-12 & ramdisk working & 2 hours \\ \hline
-\end{longtabu}
-\end{center}
+	\section{Version Control and Work Log}
+	Created with gitlog2latex
+	\begin{center}
+		\begin{longtabu} to \textwidth {|
+		    X[4,l]|
+		    X[3,c]|
+		    X[8,l]|
+		    X[4,1]|}
+		    \hline
+		    \textbf{Author} & \textbf{Date} & \textbf{Message} & \textbf{Time Spent} \\ \hline
+		codymalick & 2016-06-02 & added variable, not working & 4 hours \\ \hline
+		codymalick & 2016-05-15 & added some code, not working as of yet & 3 hours \\ \hline
+		codymalick & 2016-05-15 & added design document & 1 hour \\ \hline
+	\end{longtabu}
+	\end{center}
 
 \section{Questions}
 	\subsection{Assignment Purpose}
-	I believe the purpose of this assignment is to give student experience working
-	with modules, as well as touching the crypto API, and working with the block
-	layer directly. Working with modules allows students to directly implement
-	their own changes into Linux, as well as give them the tools they need to
-	directly contribute to the feature set of Linux.
+	I believe the purpose of this assignment was to understand how memory is allocated,
+	why it is an important problem to solve, and why best fit, although more efficient,
+	is much slower than first fit. If we wanted to work with this interace in the kernel,
+	understanding these basic concepts is important.
 
 	\subsection{Problem Approach}
 	I approached the problem initially the way I had planned in my design. I 
-	acquired my basic block device driver using sbd. After getting the basic
-	ramdisk working, I then started readin up on the crypto API, trying to find
-	a basic implementation of encryption and decryption.
+	wrote the code that found the best fit solution first, but I couldn't track down
+	the reason I kept getting a kernel panic. I wrote some code to sort inside the
+	\texttt{slob\_page\_alloc()} function, but I never saw if it worked properly
+	because of my kernel panic. Because of the kernel panic, I also coudln't get the
+	system call part of the assignment working.
 
-	I intially tried to directly call some of the Linux crypto files, which turned
-	out to be a mistake. I got all sorts of wonderful errors when I was doing that.
-	I then figured out how to call the \texttt{crypto.h} and had a much better experience.
-	Once I had actually figured out how to call the crypto API using 
-	\texttt{crypto\_alloc\_cipher}, and the other calls, actually
-	using the crypto wasn't that bad.
-	
 	\subsection{Testing}
-	Testing this poject was very straightforward. I manually print out the data
-	from the buffer. The read data is gibberish before decryption. When I read from
-	the file directly, it's readable. I also added two keys for my encrypt
-	and decrypt functions, so my module's paramters are easily adjustable.
+	Testing would be straightforward: If the VM ran, and was noticably slower, then
+	the best fit implementation was working. We could also get exact metrics based
+	off of the amount of memory that was used (lower for best fit, higher for first).
 
 	\subsection{What did I learn?}
-	I learned quite a bit on this assignment. It was a challenge!
-
-	I learned how to build and inject a module, call some basic crypto API 
-	functions, and build and use that module in the VM. I enjoyed this assignment.
-
+	Although I did not successfully finish the assignment, I learned how to get a custom
+	system call working, how to work with the a simple list of blocks, and learned how
+	different approaches to memory management are handled.
 \end{document}
