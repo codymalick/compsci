@@ -1,0 +1,89 @@
+\documentclass[10pt,letterpaper,onecolumn,draftclsnofoot]{IEEEtran}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{tabu}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C,
+  columns=flexible,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+\begin{document}
+\begin{titlepage}
+  \title{CS 444 - Spring 2016 - Assignment 4}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{June 2, 2016}
+  \maketitle
+  \vspace*{2cm}
+  \begin{abstract}
+      \noindent This report details implementation details for the fourth assignment.
+      It contains a brief description of how I planned to implement the assignment,
+      the work log, and my response to the questions asked on the assignment. \end{abstract}
+
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\section{Assignment 4}
+  \subsection{Design}
+	My approach for this problem is fairly straightforward: I'm going to change
+	how the individual block allocator iterates over each block from first to
+	best fit, then iterate over every available block and find first best fit
+	over all of them. I plan on measuring efficiency by counting the number of
+	blocks that each method yields, and graphing that.
+
+	\section{Version Control and Work Log}
+	Created with gitlog2latex
+	\begin{center}
+		\begin{longtabu} to \textwidth {|
+		    X[4,l]|
+		    X[3,c]|
+		    X[8,l]|
+		    X[4,1]|}
+		    \hline
+		    \textbf{Author} & \textbf{Date} & \textbf{Message} & \textbf{Time Spent} \\ \hline
+		codymalick & 2016-06-02 & added variable, not working & 4 hours \\ \hline
+		codymalick & 2016-05-15 & added some code, not working as of yet & 3 hours \\ \hline
+		codymalick & 2016-05-15 & added design document & 1 hour \\ \hline
+	\end{longtabu}
+	\end{center}
+
+\section{Questions}
+	\subsection{Assignment Purpose}
+	I believe the purpose of this assignment was to understand how memory is allocated,
+	why it is an important problem to solve, and why best fit, although more efficient,
+	is much slower than first fit. If we wanted to work with this interace in the kernel,
+	understanding these basic concepts is important.
+
+	\subsection{Problem Approach}
+	I approached the problem initially the way I had planned in my design. I 
+	wrote the code that found the best fit solution first, but I couldn't track down
+	the reason I kept getting a kernel panic. I wrote some code to sort inside the
+	\texttt{slob\_page\_alloc()} function, but I never saw if it worked properly
+	because of my kernel panic. Because of the kernel panic, I also coudln't get the
+	system call part of the assignment working.
+
+	\subsection{Testing}
+	Testing would be straightforward: If the VM ran, and was noticably slower, then
+	the best fit implementation was working. We could also get exact metrics based
+	off of the amount of memory that was used (lower for best fit, higher for first).
+
+	\subsection{What did I learn?}
+	Although I did not successfully finish the assignment, I learned how to get a custom
+	system call working, how to work with the a simple list of blocks, and learned how
+	different approaches to memory management are handled.
+\end{document}

@@ -30,7 +30,9 @@ void* match_smoker(void *tmp);
 void* pusher_a(void *tmp);
 void* pusher_b(void *tmp);
 void* pusher_c(void *tmp);
-void smoke(int input);
+void paper_smoke();
+void match_smoke();
+void tobacco_smoke();
 
 int main(int argc, char *argv[])
 {
@@ -128,9 +130,7 @@ int main(int argc, char *argv[])
 
 void* agent_a(void *tmp) {
 	while(1) {
-		printf("agent a waiting\n");
 		sem_wait(&agent_sem);
-		printf("agent a going\n");
 		sem_post(&tobacco);
 		printf("agent a - tobacco\n");
 		sem_post(&paper);	
@@ -140,9 +140,7 @@ void* agent_a(void *tmp) {
 
 void* agent_b(void *tmp) {
 	while(1) {
-		printf("agent b waiting\n");
 		sem_wait(&agent_sem);
-		printf("agent b going\n");
 		sem_post(&paper);
 		printf("agent b - paper\n");
 		sem_post(&match);
@@ -152,9 +150,7 @@ void* agent_b(void *tmp) {
 
 void* agent_c(void *tmp) {
 	while(1) {
-		printf("agent c waiting\n");
 		sem_wait(&agent_sem);
-		printf("agent c going\n");
 		sem_post(&tobacco);
 		printf("agent c - tobacco\n");
 		sem_post(&match);
@@ -164,9 +160,7 @@ void* agent_c(void *tmp) {
 
 void* pusher_a(void *tmp) {
 	while(1) {
-		printf("pusher a waiting\n");
 		sem_wait(&tobacco);
-		printf("pusher a going\n");
                 pthread_mutex_lock(&mutex);
 		// If pusher B has run
 		if(is_paper) {
@@ -184,9 +178,7 @@ void* pusher_a(void *tmp) {
 
 void* pusher_b(void *tmp) {
 	while(1) {
-		printf("pusher b waiting\n");
 		sem_wait(&paper);
-		printf("pusher b going\n");
 		pthread_mutex_lock(&mutex);
 		// If pusher C has run
 		if(is_match) {
@@ -204,9 +196,7 @@ void* pusher_b(void *tmp) {
 
 void* pusher_c(void *tmp) {
 	while(1) {
-		printf("pusher c waiting\n");
 		sem_wait(&match);
-		printf("pusher c going\n");
 		pthread_mutex_lock(&mutex);
 		// If pusher A has run
 		if(is_tobacco) {
@@ -226,7 +216,7 @@ void* tobacco_smoker(void *tmp) {
 	while(1) {
 		sem_wait(&pusher_tobacco);	
 		sem_post(&agent_sem);
-		smoke(1);
+		tobacco_smoke();
 	}
 }
 
@@ -234,7 +224,7 @@ void* paper_smoker(void *tmp) {
 	while(1) {
 		sem_wait(&pusher_paper);
 		sem_post(&agent_sem);
-		smoke(2);
+		paper_smoke();
 	}
 }
 
@@ -242,11 +232,19 @@ void* match_smoker(void *tmp) {
 	while(1) {
 		sem_wait(&pusher_match);
 		sem_post(&agent_sem);
-		smoke(3);
+		match_smoke();
 	}
 }
 
-void smoke(int input) {
-	printf("#%i is smoking\n", input);
+void match_smoke() {
+	printf("Match Smoker is smoking\n");
 	sleep(2);
+}
+
+void paper_smoke() {
+	printf("Paper Smoker is smoking\n");
+}
+
+void tobacco_smoke() {
+	printf("Tobacco Smoker is smoking\n");
 }
