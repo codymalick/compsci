@@ -58,7 +58,7 @@
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-D}}FreeBSD}{15}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-D}1}The Fast File System}{15}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-D}2}Virtual File System}{15}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-E}}Conclusion}{15}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-E}}Summary}{15}
 \contentsline {section}{\numberline {VI}Conclusion}{15}
 \contentsline {section}{\numberline {VII}Appendix A - Linux Structures}{16}
 \contentsline {section}{\numberline {VIII}Appendix B - FreeBSD Structures}{18}
