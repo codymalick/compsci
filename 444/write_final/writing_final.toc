@@ -1,66 +1,157 @@
-\contentsline {section}{\numberline {I}Introduction}{3}
-\contentsline {section}{\numberline {II}Processes and Scheduling}{3}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-A}}Introduction}{3}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-B}}Linux}{3}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}1}Processes}{3}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}2}Threads}{4}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}3}CPU Scheduling}{4}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-C}}Windows}{4}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-C}1}Processes}{4}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-C}2}Threads}{5}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-C}3}CPU Scheduling}{6}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-D}}FreeBSD}{6}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}1}Processes}{6}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}2}Threads}{6}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}3}CPU Scheduling}{7}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-E}}Summary}{7}
-\contentsline {section}{\numberline {III}Interrupts}{7}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Introduction}{7}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Linux}{8}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-B}1}Interrupts}{8}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-B}2}Interrupt Structure}{8}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-B}3}Drivers}{8}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-C}}Windows}{8}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-C}1}Interrupts}{8}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-C}2}Drivers}{9}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-D}}FreeBSD}{9}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-D}1}Interrupts}{9}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-D}2}Interrupt Handler}{9}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-E}}Conclusion}{9}
-\contentsline {section}{\numberline {IV}Memory Management}{9}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Introduction}{9}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Linux}{9}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}1}Pages}{10}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}2}Zones}{10}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}3}Slabs}{11}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}4}Basic Allocation and Deallocation}{11}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}5}Allocation}{11}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}6}Deallocation}{11}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}7}Virtual Memory}{11}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}Windows}{12}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}1}Memory Manager Components}{12}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}2}Virtual Memory}{12}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}}FreeBSD}{13}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}1}Pages}{13}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}2}Memory Allocation and Deallocation}{13}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}3}Virtual Memory}{13}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-E}}Summary}{13}
-\contentsline {section}{\numberline {V}File Systems}{13}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-A}}Introduction}{13}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-B}}Linux}{13}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}1}File Systems}{13}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}2}Linux Default File Systems}{13}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}3}Virtual Filesystem}{14}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}4}VFS Structures}{14}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-C}}Windows}{14}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-C}1}NTFS}{14}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-C}2}NTFS Driver}{14}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-D}}FreeBSD}{15}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-D}1}The Fast File System}{15}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-D}2}Virtual File System}{15}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-E}}Summary}{15}
-\contentsline {section}{\numberline {VI}Conclusion}{15}
-\contentsline {section}{\numberline {VII}Appendix A - Linux Structures}{16}
-\contentsline {section}{\numberline {VIII}Appendix B - FreeBSD Structures}{18}
-\contentsline {section}{\numberline {IX}Bibliography}{21}
-\contentsline {section}{References}{21}
+\contentsline {section}{\numberline {I}Introduction}{6}
+\contentsline {section}{\numberline {II}Processes and Scheduling}{6}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-A}}Introduction}{6}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-B}}Linux}{6}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}1}Processes}{6}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}2}Threads}{7}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}3}CPU Scheduling}{7}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-C}}Windows}{7}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-C}1}Processes}{7}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-C}2}Threads}{8}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-C}3}CPU Scheduling}{9}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-D}}FreeBSD}{9}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}1}Processes}{9}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}2}Threads}{9}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}3}CPU Scheduling}{10}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-E}}Summary}{10}
+\contentsline {section}{\numberline {III}Interrupts}{10}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Introduction}{10}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Linux}{11}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-B}1}Interrupts}{11}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-B}2}Interrupt Structure}{11}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-B}3}Drivers}{11}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-C}}Windows}{11}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-C}1}Interrupts}{11}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-C}2}Drivers}{12}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-D}}FreeBSD}{12}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-D}1}Interrupts}{12}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-D}2}Interrupt Handler}{12}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-E}}Conclusion}{12}
+\contentsline {section}{\numberline {IV}Memory Management}{12}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Introduction}{12}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Linux}{12}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}1}Pages}{13}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}2}Zones}{13}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}3}Slabs}{14}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}4}Basic Allocation and Deallocation}{14}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}5}Allocation}{14}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}6}Deallocation}{14}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}7}Virtual Memory}{14}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}Windows}{15}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}1}Memory Manager Components}{15}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}2}Virtual Memory}{15}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}}FreeBSD}{16}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}1}Pages}{16}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}2}Memory Allocation and Deallocation}{16}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}3}Virtual Memory}{16}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-E}}Summary}{16}
+\contentsline {section}{\numberline {V}File Systems}{16}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-A}}Introduction}{16}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-B}}Linux}{16}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}1}File Systems}{16}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}2}Linux Default File Systems}{16}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}3}Virtual Filesystem}{17}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}4}VFS Structures}{17}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-C}}Windows}{17}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-C}1}NTFS}{17}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-C}2}NTFS Driver}{17}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-D}}FreeBSD}{18}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-D}1}The Fast File System}{18}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-D}2}Virtual File System}{18}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-E}}Summary}{18}
+\contentsline {section}{\numberline {VI}Conclusion}{18}
+\contentsline {section}{\numberline {VII}Appendix A - Linux Structures}{19}
+\contentsline {section}{\numberline {VIII}Appendix B - FreeBSD Structures}{21}
+\contentsline {section}{\numberline {IX}Bibliography}{24}
+\contentsline {section}{References}{24}
+\contentsline {section}{\numberline {X}Drafts}{24}
+\contentsline {section}{\numberline {XI}Introduction}{2}
+\contentsline {section}{\numberline {XII}Linux}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XII-A}}Processes}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XII-B}}Threads}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XII-C}}CPU Scheduling}{3}
+\contentsline {section}{\numberline {XIII}Windows}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XIII-A}}Processes}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XIII-B}}Threads}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XIII-C}}CPU Scheduling}{4}
+\contentsline {section}{\numberline {XIV}FreeBSD}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XIV-A}}Processes}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XIV-B}}Threads}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XIV-C}}CPU Scheduling}{6}
+\contentsline {section}{\numberline {XV}Appendix A}{7}
+\contentsline {section}{\numberline {XVI}Appendix B}{10}
+\contentsline {section}{\numberline {XVII}Bibliography}{12}
+\contentsline {section}{\numberline {XVIII}Introduction}{2}
+\contentsline {section}{\numberline {XIX}Linux}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XIX-A}}Virtual Filesystem}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XIX-B}}Block IO Layer}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XIX-C}}Scheduling}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XIX-D}}Interrupts}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XIX-E}}Interrupt Structure}{4}
+\contentsline {section}{\numberline {XX}Windows}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XX-A}}IO Manager}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XX-B}}Types of IO}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XX-C}}Drivers}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XX-D}}Scheduling}{5}
+\contentsline {section}{\numberline {XXI}FreeBSD}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXI-A}}Basic IO}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXI-B}}Scheduling}{6}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXI-C}}Interrupts}{6}
+\contentsline {section}{\numberline {XXII}Conclusion}{7}
+\contentsline {section}{\numberline {XXIII}Appendix A - Linux Structs}{8}
+\contentsline {section}{\numberline {XXIV}Appendix B - Windows Structs}{8}
+\contentsline {section}{\numberline {XXV}Appendix C - FreeBSD Structs}{8}
+\contentsline {section}{\numberline {XXVI}Introduction}{2}
+\contentsline {section}{\numberline {XXVII}Linux}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXVII-A}}Interrupts}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXVII-B}}Interrupt Structure}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXVII-C}}Drivers}{2}
+\contentsline {section}{\numberline {XXVIII}Windows}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXVIII-A}}Interrupts}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXVIII-B}}Drivers}{3}
+\contentsline {section}{\numberline {XXIX}FreeBSD}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXIX-A}}Interrupts}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXIX-B}}Interrupt Handler}{3}
+\contentsline {section}{\numberline {XXX}Conclusion}{4}
+\contentsline {section}{\numberline {XXXI}Appendix A - Linux Structs}{5}
+\contentsline {section}{\numberline {XXXII}Appendix B - Windows Structs}{5}
+\contentsline {section}{\numberline {XXXIII}Appendix C - FreeBSD Structs}{5}
+\contentsline {section}{\numberline {XXXIV}Bibliography}{5}
+\contentsline {section}{\numberline {XXXV}Introduction}{2}
+\contentsline {section}{\numberline {XXXVI}Linux}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXXVI-A}}Pages}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXXVI-B}}Zones}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXXVI-C}}Slabs}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXXVI-D}}Basic Allocation and Deallocation}{3}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {XXXVI-D}1}Allocation}{3}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {XXXVI-D}2}Deallocation}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXXVI-E}}Virtual Memory}{4}
+\contentsline {section}{\numberline {XXXVII}Windows}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXXVII-A}}Memory Manager Components}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXXVII-B}}Virtual Memory}{5}
+\contentsline {section}{\numberline {XXXVIII}FreeBSD}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXXVIII-A}}Pages}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXXVIII-B}}Memory Allocation and Deallocation}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XXXVIII-C}}Virtual Memory}{5}
+\contentsline {section}{\numberline {XXXIX}Conclusion}{6}
+\contentsline {section}{\numberline {XL}Appendix A - Linux Structs}{7}
+\contentsline {section}{\numberline {XLI}Appendix B - Windows Structs}{7}
+\contentsline {section}{\numberline {XLII}Appendix C - FreeBSD Structs}{7}
+\contentsline {section}{\numberline {XLIII}Bibliography}{7}
+\contentsline {section}{\numberline {XLIV}Introduction}{2}
+\contentsline {section}{\numberline {XLV}Linux}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XLV-A}}File Systems}{2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {XLV-A}1}Linux Default File Systems}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XLV-B}}Virtual Filesystem}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XLV-C}}VFS Structures}{2}
+\contentsline {section}{\numberline {XLVI}Windows}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XLVI-A}}NTFS}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XLVI-B}}NTFS Driver}{3}
+\contentsline {section}{\numberline {XLVII}FreeBSD}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XLVII-A}}The Fast File System}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {XLVII-B}}Virtual File System}{4}
+\contentsline {section}{\numberline {XLVIII}Conclusion}{4}
+\contentsline {section}{\numberline {XLIX}Appendix A - Linux Structs}{5}
+\contentsline {section}{\numberline {L}Appendix B - Windows Structs}{5}
+\contentsline {section}{\numberline {LI}Appendix C - FreeBSD Structs}{5}
+\contentsline {section}{\numberline {LII}Bibliography}{5}

@@ -1,9 +1,9 @@
-\documentclass[10pt,letterpaper,onecolumn,draftclsnofoot]{IEEEtran}
-\usepackage[margin=0.75in]{geometry}
-\usepackage{listings}
-\usepackage{color}
-\usepackage{longtable}
-\usepackage{tabu}
+% \documentclass[10pt,letterpaper,onecolumn,draftclsnofoot]{IEEEtran}
+% \usepackage[margin=0.75in]{geometry}
+% \usepackage{listings}
+% \usepackage{color}
+% \usepackage{longtable}
+% \usepackage{tabu}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -19,8 +19,8 @@
   breakatwhitespace=true,
   tabsize=4
 }
-
-\begin{document}
+%
+% \begin{document}
 \begin{titlepage}
   \title{CS 444 - Spring 2016 - Writing Assignment 5}
   \author{Cody Malick\\
@@ -47,16 +47,16 @@ problem, the file system and virtual file systems are wrappers around these
 arduous tasks that make it simple, and user friendly. The VFS is the unification
 of two ideas: making the user's life easy, while providing a generic interface
 that allows different types of file systems the same interfaces. Following is
-an examination of the FS and VFS implementations in Linux, Windows, and FreeBSD. 
+an examination of the FS and VFS implementations in Linux, Windows, and FreeBSD.
 \section{Linux}
   \subsection{File Systems}
   A file system, simply, is an abstraction of the IO layer that allows ease of
   use for the user in tracking, reading, and writing to disk. Instead of forcing
   the user to remember where a file is, what its size is, what type of file it
   is, etc., the file system provides interfaces that make this a, relatively,
-  easy task. There are many different types of file systems. They are 
+  easy task. There are many different types of file systems. They are
   differentiated by minimum and maximum file size, journaling capability, and
-  maximum partition size. 
+  maximum partition size.
   \subsubsection{Linux Default File Systems}
   There are a few default file systems available in Linux. A few of them are
   all from the \texttt{EXT} family, like \texttt{EXT2}, \texttt{EXT3}, and
@@ -67,7 +67,7 @@ an examination of the FS and VFS implementations in Linux, Windows, and FreeBSD.
   One the great things about Linux is the number of options for file systems.
   If there are features you're looking for, but don't have, then you can pick
   one that works better for your needs. If you want a bleeding edge system, you
-  can also grab your favorite choice from the internet. 
+  can also grab your favorite choice from the internet.
 
   \subsection{Virtual Filesystem}
   The VFS lies at the top layer of the OS input-output system. The virtual
@@ -112,8 +112,8 @@ section, we will examine the Windows file system, \texttt{NTFS}, and its virtual
 file system layer.
   \subsection{NTFS}
   Windows has a few different file systems available by default. The native file
-  system, however, is called \texttt{NTFS}, or New Technology File System. 
-  \texttt{NTFS} is fairly comperable to \texttt{EXT4} in maximum partition and 
+  system, however, is called \texttt{NTFS}, or New Technology File System.
+  \texttt{NTFS} is fairly comperable to \texttt{EXT4} in maximum partition and
   file size. \texttt{NTFS} theoretically supports up to exabyte volume sizes, but
   Windows currently limits support to 256 terrabyte volume sizes with 64 kilobyte
   cluster sizes. \texttt{NTFS} has the normal array of features that standard file
@@ -127,7 +127,7 @@ file system layer.
   Linux and Windows. Linux seperates the VFS layer entirely, and then has the FS plug
   into the VFS and integrate. If you wanted to plug another file system in to Windows,
   it would use a distinctly different set of interfaces from another. So if you wanted
-  to use a \texttt{FAT32} file system type, it would not easily integrate with a 
+  to use a \texttt{FAT32} file system type, it would not easily integrate with a
   \texttt{NTFS} file system. \cite{internals2}
 
   Now that we've examined how Windows handles its filesystem layer, and saw how
@@ -198,8 +198,8 @@ for future code samples
 
 \end{lstlisting}
 
-section{Bibliography}
-\bibliographystyle{IEEEtran}
-\bibliography{writing_5}
-
-\end{document}
+\section{Bibliography}
+% \bibliographystyle{IEEEtran}
+% \bibliography{writing_5}
+%
+% \end{document}
