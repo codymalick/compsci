@@ -1,0 +1,137 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage{tikz}
+
+\begin{document}
+
+  \title{CS 321, Assignment 1}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{\today}
+  \maketitle
+
+\section{}
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.2]
+		\tikzstyle{every node}+=[inner sep=0pt]
+		\draw [black] (13.9,-21.2) circle (3);
+		\draw (13.9,-21.2) node {$q0$};
+		\draw [black] (23.4,-21.2) circle (3);
+		\draw (23.4,-21.2) node {$q1$};
+		\draw [black] (32.3,-21.2) circle (3);
+		\draw (32.3,-21.2) node {$q2$};
+		\draw [black] (41.7,-21.2) circle (3);
+		\draw (41.7,-21.2) node {$q3$};
+		\draw [black] (41.7,-21.2) circle (2.4);
+		\draw [black] (23.4,-29.4) circle (3);
+		\draw (23.4,-29.4) node {$q4$};
+		\draw [black] (32.3,-29.3) circle (3);
+		\draw (32.3,-29.3) node {$q5$};
+		\draw [black] (41.6,-29.4) circle (3);
+		\draw (41.6,-29.4) node {$q6$};
+		\draw [black] (41.6,-29.4) circle (2.4);
+		\draw [black] (6,-21.2) -- (10.9,-21.2);
+		\fill [black] (10.9,-21.2) -- (10.1,-20.7) -- (10.1,-21.7);
+		\draw [black] (16.9,-21.2) -- (20.4,-21.2);
+		\fill [black] (20.4,-21.2) -- (19.6,-20.7) -- (19.6,-21.7);
+		\draw (18.65,-20.7) node [above] {$a$};
+		\draw [black] (26.4,-21.2) -- (29.3,-21.2);
+		\fill [black] (29.3,-21.2) -- (28.5,-20.7) -- (28.5,-21.7);
+		\draw (27.85,-20.7) node [above] {$a$};
+		\draw [black] (35.3,-21.2) -- (38.7,-21.2);
+		\fill [black] (38.7,-21.2) -- (37.9,-20.7) -- (37.9,-21.7);
+		\draw (37,-20.7) node [above] {$a$};
+		\draw [black] (12.577,-18.52) arc (234:-54:2.25);
+		\draw (13.9,-13.95) node [above] {$a,b$};
+		\fill [black] (15.22,-18.52) -- (16.1,-18.17) -- (15.29,-17.58);
+		\draw [black] (22.077,-18.52) arc (234:-54:2.25);
+		\draw (23.4,-13.95) node [above] {$b$};
+		\fill [black] (24.72,-18.52) -- (25.6,-18.17) -- (24.79,-17.58);
+		\draw [black] (30.977,-18.52) arc (234:-54:2.25);
+		\draw (32.3,-13.95) node [above] {$b$};
+		\fill [black] (33.62,-18.52) -- (34.5,-18.17) -- (33.69,-17.58);
+		\draw [black] (16.17,-23.16) -- (21.13,-27.44);
+		\fill [black] (21.13,-27.44) -- (20.85,-26.54) -- (20.2,-27.3);
+		\draw (17.64,-25.79) node [below] {$b$};
+		\draw [black] (26.4,-29.37) -- (29.3,-29.33);
+		\fill [black] (29.3,-29.33) -- (28.49,-28.84) -- (28.51,-29.84);
+		\draw (27.85,-29.86) node [below] {$b$};
+		\draw [black] (35.3,-29.33) -- (38.6,-29.37);
+		\fill [black] (38.6,-29.37) -- (37.81,-28.86) -- (37.79,-29.86);
+		\draw (36.95,-29.86) node [below] {$b$};
+		\draw [black] (24.723,-32.08) arc (54:-234:2.25);
+		\draw (23.4,-36.65) node [below] {$a$};
+		\fill [black] (22.08,-32.08) -- (21.2,-32.43) -- (22.01,-33.02);
+		\draw [black] (33.623,-31.98) arc (54:-234:2.25);
+		\draw (32.3,-36.55) node [below] {$a$};
+		\fill [black] (30.98,-31.98) -- (30.1,-32.33) -- (30.91,-32.92);
+	\end{tikzpicture}
+\end{center}
+
+\section{}
+\begin{center}
+	\begin{tikzpicture}[scale=0.2]
+		\tikzstyle{every node}+=[inner sep=0pt]
+		\draw [black] (13.9,-21.2) circle (3);
+		\draw (13.9,-21.2) node {$q0$};
+		\draw [black] (23.4,-21.2) circle (3);
+		\draw (23.4,-21.2) node {$q1$};
+		\draw [black] (32.3,-21.2) circle (3);
+		\draw (32.3,-21.2) node {$q2$};
+		\draw [black] (41.7,-21.2) circle (3);
+		\draw (41.7,-21.2) node {$q3$};
+		\draw [black] (41.7,-21.2) circle (2.4);
+		\draw [black] (23.4,-29.4) circle (3);
+		\draw (23.4,-29.4) node {$q4$};
+		\draw [black] (32.3,-29.3) circle (3);
+		\draw (32.3,-29.3) node {$q5$};
+		\draw [black] (41.6,-29.4) circle (3);
+		\draw (41.6,-29.4) node {$q6$};
+		\draw [black] (41.6,-29.4) circle (2.4);
+		\draw [black] (6,-21.2) -- (10.9,-21.2);
+		\fill [black] (10.9,-21.2) -- (10.1,-20.7) -- (10.1,-21.7);
+		\draw [black] (16.9,-21.2) -- (20.4,-21.2);
+		\fill [black] (20.4,-21.2) -- (19.6,-20.7) -- (19.6,-21.7);
+		\draw (18.65,-20.7) node [above] {$a$};
+		\draw [black] (26.4,-21.2) -- (29.3,-21.2);
+		\fill [black] (29.3,-21.2) -- (28.5,-20.7) -- (28.5,-21.7);
+		\draw (27.85,-20.7) node [above] {$a$};
+		\draw [black] (35.3,-21.2) -- (38.7,-21.2);
+		\fill [black] (38.7,-21.2) -- (37.9,-20.7) -- (37.9,-21.7);
+		\draw (37,-20.7) node [above] {$a$};
+		\draw [black] (12.577,-18.52) arc (234:-54:2.25);
+		\draw (13.9,-13.95) node [above] {$a,b$};
+		\fill [black] (15.22,-18.52) -- (16.1,-18.17) -- (15.29,-17.58);
+		\draw [black] (22.077,-18.52) arc (234:-54:2.25);
+		\draw (23.4,-13.95) node [above] {$b$};
+		\fill [black] (24.72,-18.52) -- (25.6,-18.17) -- (24.79,-17.58);
+		\draw [black] (30.977,-18.52) arc (234:-54:2.25);
+		\draw (32.3,-13.95) node [above] {$b$};
+		\fill [black] (33.62,-18.52) -- (34.5,-18.17) -- (33.69,-17.58);
+		\draw [black] (16.17,-23.16) -- (21.13,-27.44);
+		\fill [black] (21.13,-27.44) -- (20.85,-26.54) -- (20.2,-27.3);
+		\draw (17.64,-25.79) node [below] {$b$};
+		\draw [black] (26.4,-29.37) -- (29.3,-29.33);
+		\fill [black] (29.3,-29.33) -- (28.49,-28.84) -- (28.51,-29.84);
+		\draw (27.85,-29.86) node [below] {$b$};
+		\draw [black] (35.3,-29.33) -- (38.6,-29.37);
+		\fill [black] (38.6,-29.37) -- (37.81,-28.86) -- (37.79,-29.86);
+		\draw (36.95,-29.86) node [below] {$b$};
+		\draw [black] (24.723,-32.08) arc (54:-234:2.25);
+		\draw (23.4,-36.65) node [below] {$a$};
+		\fill [black] (22.08,-32.08) -- (21.2,-32.43) -- (22.01,-33.02);
+		\draw [black] (33.623,-31.98) arc (54:-234:2.25);
+		\draw (32.3,-36.55) node [below] {$a$};
+		\fill [black] (30.98,-31.98) -- (30.1,-32.33) -- (30.91,-32.92);
+	\end{tikzpicture}
+\end{center}
+
+\end{document}
+
+
+\section{}
+\section{}
+\section{}
+\end{document}
