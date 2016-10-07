@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2016.3.16)  6 OCT 2016 19:54
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2016.3.16)  7 OCT 2016 13:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -469,10 +469,10 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 {/usr/share/texlive/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
 (./a2.aux) ) 
 Here is how much of TeX's memory you used:
- 10966 strings out of 495063
- 209230 string characters out of 3182201
- 258152 words of memory out of 3000000
- 13956 multiletter control sequences out of 15000+200000
+ 11101 strings out of 495063
+ 211839 string characters out of 3182201
+ 260847 words of memory out of 3000000
+ 14091 multiletter control sequences out of 15000+200000
  7449 words of font info for 27 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
  56i,6n,68p,392b,576s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -481,11 +481,13 @@ Here is how much of TeX's memory you used:
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/te
 xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on a2.pdf (2 pages, 62078 bytes).
+exmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on a2.pdf (2 pages, 89343 bytes).
 PDF statistics:
- 38 PDF objects out of 1000 (max. 8388607)
- 27 compressed objects within 1 object stream
+ 46 PDF objects out of 1000 (max. 8388607)
+ 33 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 
