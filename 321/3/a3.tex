@@ -31,6 +31,24 @@ $(aa)^*(bb)^*+\\
 a((aa)^*(bb)^*((ab)(ab))^*((ab)(ba))^*((ba)(ab))^*((ba)(ba))^*)a+\\
 b((aa)^*(bb)^*((ab)(ab))^*((ab)(ba))^*((ba)(ab))^*((ba)(ba))^*)b$
 \section{}
+Prove: Let $M(w)$ be the statement that, for any regular language,$w \in \Sigma\{0,1\}^*$,
+, the string is a multiple of three if and only if its reverse
+, $rev(w)$, is also a multiple of three.\\\\
+
+Initial Step: We must verify that the reversed form of binary 3, '11', is a
+multiple of three, $M(w)$ where $w=11$: \\
+
+$M(rev(11))=M(11)$\\
+
+Then the reversed binary form of 3 is equal to 3, which is a multiple of 3.\\\\
+
+Inductive Step: Assume there is a string k that is representative of a value
+greater than or equal to zero, that is a multiple of 3. Prove
+that $M(k+3)$ is also a multiple of 3:\\
+
+$M(k+3)=M(rev(k+3))=$
+
+
 \section{}
-\section{}
+If there exists some regular language
 \end{document}
