@@ -17,8 +17,19 @@ $a^*(ba^*ba^*)^*$
 \subsection*{b}
 $b^*a^*$
 \subsection*{c}
-$b^*a^*((ab)b^*a^*(ab))$
+$b^*a^*((ab)b^*a^*(ab))^*b^*a^*$
 \subsection*{d}
+This was a particularlly tricky one. You need to handle all even numbered cases,
+and the case that you start with an a or b, then have a ton of stuff in the
+middle, then an a at the end. Here is my long regex to handle this problem. I
+use line breaks whenever there is an 'or' for ease of reading:\\
+$(aa)^*(bb)^*+\\
+((ab)(ab))^*+\\
+((ab)(ba))^*+\\
+((ba)(ab))^*+\\
+((ba)(ba))^*+\\
+a((aa)^*(bb)^*((ab)(ab))^*((ab)(ba))^*((ba)(ab))^*((ba)(ba))^*)a+\\
+b((aa)^*(bb)^*((ab)(ab))^*((ab)(ba))^*((ba)(ab))^*((ba)(ba))^*)b$
 \section{}
 \section{}
 \section{}
