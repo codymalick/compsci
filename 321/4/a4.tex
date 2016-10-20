@@ -124,7 +124,61 @@ Reverse the NFA: \\
 And then tranlate that into a new regex statement:\\
 $b(ba+baa)^*$
 \section{}	
-
+\begin{center}
+	\begin{tikzpicture}[scale=0.2]
+		\tikzstyle{every node}+=[inner sep=0pt]
+		\draw [black] (7.1,-9.3) circle (3);
+		\draw [black] (7.1,-9.3) circle (2.4);
+		\draw [black] (16.2,-9.3) circle (3);
+		\draw [black] (10.4,-30.4) circle (3);
+		\draw [black] (45.9,-9.2) circle (3);
+		\draw [black] (28.1,-9.2) circle (3);
+		\draw [black] (28.1,-9.2) circle (2.4);
+		\draw [black] (45.9,-30.4) circle (3);
+		\draw [black] (28.1,-30.4) circle (3);
+		\draw [black] (1.2,-9.3) -- (4.1,-9.3);
+		\fill [black] (4.1,-9.3) -- (3.3,-8.8) -- (3.3,-9.8);
+		\draw [black] (10.1,-9.3) -- (13.2,-9.3);
+		\fill [black] (13.2,-9.3) -- (12.4,-8.8) -- (12.4,-9.8);
+		\draw (11.65,-9.8) node [below] {$a$};
+		\draw [black] (7.56,-12.26) -- (9.94,-27.44);
+		\fill [black] (9.94,-27.44) -- (10.31,-26.57) -- (9.32,-26.72);
+		\draw (8.05,-20.05) node [left] {$b$};
+		\draw [black] (11.723,-33.08) arc (54:-234:2.25);
+		\draw (10.4,-37.65) node [below] {$a,b$};
+		\fill [black] (9.08,-33.08) -- (8.2,-33.43) -- (9.01,-34.02);
+		\draw [black] (19.2,-9.27) -- (25.1,-9.23);
+		\fill [black] (25.1,-9.23) -- (24.3,-8.73) -- (24.3,-9.73);
+		\draw (22.15,-8.74) node [above] {$b$};
+		\draw [black] (15.4,-12.19) -- (11.2,-27.51);
+		\fill [black] (11.2,-27.51) -- (11.89,-26.87) -- (10.93,-26.6);
+		\draw (12.53,-19.32) node [left] {$a$};
+		\draw [black] (31.1,-9.2) -- (42.9,-9.2);
+		\fill [black] (42.9,-9.2) -- (42.1,-8.7) -- (42.1,-9.7);
+		\draw (37,-8.7) node [above] {$a$};
+		\draw [black] (45.9,-12.2) -- (45.9,-27.4);
+		\fill [black] (45.9,-27.4) -- (46.4,-26.6) -- (45.4,-26.6);
+		\draw (45.4,-19.8) node [left] {$a$};
+		\draw [black] (47.223,-33.08) arc (54:-234:2.25);
+		\draw (45.9,-37.65) node [below] {$a$};
+		\fill [black] (44.58,-33.08) -- (43.7,-33.43) -- (44.51,-34.02);
+		\draw [black] (30.167,-7.039) arc (128.45575:51.54425:10.987);
+		\fill [black] (30.17,-7.04) -- (31.1,-6.93) -- (30.48,-6.15);
+		\draw (37,-4.16) node [above] {$b$};
+		\draw [black] (42.9,-30.4) -- (31.1,-30.4);
+		\fill [black] (31.1,-30.4) -- (31.9,-30.9) -- (31.9,-29.9);
+		\draw (37,-29.9) node [above] {$b$};
+		\draw [black] (28.1,-27.4) -- (28.1,-12.2);
+		\fill [black] (28.1,-12.2) -- (27.6,-13) -- (28.6,-13);
+		\draw (28.6,-19.8) node [right] {$b$};
+		\draw [black] (25.1,-30.4) -- (13.4,-30.4);
+		\fill [black] (13.4,-30.4) -- (14.2,-30.9) -- (14.2,-29.9);
+		\draw (19.25,-29.9) node [above] {$a$};
+		\draw [black] (30.03,-11.5) -- (43.97,-28.1);
+		\fill [black] (43.97,-28.1) -- (43.84,-27.17) -- (43.07,-27.81);
+		\draw (36.45,-21.24) node [left] {$b$};
+	\end{tikzpicture}
+\end{center}
 \section{}
 
 \section{}
