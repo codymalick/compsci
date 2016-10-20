@@ -1,0 +1,132 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage{tikz}
+
+\begin{document}
+
+  \title{CS 321, Assignment 4}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{\today}
+  \maketitle
+
+\section{}
+This is an interesting problem. To get the answer, we need to construct an NFA,
+reverse it, then construct a regex statement out of it. So, our initial NFA 
+looks like this: \\
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.2]
+		\tikzstyle{every node}+=[inner sep=0pt]
+		\draw [black] (7.2,-19.5) circle (3);
+		\draw [black] (16.1,-14.8) circle (3);
+		\draw [black] (42.5,-19.5) circle (3);
+		\draw [black] (12.5,-28.3) circle (3);
+		\draw [black] (54.4,-19.5) circle (3);
+		\draw [black] (54.4,-19.5) circle (2.4);
+		\draw [black] (24.7,-14.8) circle (3);
+		\draw [black] (33.4,-14.8) circle (3);
+		\draw [black] (21.5,-29) circle (3);
+		\draw [black] (30.9,-29) circle (3);
+		\draw [black] (39.3,-28.3) circle (3);
+		\draw [black] (1.3,-19.5) -- (4.2,-19.5);
+		\fill [black] (4.2,-19.5) -- (3.4,-19) -- (3.4,-20);
+		\draw [black] (45.5,-19.5) -- (51.4,-19.5);
+		\fill [black] (51.4,-19.5) -- (50.6,-19) -- (50.6,-20);
+		\draw (48.45,-20) node [below] {$b$};
+		\draw [black] (7.763,-16.557) arc (164.31971:15.68029:17.747);
+		\fill [black] (7.76,-16.56) -- (8.46,-15.92) -- (7.5,-15.65);
+		\draw (24.85,-3.11) node [above] {$\epsilon$};
+		\draw [black] (9.898,-26.843) arc (-130.13525:-167.74593:7.898);
+		\fill [black] (9.9,-26.84) -- (9.61,-25.94) -- (8.96,-26.71);
+		\draw (7.58,-26.15) node [left] {$\epsilon$};
+		\draw [black] (15.49,-28.53) -- (18.51,-28.77);
+		\fill [black] (18.51,-28.77) -- (17.75,-28.21) -- (17.67,-29.2);
+		\draw (16.89,-29.21) node [below] {$a$};
+		\draw [black] (24.5,-29) -- (27.9,-29);
+		\fill [black] (27.9,-29) -- (27.1,-28.5) -- (27.1,-29.5);
+		\draw (26.2,-29.5) node [below] {$a$};
+		\draw [black] (33.89,-28.75) -- (36.31,-28.55);
+		\fill [black] (36.31,-28.55) -- (35.47,-28.12) -- (35.55,-29.11);
+		\draw (35.24,-29.22) node [below] {$b$};
+		\draw [black] (40.33,-25.48) -- (41.47,-22.32);
+		\fill [black] (41.47,-22.32) -- (40.73,-22.9) -- (41.67,-23.24);
+		\draw (41.66,-24.69) node [right] {$\epsilon$};
+		\draw [black] (36.07,-16.18) -- (39.83,-18.12);
+		\fill [black] (39.83,-18.12) -- (39.35,-17.31) -- (38.89,-18.2);
+		\draw (38.86,-16.65) node [above] {$\epsilon$};
+		\draw [black] (27.7,-14.8) -- (30.4,-14.8);
+		\fill [black] (30.4,-14.8) -- (29.6,-14.3) -- (29.6,-15.3);
+		\draw (29.05,-14.3) node [above] {$b$};
+		\draw [black] (19.1,-14.8) -- (21.7,-14.8);
+		\fill [black] (21.7,-14.8) -- (20.9,-14.3) -- (20.9,-15.3);
+		\draw (20.4,-14.3) node [above] {$a$};
+		\draw [black] (9.453,-17.527) arc (125.6763:109.99986:15.532);
+		\fill [black] (13.2,-15.55) -- (12.28,-15.35) -- (12.62,-16.29);
+		\draw (10.34,-15.91) node [above] {$\epsilon$};
+	\end{tikzpicture}
+\end{center}
+
+Reverse the NFA: \\
+\begin{center}
+	\begin{tikzpicture}[scale=0.2]
+		\tikzstyle{every node}+=[inner sep=0pt]
+		\draw [black] (7.2,-19.5) circle (3);
+		\draw [black] (7.2,-19.5) circle (2.4);
+		\draw [black] (16.7,-14.8) circle (3);
+		\draw [black] (42.5,-19.5) circle (3);
+		\draw [black] (10.5,-29) circle (3);
+		\draw [black] (54.4,-19.5) circle (3);
+		\draw [black] (24.7,-14.8) circle (3);
+		\draw [black] (33.4,-14.8) circle (3);
+		\draw [black] (20.4,-29) circle (3);
+		\draw [black] (30.9,-29) circle (3);
+		\draw [black] (40.7,-29) circle (3);
+		\draw [black] (8.004,-16.613) arc (159.66022:20.33978:17.967);
+		\fill [black] (41.7,-16.61) -- (41.89,-15.69) -- (40.95,-16.04);
+		\draw (24.85,-4.39) node [above] {$\epsilon$};
+		\draw [black] (41.94,-22.45) -- (41.26,-26.05);
+		\fill [black] (41.26,-26.05) -- (41.9,-25.36) -- (40.92,-25.17);
+		\draw (40.87,-23.96) node [left] {$\epsilon$};
+		\draw [black] (39.83,-18.12) -- (36.07,-16.18);
+		\fill [black] (36.07,-16.18) -- (36.55,-16.99) -- (37.01,-16.1);
+		\draw (38.86,-16.65) node [above] {$\epsilon$};
+		\draw [black] (30.498,-15.53) arc (-83.05694:-96.94306:11.98);
+		\fill [black] (27.6,-15.53) -- (28.34,-16.12) -- (28.46,-15.13);
+		\draw (29.05,-16.12) node [below] {$b$};
+		\draw [black] (21.831,-15.633) arc (-83.02591:-96.97409:9.319);
+		\fill [black] (19.57,-15.63) -- (20.3,-16.23) -- (20.42,-15.23);
+		\draw (20.7,-16.2) node [below] {$a$};
+		\draw [black] (14.01,-16.13) -- (9.89,-18.17);
+		\fill [black] (9.89,-18.17) -- (10.83,-18.26) -- (10.38,-17.37);
+		\draw (12.86,-17.65) node [below] {$\epsilon$};
+		\draw [black] (37.7,-29) -- (33.9,-29);
+		\fill [black] (33.9,-29) -- (34.7,-29.5) -- (34.7,-28.5);
+		\draw (35.8,-28.5) node [above] {$b$};
+		\draw [black] (27.9,-29) -- (23.4,-29);
+		\fill [black] (23.4,-29) -- (24.2,-29.5) -- (24.2,-28.5);
+		\draw (25.65,-28.5) node [above] {$a$};
+		\draw [black] (17.4,-29) -- (13.5,-29);
+		\fill [black] (13.5,-29) -- (14.3,-29.5) -- (14.3,-28.5);
+		\draw (15.45,-28.5) node [above] {$a$};
+		\draw [black] (9.52,-26.17) -- (8.18,-22.33);
+		\fill [black] (8.18,-22.33) -- (7.97,-23.25) -- (8.92,-22.93);
+		\draw (8.09,-24.99) node [left] {$\epsilon$};
+		\draw [black] (54.4,-12) -- (54.4,-16.5);
+		\fill [black] (54.4,-16.5) -- (54.9,-15.7) -- (53.9,-15.7);
+		\draw [black] (51.4,-19.5) -- (45.5,-19.5);
+		\fill [black] (45.5,-19.5) -- (46.3,-20) -- (46.3,-19);
+		\draw (48.45,-19) node [above] {$b$};
+	\end{tikzpicture}
+\end{center}
+
+And then tranlate that into a new regex statement:\\
+$b(ba+baa)^*$
+\section{}	
+
+\section{}
+
+\section{}
+
+\end{document}
