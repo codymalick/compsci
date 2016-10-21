@@ -122,7 +122,7 @@ Reverse the NFA: \\
 \end{center}
 
 And then tranlate that into a new regex statement:\\
-$b(ba+baa)^*$
+\noindent $b(ba+baa)^*$
 \section{}	
 \begin{center}
 	\begin{tikzpicture}[scale=0.2]
@@ -182,7 +182,35 @@ $b(ba+baa)^*$
 \section{}
 To show that this DFA has at least 1024 states, we need to prove that having
 less that 1024 states rejects a string in $A$, or show that there is a string
-not in the language $A$ that the machine accepts. \\
+not in the language $A$ that the machine accepts. More specifically, we can
+show that if machine $M$ has $<1024$ states, then feeding a string with $1024$
+characters must prove there is a cycle, showing that it is regular.\\
+
+This can be shown by accounting for every possible combination after the cycle
+ends of alphabet $\{a,b\}^*$ leading up to the accepting state. This leaves us
+with $2^{10}$ combinations. If we propose that the machine $M$ has less than 1024
+states, then we can provide a string of length: number of states + 1, then we
+can show there is a string that is rejected by $M$.
+
+Given alphabet $A=\{a,b\}^*$, consider all strings of length 10, $w\in A$. Given
+a string of length ten, there are two possible combinations for each position
+in the string. Therefore, the total number of possible combinations of strings
+are $2^{10}$.
+
+Given that the number of states is less than 1024, then there must be a
+combination in the alphabet $A$ that is not accepted. 
+
 \section{}
+Step 1:\\
+Adversary picks $p$\\
+Step 2:\\
+I select $w=a^p b^p c^{p-p}$, where $|w|>=p$, and $w \in A$ and $w \in
+$ real numbers\\
+Step 3:\\
+Split into $w=xyz$ where $|xy|=<p$, and $|y|>0$ \\
+Step 4:\\
+I pick $i=0$, I win if $xy^iz \notin A$\\
+Then $xy^0z=xz=a^{p-|y|}c^0 \notin A$ since $|y|>0$\\
+I win, A is not regular. 
 
 \end{document}
