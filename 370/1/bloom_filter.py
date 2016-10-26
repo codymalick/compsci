@@ -2,19 +2,21 @@
 
 import sys
 
-def read_dictionary(dict_file):
-	print(dict_file)
+def split_file(in_file):
+	print(in_file)
 	content = []
-	with open(dict_file) as f:
+	with open(in_file) as f:
 		content = f.read().splitlines()
 
-	for val in content:
-		print(val)
-	return
+	#for val in content:
+	#	print(val)
+	return content
 
-def read_input():
+def bloom3():
 	pass
 
+def bloom5():
+	pass
 
 def main():
 	print("Hello!")
@@ -26,6 +28,7 @@ def main():
 	else:
 		print("It's working!")
 
-	read_dictionary(sys.argv[2])
+	dictionary = split_file(sys.argv[2])
+	user_in = split_file(sys.argv[4])
 
 main()
