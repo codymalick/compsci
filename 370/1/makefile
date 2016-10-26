@@ -1,12 +1,12 @@
-CC=clang
+CC=clang++
 CFLAGS=
-EXE=blm
+EXE=bloom_filter
 
 all: main
 
-main: bloom.c
+main: bloom.cpp
 	clear
-	$(CC) bloom.c -o $(EXE) $(CFLAGS)
+	$(CC) bloom.cpp -o $(EXE) $(CFLAGS)
 
 run: main
 	./$(EXE)
