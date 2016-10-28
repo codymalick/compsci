@@ -10,18 +10,12 @@ def split_file(in_file):
 	with open(in_file) as f:
 		content = f.read().splitlines()
 
-	#for val in content:
-	#	print(val)
 	return content
-# http://stackoverflow.com/questions/658439/how-many-hash-functions-does-my-bloom-filter-need
-#Our hash function will need a certain number of bits.
-# n, expected number of items
-# n = len(dictionary)
-# p, acceptable false positive rait from 0..1
-# m, size of bloom filter in bits
-# m = -n*ln(p) / (ln(2)^2)
-# k number of hash functions
-# k = m/n * ln(2)
+
+# bloom3() takes a dictionary, input file, and output file, and runs the dict
+# through a set of 3 hashes, flipping bits where hash lands. Then, it runs the
+# input through the same set of hashes and the same array, flagging any input
+# that collides on all three hashes as a bad password.
 def bloom3(input, dictionary, output3):
 	print("Bloom3 Starting...")
 	#Pick an arbitrarily large array
@@ -34,7 +28,29 @@ def bloom3(input, dictionary, output3):
 		b_array[sha1_hash(x, b_array_size)] = 1	
 		b_array[sha224_hash(x, b_array_size)] = 1
 
-	#print(b_array)
+	#process input file
+	print(input)
+	f = open(output3, 'w')
+	for x in input:
+		#Password check array, if all bits are flipped, then it was flagged
+		check_arr = [0,0,0]
+	
+		if b_array[md5_hash(x, b_array_size)] == 1:
+			check_arr[0] = 1
+			
+		if b_array[sha1_hash(x, b_array_size)] == 1:
+			check_arr[1] = 1
+		
+		if b_array[sha224_hash(x, b_array_size)] == 1:
+			check_arr[2] = 1
+		
+		#print(check_arr)
+		if check_arr[0] == 1 and check_arr[1] == 1 and check_arr[2] == 1:
+			f.write("maybe\n")
+		else:
+			f.write("no\n")
+	f.close()
+	return
 
 # Hex value to integer
 def to_int(hex):
@@ -100,8 +116,31 @@ def bloom5(input, dictionary, output5):
 		b_array[sha384_hash(x, b_array_size)] = 1
 		b_array[sha512_hash(x, b_array_size)] = 1
 
-	print(b_array)
 
+	#process input file
+	print(input)
+	f = open(output5, 'w')
+	for x in input:
+		#Password check array, if all bits are flipped, then it was flagged
+		check_arr = [0,0,0,0,0]
+		if b_array[md5_hash(x, b_array_size)] == 1:
+			check_arr[0] = 1
+		if b_array[sha1_hash(x, b_array_size)] == 1:
+			check_arr[1] = 1
+		if b_array[sha224_hash(x, b_array_size)] == 1:
+			check_arr[2] = 1
+		if b_array[sha384_hash(x, b_array_size)] == 1:
+			check_arr[3] = 1
+		if b_array[sha512_hash(x, b_array_size)] == 1:
+			check_arr[4] = 1
+
+		print(check_arr)
+		if check_arr[0] == 1 and check_arr[1] == 1 and check_arr[2] == 1 and check_arr[3] == 1 and check_arr[4] == 1:
+			f.write("maybe\n")
+		else:
+			f.write("no\n")
+	f.close()
+	return
 
 def main():
 	print("Hello!")
