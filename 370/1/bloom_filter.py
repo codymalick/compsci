@@ -9,6 +9,7 @@
 import sys
 import math
 import hashlib
+import time
 
 # splits file input into an array and returns the array
 def split_file(in_file):
@@ -72,7 +73,7 @@ def sha512_hash(str_in, arr_size):
 def bloom3(input, dictionary, output3):
 	print("Bloom3 Starting...")
 	#Pick an arbitrarily large array
-	b_array_size = (len(dictionary)+10000000)
+	b_array_size = (len(dictionary)+20000000)
 	b_array = [0] * b_array_size
 	#print("Array size: ", len(b_array))
 
@@ -84,7 +85,13 @@ def bloom3(input, dictionary, output3):
 	# process input file
 	#print(input)
 	f = open(output3, 'w')
+
+	average_time = 0
 	for x in input:
+		
+		# start timer
+		start = time.time()
+
 		# Password check array, if all bits are flipped, then it was flagged
 		check_arr = [0,0,0]
 	
@@ -102,7 +109,14 @@ def bloom3(input, dictionary, output3):
 			f.write("maybe\n")
 		else:
 			f.write("no\n")
+
+		end = time.time()
+		average_time += end - start
+
+
 	f.close()
+
+	print("Average password parse time: {0} seconds".format(average_time/len(input)))
 	return
 
 
@@ -111,10 +125,10 @@ def bloom3(input, dictionary, output3):
 def bloom5(input, dictionary, output5):
 	print("Bloom5 Starting...")
 	# Pick an arbitrarily large array
-	b_array_size = (len(dictionary)+10000000)
+	b_array_size = (len(dictionary)+20000000)
 	b_array = [0] * b_array_size
 	
-	# print("Array size: ", len(b_array))
+	#print("Array size: ", len(dictionary))
 
 	for x in dictionary:
 		b_array[md5_hash(x, b_array_size)] = 1
@@ -127,7 +141,13 @@ def bloom5(input, dictionary, output5):
 	# process input file
 	# print(input)
 	f = open(output5, 'w')
+
+	average_time = 0
+
 	for x in input:
+		# start timer
+		start = time.time()
+
 		# Password check array, if all bits are flipped, then it was flagged
 		check_arr = [0,0,0,0,0]
 		if b_array[md5_hash(x, b_array_size)] == 1:
@@ -146,7 +166,13 @@ def bloom5(input, dictionary, output5):
 			f.write("maybe\n")
 		else:
 			f.write("no\n")
+
+		end = time.time()
+		average_time += end - start
+	
 	f.close()
+
+	print("Average password parse time: {0} seconds".format(average_time/len(input)))
 	return
 
 # main function of the program.
