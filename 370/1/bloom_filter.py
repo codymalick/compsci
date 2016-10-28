@@ -12,7 +12,6 @@ import hashlib
 
 # splits file input into an array and returns the array
 def split_file(in_file):
-	print(in_file)
 	content = []
 	with open(in_file) as f:
 		content = f.read().splitlines()
@@ -73,9 +72,9 @@ def sha512_hash(str_in, arr_size):
 def bloom3(input, dictionary, output3):
 	print("Bloom3 Starting...")
 	#Pick an arbitrarily large array
-	b_array_size = (len(dictionary)+1000000)
+	b_array_size = (len(dictionary)+10000000)
 	b_array = [0] * b_array_size
-	print("Array size: ", len(b_array))
+	#print("Array size: ", len(b_array))
 
 	for x in dictionary:
 		b_array[md5_hash(x, b_array_size)] = 1
@@ -83,7 +82,7 @@ def bloom3(input, dictionary, output3):
 		b_array[sha224_hash(x, b_array_size)] = 1
 
 	# process input file
-	print(input)
+	#print(input)
 	f = open(output3, 'w')
 	for x in input:
 		# Password check array, if all bits are flipped, then it was flagged
@@ -112,7 +111,7 @@ def bloom3(input, dictionary, output3):
 def bloom5(input, dictionary, output5):
 	print("Bloom5 Starting...")
 	# Pick an arbitrarily large array
-	b_array_size = (len(dictionary)+1000000)
+	b_array_size = (len(dictionary)+10000000)
 	b_array = [0] * b_array_size
 	
 	# print("Array size: ", len(b_array))
@@ -142,7 +141,7 @@ def bloom5(input, dictionary, output5):
 		if b_array[sha512_hash(x, b_array_size)] == 1:
 			check_arr[4] = 1
 
-		print(check_arr)
+		#print(check_arr)
 		if check_arr[0] == 1 and check_arr[1] == 1 and check_arr[2] == 1 and check_arr[3] == 1 and check_arr[4] == 1:
 			f.write("maybe\n")
 		else:
