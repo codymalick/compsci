@@ -1,0 +1,38 @@
+Cryptographic Hashes
+- Preimage resistance
+- Collision resistance
+- Second Preimage resistance
+
+HMAC and Strong Collisions
+Keyed-Hash Message Authentication Code
+- Not vulnerable to the birthday attack because you need the key to launch
+	the attack
+
+Diffie-Hellman
+Allows two parties to create a shared secret while exchanging in the open.
+Fairly important to modern cryptography
+
+MitM protection can be created through using a long term key, and an individual
+session based key that is disposed of at the end of the session.
+
+Requirements:
+- Consistency property: both parties must agree on the session state negotiated
+by the protocol, or the protocol must fail
+- The mutual Authentication Property: Each party must be able to verify the(?)
+
+- The secrecy property: None of the bits of the key should be guessable(?) 
+
+Curly braces {a,b}_k means encrypted with k
+Brackets [a,b]_k means a message authentication code
+
+MAC
+- Verifies integrity
+- Verifies authenticity
+- Can't verify to a third party that you didn't forge the MAC
+
+Signature
+- Verifies who sent it
+- Verifiable by a third party
+- Adds integrity
+
+ 
