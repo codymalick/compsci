@@ -1,0 +1,27 @@
+Sharing keys is hard
+Using a trusted third party makes key exchange much easier.
+
+Replay Attack
+- Eve records a message and replays it later.
+
+Session Key reuse
+- Eve replays message from Alice to Bob, so Bob re-uses session key
+
+Protocols must provide authentication and defend against replay
+
+Needham-Schroeder
+
+Message for Bob with R1
+Alice --Alice||Bob||R1--> Cathy
+
+Alice <--{Alice||Bob||R1||k_s{Alice||k_s}k_B}k_A-- Cathy
+
+Alice --{Alice||k_s}k_B--> Bob
+
+Alice <--{R2}k_s-- Bob
+
+Alice --{R2-1}k_s--> Bob
+
+Numbers Used Only Once
+NONCE
+

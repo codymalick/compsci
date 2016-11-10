@@ -1,0 +1,17 @@
+MAKE THIS A PDF BEFORE SUBMISSION
+
+2.
+First Hash:
+SHA1(cow)= 3fb6542ba0cc9b35cf14bd8db9d33ac9669a898f
+
+4.
+After bit flipped:
+SHA1(cow)= e2591b94f260c7d02b6f6ede382adbb46c8e3fce
+
+5. The bits between the keys are not similar. They are actually quite different.
+I believe this is caused by the avalanche effect, which is in effect in the
+SHA1 standard
+
+6. 
+
+
