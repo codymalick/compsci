@@ -2,7 +2,7 @@
 
 \usepackage[margin=0.75in]{geometry}
 \usepackage{tikz}
-
+\usepackage{amsmath}
 \begin{document}
 
   \title{CS 321, Assignment 6}
@@ -13,22 +13,36 @@
 
 \section{}
 \subsection*{a}
-Base case: Given some machine $M=\{Q,\Sigma,\delta,s,F\}$ and a CFG 
+Given some machine $M=\{Q,\Sigma,\delta,s,F\}$ and a CFG 
 $G=\{A_p \rightarrow cA_q | \delta(p,c)\} 
-\cup \{A_p \rightarrow \epsilon | p \in F\}$ with a start state $A_s = S$
-where the start state has not read any characters. \\\\
+\cup \{A_p \rightarrow \epsilon | p \in F\}$\\\\
 
-$A_s = A_p \rightarrow cA_q$, where $|w|=1$\\\\
+$\delta^*(s,w) = q \iff A_s \overset{*}{\iff} wA_q$\\\\
 
-Inductive Step: We need to show that 
+\noindent Base Case:\\
+$w=\epsilon, q=q\\
+A_s \overset{*}{\iff} A_s = \epsilon A_s$\\\\
 
+\noindent Inductive Step:\\
+$w = xb$, assuming the inductive hypothesis is true for x.\\
+$\delta^*(s,xb)=\delta(\delta^*(s,x),b)$\\
+$p=\delta^*(s,x)$\\
+$q=\delta(p,b) \iff A_p \Rightarrow bA_q$\\
+$\delta^*(s,x) = p \iff A_s \Rightarrow xA_p=A_s \Rightarrow x(bA_q) = A_s \Rightarrow wA_q$
+
+Because $p = \delta^*(s,x)$ then we can show that reading an additional
+character is no different than reading a character in the original string.
+
+Therefore, the inductive hypothesis holds. 
 
 \subsection*{b}
 Original: \\
+
 \begin{center}
 	\begin{tikzpicture}[scale=0.2]
 		\tikzstyle{every node}+=[inner sep=0pt]
 		\draw [black] (12.4,-10.8) circle (3);
+		\draw [black] (12.4,-10.8) circle (2.4);
 		\draw [black] (23.4,-10.8) circle (3);
 		\draw [black] (34.8,-10.8) circle (3);
 		\draw [black] (5.8,-10.8) -- (9.4,-10.8);
@@ -53,6 +67,7 @@ Original: \\
 		\fill [black] (13.72,-8.12) -- (14.6,-7.77) -- (13.79,-7.18);
 	\end{tikzpicture}
 \end{center}
+
 
 \noindent CFG:\\
 $S \rightarrow 0S | 1T | \epsilon$\\
@@ -110,7 +125,7 @@ $C \rightarrow c$\\
 
 Step 5, for each rule $A \rightarrow B$, copy all $B \rightarrow \alpha$ rules to
 $A \rightarrow \alpha$. Repeat until no more changes, then delete $A \rightarrow B$\\
-$S^* \rightarrow MN\ |\ TS$\\
+$S^* \rightarrow MN\ |\ T$\\
 $M \rightarrow AS$\\
 $N \rightarrow DO$\\
 $O \rightarrow DD$\\
@@ -120,9 +135,80 @@ $A \rightarrow a$\\
 $B \rightarrow b$\\
 $C \rightarrow c$\\
 
-
-
 \section{}
 \subsection*{a}
+$L=\{a^kb^mc^n\ |\ k,m,n not all equal\}$\\
+We can solve this problem by building a CFG to show that it's context free:\\
+$S \rightarrow\;T \;| \;U \;| \;V \;| \;W \;$\\
+$T \rightarrow\;aTbC \;| \;aT \;| \;a$\\ % a > b
+$U \rightarrow\;aUBc \;| \;aU \;| \;a$\\ % a > c
+$V \rightarrow \;aVbC \;| \;Vb \;| \;b$\\ % b > a
+$W \rightarrow \;AbWc \;| \;Wb \;| \;b$\\ % b > c
+$A \rightarrow \;aA \;| \;a \;| \;\epsilon$ \\
+$B \rightarrow \;Bb \;| \;b \;|\; \epsilon$ \\
+$C \rightarrow \;Cc \;| \;c \;| \;\epsilon$ \\
+In the above rules, T covers the $a > b$ case, U covers the $a > b$ case, V
+covers the $b > a$ case, and W covers the $b > c$ case. We don't need to cover
+more cases than this, because with the above rules, one letter will always not
+be equal to the others.
+
 \subsection*{b}
+We can show that this language is context free by building a pushdown automaton
+. The automaton below reads in a set of characters, and for every character
+read in before the 'c' character, we push to the stack. These are the characters
+in x. After the 'c' char, we read the characters in y. To do this, we
+read an arbitrary number of characters, then we read the $rev(x)$ substring
+and pop the stack until it's empty. Once it's empty, we read an arbitrary number of
+characters again. By using the stack, we can reverse the substring, giving us
+$rev(x)$.
+\begin{center}
+	\begin{tikzpicture}[scale=0.2]
+		\tikzstyle{every node}+=[inner sep=0pt]
+		\draw [black] (11.3,-12.8) circle (3);
+		\draw [black] (22.3,-12.8) circle (3);
+		\draw [black] (34.2,-12.8) circle (3);
+		\draw [black] (45.2,-12.8) circle (3);
+		\draw [black] (57.1,-12.8) circle (3);
+		\draw [black] (57.1,-12.8) circle (2.4);
+		\draw [black] (4.5,-12.8) -- (8.3,-12.8);
+		\fill [black] (8.3,-12.8) -- (7.5,-12.3) -- (7.5,-13.3);
+		\draw [black] (14.3,-12.8) -- (19.3,-12.8);
+		\fill [black] (19.3,-12.8) -- (18.5,-12.3) -- (18.5,-13.3);
+		\draw (16.8,-12.3) node [above] {$\epsilon,\epsilon,\$$};
+		\draw [black] (20.977,-10.12) arc (234:-54:2.25);
+		\draw (22.3,-5.55) node [above] {$a,\epsilon,a$};
+		\fill [black] (23.62,-10.12) -- (24.5,-9.77) -- (23.69,-9.18);
+		\draw [black] (23.623,-15.48) arc (54:-234:2.25);
+		\draw (22.3,-20.05) node [below] {$b,\epsilon,b$};
+		\fill [black] (20.98,-15.48) -- (20.1,-15.83) -- (20.91,-16.42);
+		\draw [black] (25.3,-12.8) -- (31.2,-12.8);
+		\fill [black] (31.2,-12.8) -- (30.4,-12.3) -- (30.4,-13.3);
+		\draw (28.25,-13.3) node [below] {$c,\epsilon,\epsilon$};
+		\draw [black] (37.2,-12.8) -- (42.2,-12.8);
+		\fill [black] (42.2,-12.8) -- (41.4,-12.3) -- (41.4,-13.3);
+		\draw (39.7,-13.3) node [below] {$\epsilon,\epsilon,\epsilon$};
+		\draw [black] (32.877,-10.12) arc (234:-54:2.25);
+		\draw (34.2,-5.55) node [above] {$a,\epsilon,\epsilon$};
+		\fill [black] (35.52,-10.12) -- (36.4,-9.77) -- (35.59,-9.18);
+		\draw [black] (35.523,-15.48) arc (54:-234:2.25);
+		\draw (34.2,-20.05) node [below] {$b,\epsilon,\epsilon$};
+		\fill [black] (32.88,-15.48) -- (32,-15.83) -- (32.81,-16.42);
+		\draw [black] (43.877,-10.12) arc (234:-54:2.25);
+		\draw (45.2,-5.55) node [above] {$a,a,\epsilon$};
+		\fill [black] (46.52,-10.12) -- (47.4,-9.77) -- (46.59,-9.18);
+		\draw [black] (46.523,-15.48) arc (54:-234:2.25);
+		\draw (45.2,-20.05) node [below] {$b,b,\epsilon$};
+		\fill [black] (43.88,-15.48) -- (43,-15.83) -- (43.81,-16.42);
+		\draw [black] (48.2,-12.8) -- (54.1,-12.8);
+		\fill [black] (54.1,-12.8) -- (53.3,-12.3) -- (53.3,-13.3);
+		\draw (51.15,-13.3) node [below] {$\epsilon,\$,\epsilon$};
+		\draw [black] (55.777,-10.12) arc (234:-54:2.25);
+		\draw (57.1,-5.55) node [above] {$a,\epsilon,\epsilon$};
+		\fill [black] (58.42,-10.12) -- (59.3,-9.77) -- (58.49,-9.18);
+		\draw [black] (58.423,-15.48) arc (54:-234:2.25);
+		\draw (57.1,-20.05) node [below] {$b,\epsilon,\epsilon$};
+		\fill [black] (55.78,-15.48) -- (54.9,-15.83) -- (55.71,-16.42);
+	\end{tikzpicture}
+\end{center}
+
 \end{document}
