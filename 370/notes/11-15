@@ -1,0 +1,127 @@
+Access Control
+
+Access Policy defines what users can access what functions, as well as what
+files can be accessed by who
+
+Application
+Middleware
+Operating Systems
+Hardware
+
+AAA
+Authentication
+	Bind external entity to system entity
+
+Authorization
+	Grant a right or permission to the system entity to access a system
+	resource
+
+Audit
+	Independent review of system actions
+
+Access Control Policy Models
+	Discretionary Access Control (DAC)
+	*Decision made based on identity of requestor and access rules
+	*Regular users can adjust the policy
+
+	-Used in home machines, Windows, Unix (hybrids)
+	-If there is one user, there is no difference between the user and the
+		the machine
+	-The access policy is up to the user
+
+Mandatory Access Control (MAC)
+	*Decision made by testing labels associated with processes and
+		resources against system policy rules
+	*Regular user cannot adjust the policy
+
+	- Used by government
+
+Role-Based Access Control (RBAC)
+	*Access policies defined in terms of roles rather than individual
+		requestors
+
+	- Can be implemented as a DAC or MAC system
+
+Attribute-Based Access Control (ABAC)
+	*Access policies defined in terms of attributes of the user, resource,
+		and environment or context for the access
+
+Access Control Requirements or Differentiators
+	-Reliable input
+		*Access control assumes user has been authenticated, that other
+		control inputs are correct
+	-Fine and course grain specifications
+		*Management overhead vs. Precision in policy
+		*Unix controls at the level of files, not accounts, not bytes
+	-Least Privilege
+		*Provide the least set of privilieges needed for the task
+	-Seperation of Duty
+		*More than one entity to complete a task
+		*Manages conflict of interest
+		*Example: Accountant and auditor
+	-Open/Closed Policy
+		-Blacklisting/Whitelisting
+		*closed --- access limited to those explicitly stated,
+			 whitelisting
+		*open --- access limitations are specified, all others are
+			allowed, blacklisting
+	-Policy combination and conflict resolution
+		*Different entities have different policy and we need to
+			 adjudicate with respect to both
+		*A given policy may have conflicting rules --- how to resolve?
+	-Administrative Policies - How is change to access control managed?
+	-Dual Control
+		*Two entities required to implement policy change
+
+Access Control Elements
+	-Subject
+		*Any entity capable of access objects
+		*Generally a process in an OS context
+	-Object
+		*A resource in a system
+		*Often a file; could also be mutex, process, network interface,
+			network port
+	-Access Right
+		*Way or mode tha a subject may access an object in the system
+		*Read, Write, Execute, Delete, Create, Search, Change, Access,
+			own
+
+Access Control Matrix (ACM)
+	-Provieds very basic abstraction
+	-Maps different systems to a common form for comparison
+	-Enables standard proof techniques
+	-Not directly used in implementation
+
+Implementing Access Matrix
+	-Slice by Column
+		-Cut the access control matrix into columns, each column 
+			represents a resource, each row represents a user.
+		*-ACL, Access control list
+		*Store identity of entities that are permitted access with the
+			objects
+		*Used by Multics and most modern OS
+	-Slice by Row
+		-Each row defines the permissions a user has
+		*Store identity of objects a subject may access with the
+			subjects: Capability list, or "Capability tickets"
+			-Not what is used in Linux
+		*Often associated with object-oriented systems
+		-not implemented often anymore
+Ways to Make ACL scale up
+	*Groups of users
+		Shortens list of ACE
+	*Role Base Access Control
+	*Directory inheritance
+		Transfer rights to lower objects in directory tree
+	*Negative rights
+		Infer what is permitted by the negation of what is stated to
+		denied
+
+Remove rights with ACLs
+	Revoking rights for subject s to a particular object o straightforward
+	-Remove ACL(o) or
+	-Make sure s has a negative entry in the ACL(o)
+		Delete the account
+	
+	
+
