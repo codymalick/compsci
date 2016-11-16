@@ -11,10 +11,12 @@ After bit flipped:
 SHA1(cow)= ea69777a5effef525b4ef54bf5ee46900f15a6fa 
 SHA256(cow)= bf659b85ac3106f0b4672dd4b9eab8c4546bc49d1d28ac2c2b162a7d03ebf5c9
 
-4. The bits between the keys are not similar. They are actually quite different.
+5. The bits between the keys are not similar. They are actually quite different.
 I believe this is caused by the avalanche effect, which is in effect in the
 SHA1 and SHA256 standard
 
-5.  
+6.
+position, 1, 49, 73, 113
+sha1  
 
 
