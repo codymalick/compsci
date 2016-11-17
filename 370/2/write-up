@@ -1,4 +1,5 @@
 MAKE THIS A PDF BEFORE SUBMISSION
+Part 1:
 
 SHA1:
 2.
@@ -16,7 +17,11 @@ I believe this is caused by the avalanche effect, which is in effect in the
 SHA1 and SHA256 standard
 
 6.
-position, 1, 49, 73, 113
-sha1  
+sha1, a7ee89b1411fcbdf4485f23ba607ae23290ccf68   
+sha256, 625df430102e793aec8313128fd5caaeba54a3d1b743e77f0c9c637cb69a3bff
 
+The two hashes are very different between each hash, and their original
+unflipped form. Due to the avalanche, these bit flips will completely change the
+resulting hash in each case. 
 
+Part 2:
