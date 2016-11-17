@@ -7,17 +7,23 @@
 
 #include <string.h>
 
-void weak_collision(int argc, char *argv[], int attempt);
+#define TRIALS 500
 
-int main(int argc, char *argv[])
+void weak_collision(int argc, char *argv[], int attempt);
+void strong_collision(int argc, char *argv[], int attempt);
+
+void main(int argc, char *argv[])
 {
 	// Seed random number generator
 	srand(time(NULL));
 
-	for(int i = 0; i < 100; i++) {	
+	for(int i = 0; i < TRIALS; i++) {	
 		weak_collision(argc, argv, i);
 	}
 	exit(0);
+}
+
+void strong_collision(int argc, char *argv[], int attempt) {
 	// EVP_MD_CTX: Message Digest Context
 	EVP_MD_CTX *mdctx;
 
@@ -73,15 +79,15 @@ int main(int argc, char *argv[])
 	// Destroy the variable
 	EVP_MD_CTX_destroy(mdctx);
 
-	printf("Digest is: ");
+	//printf("Digest is: ");
 
 	// Only print the first three bytes, per assignment specs 
-	for (i = 0; i < 3; i++) {
-		printf("%02x", md_value[i]);
-	}
-	printf("\n");
+	//for (i = 0; i < 3; i++) {
+	//	printf("%02x", md_value[i]);
+	//}
+	//printf("\n");
 
-	printf("Starting Weak Collision Resistance Test:\n");
+	//printf("Starting Weak Collision Resistance Test:\n");
 
 	unsigned char hash[EVP_MAX_MD_SIZE];
 	long unsigned int count = 0;
@@ -108,22 +114,8 @@ int main(int argc, char *argv[])
 		count++;
 
 	}	
-	//printf("Original:");
-
-	//for (int i = 0; i < 3; i++) {
-	//	printf("%02x", md_value[i]);
-	//}
-
-	//printf(" Found:");
-	
-	//for (int i = 0; i < 3; i++) {
-	//	printf("%02x", hash[i]);
-	//}
-
-	//printf(" Count: %lu\n", count);
-	return 0;
+	printf("%d,%lu\n", attempt, count);
 }
-
 void weak_collision(int argc, char *argv[], int attempt) {
 	// EVP_MD_CTX: Message Digest Context
 	EVP_MD_CTX *mdctx;
