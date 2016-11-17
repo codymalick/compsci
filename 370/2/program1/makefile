@@ -1,5 +1,5 @@
 CC=clang
-CFLAGS=
+CFLAGS=-g
 LDLIBS= -L/usr/local/ssl/lib -lssl -lcrypto
 EXE=prog1
 
