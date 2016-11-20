@@ -1,0 +1,27 @@
+MAKE THIS A PDF BEFORE SUBMISSION
+Part 1:
+
+SHA1:
+2.
+First Hash:
+SHA1(cow)= 3fb6542ba0cc9b35cf14bd8db9d33ac9669a898f
+SHA256(cow)= 15fda678dfcc49b7c6e7e77fad66ffd5a5d1fa755df0363d04ce908942896b23
+
+4.
+After bit flipped:
+SHA1(cow)= ea69777a5effef525b4ef54bf5ee46900f15a6fa 
+SHA256(cow)= bf659b85ac3106f0b4672dd4b9eab8c4546bc49d1d28ac2c2b162a7d03ebf5c9
+
+5. The bits between the keys are not similar. They are actually quite different.
+I believe this is caused by the avalanche effect, which is in effect in the
+SHA1 and SHA256 standard
+
+6.
+sha1, a7ee89b1411fcbdf4485f23ba607ae23290ccf68   
+sha256, 625df430102e793aec8313128fd5caaeba54a3d1b743e77f0c9c637cb69a3bff
+
+The two hashes are very different between each hash, and their original
+unflipped form. Due to the avalanche, these bit flips will completely change the
+resulting hash in each case. 
+
+Part 2:
