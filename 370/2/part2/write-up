@@ -1,0 +1,29 @@
+128 character key
+HMAC-SHA256(cow)= 63fd1176c5e507c90278349868916b8ed99a1ac71038e1af14804d65cf9473e1
+HMAC-SHA1(cow)= 6957b44a3eae1693dade1bf969e66e1b65225fa5
+
+160 character key
+HMAC-SHA256(cow)= 4c8d099c09091f04f24649530bf1c6a6493c2c17ec99ebfd4e49b8370a70add8
+HMAC-SHA1(cow)= a50ce33015af385ea52f943cdfe3ae0ec87635bd
+
+256 character key
+HMAC-SHA256(cow)= 1091ac33a2d021ccb2a24ebf498f60fa28c433dcdf43bd02ffbb122880809132
+HMAC-SHA1(cow)= bc7323e59424db54eced37dce543cd194eb76a5f
+----
+Do we have to use a key with a fixed size in HMAC?
+
+No, but a shorter key lowers the strength of the algorithm to the length of the
+key, and a longer key does not add extra strength to the hash. 
+
+----
+If so, what is the key size? If not, why?
+
+We don't have to use the hash size the algorithm calls for, but it would lower
+the strength of the hash to the size of the key provided. For example, a 128
+bit key provided to SHA256 would lower the strength to 128 bit instead of the
+designated 256 bit value. The primary reason for the drop in strength is that
+the algorithm would have to loop back over the same key to xor the value we
+wish to hash using hmac. 
+
+If we used the correct size of the key or larger, we would be ensure the full
+strength of the key is utilized. 

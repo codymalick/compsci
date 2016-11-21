@@ -1,1 +1,35 @@
-1. 
+1.
+Weak Hash Collision:
+500 Trials, Average: 16,811,276.65, Median: 10439032.5
+
+2.
+Strong Hash Collision:
+500 Trials, Average: 5370.812, Median: 4911.5
+
+3.
+Trial description: Each trial used a randomized string (strong) or a randomized
+start hash (weak). 
+
+Overall, strong hash collision was much easier to break. Weak
+hash collision on a three byte has took several million trials on average,
+while a 3 byte hash took only about five thousand on average using strong hash
+collision.
+
+Mathematical description
+Weak collision:
+The probability of guessing a certain hash out of a 24 bit hash is the very
+simple:
+
+Probability = 1/(2^24) = 1/16777216 = 5.9604 * 10^-8
+
+Strong collision:
+For this equation, I'm plugging in the average number of attempts for n to give
+a reasonable estimate of the probability:
+
+P(5370) = 1 - ((2^24)!/((2^24)^(5370)*(2^24-5370)!))
+=.5765
+
+An incredibly large guessing chance for such a small number of attempts. 
+
+
+ 

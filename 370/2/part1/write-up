@@ -24,4 +24,3 @@ The two hashes are very different between each hash, and their original
 unflipped form. Due to the avalanche, these bit flips will completely change the
 resulting hash in each case. 
 
-Part 2:

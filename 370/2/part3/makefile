@@ -1,13 +1,13 @@
 CC=clang
 CFLAGS=-g
 LDLIBS= -L/usr/local/ssl/lib -lssl -lcrypto
-EXE=prog1
+EXE=part3
 
 all: main
 
-main: prog1.c
+main: part3.c
 #	clear
-	$(CC) prog1.c -o $(EXE) $(CFLAGS) $(LDLIBS)
+	$(CC) part3.c -o $(EXE) $(CFLAGS) $(LDLIBS)
 
 run: main
 	./$(EXE)
