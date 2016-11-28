@@ -1,0 +1,48 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage{tikz}
+\usepackage{amsmath}
+\begin{document}
+
+  \title{CS 321, Assignment 7}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{\today}
+  \maketitle
+
+\section{}
+\subsection*{a}
+1. Adversary picks a number $p \geq 0$\\
+2. I pick a string $s \in A$ \\
+3. Adversary breaks $s$ into $s = uvwxy$, such that $|vwx| \leq p$ and $|vx| > 0$\\
+4. I pick a number $i \geq 0$. If $uv^iwx^iy \notin A$, then I win
+
+\subsection*{b}
+1. Adversary picks a number $p \geq 0$\\
+2. I pick a string $s \in A$ \\
+3. Adversary breaks $s$ into $s = uvwxy$, such that $|vwx| \leq p$ and $|vx| > 0$\\
+4. I pick a number $i \geq 0$. If $uv^iwx^iy \notin A$, then I win
+
+\section{}
+The tape head can move left and right freely along the tape, while being able
+to read and write freely on a theoretically limitless tape. The tape is our way
+of showing memory. If the tape head needs to read a value at a specific index,
+it moves to that index, reads what's on the tape, and updates it as necessary.
+Using the ability to read, write, and move freely, we can implement algorithms
+to recognize and "compute" yes or no answers to problems. \\
+
+\begin{center}
+	\begin{tabular}{ | p{6cm} | p{6cm} | p{6cm} | }
+		\hline
+		\multicolumn{3}{|c|}{Turing Machine for $\{a^nb^mc^{nm}\}$} \\
+		\hline
+		If in state: & reading: & do: \\ \hline
+		look for an a & test \newline testt& \\ \hline
+		look for a b & & \\ \hline
+		look for a c & & \\ \hline
+
+
+\end{tabular}
+\end{center}
+\end{document}
