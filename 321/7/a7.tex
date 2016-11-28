@@ -3,6 +3,7 @@
 \usepackage[margin=0.75in]{geometry}
 \usepackage{tikz}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \begin{document}
 
   \title{CS 321, Assignment 7}
@@ -14,33 +15,110 @@
 \section{}
 \subsection*{a}
 1. Adversary picks a number $p \geq 0$\\
-2. I pick a string $s \in A$ \\
+2. I pick a string $s \in A$, $bin(2^p)\ c\ bin(2^p)+1$ \\
 3. Adversary breaks $s$ into $s = uvwxy$, such that $|vwx| \leq p$ and $|vx| > 0$\\
-4. I pick a number $i \geq 0$. If $uv^iwx^iy \notin A$, then I win
+4. I pick a number $i \geq 0$. If $uv^iwx^iy \notin A$, then I win.\\
+
+There are a couple cases here:\\
+$uwx$ exists only in $x$\\
+$uwx$ exists only in $c$, $|uwx| = 1$\\
+$uwx$ exists only in $y$\\
+$uwx$ exists in all parts, $xcy$\\
+$uwx$ exists in $xc$\\
+$uwx$ exists in $cy$\\
+
+All of these cases can be resolved by picking $i = 0$. If $uwy \in x$, then $y$
+would no longer be equal to $bin(x)+1$. If $uwy \in xc$, then if $c$ was part
+of $v$ or $x$, then there is no longer a $c$ in the string. This case also
+applies to any of the cases containing $c$. Finally, if $uwx \in cy$ or $uwx \in
+y$, pumpin down breaks the equivilence of $bin(x)+1 = bin(y)$.
 
 \subsection*{b}
-1. Adversary picks a number $p \geq 0$\\
-2. I pick a string $s \in A$ \\
+This problem has several cases, each case will be followed by it's solution:
+\subsubsection*{case 1}
+$uwx$ exist only in $a$\\
+$uwx$ exist in `a' and $b$\\
+$uwx$ exist only in $b$\\
+
+\noindent 1. Adversary picks a number $p \geq 0$\\
+2. I pick a string $s \in A$, $a^{p-2}b^{p-1}c^p$ \\
 3. Adversary breaks $s$ into $s = uvwxy$, such that $|vwx| \leq p$ and $|vx| > 0$\\
-4. I pick a number $i \geq 0$. If $uv^iwx^iy \notin A$, then I win
+4. I pick a number $i \geq 0$. If $uv^iwx^iy \notin A$, then I win\\
+
+I select $i=2$, as $v^iwx^i$ are either all in a, are in a and b, or are only 
+in b, then the number of a's will be equal to the number of b's, or the number
+of b's will be equal to the number of c's. In those cases, the string is not
+in the language.
+
+\subsection*{case 2}
+$uwx$ exist in `b' and `c'\\
+$uwx$ exist in only `c'\\
+
+\noindent 1. Adversary picks a number $p \geq 0$\\
+2. I pick a string $s \in A$, $a^{p-2}b^{p-1}c^p$ \\
+3. Adversary breaks $s$ into $s = uvwxy$, such that $|vwx| \leq p$ and $|vx| > 0$\\
+4. I pick a number $i \geq 0$. If $uv^iwx^iy \notin A$, then I win\\
+
+I select $i=0$, as $v^iwx^i$ are in both b's and c's, or only c's, then because
+I pumped down, the number of b's are equal to the number of a's, or the number
+of c's are equal to the number of b's, and therefore, not in the language.
 
 \section{}
-The tape head can move left and right freely along the tape, while being able
-to read and write freely on a theoretically limitless tape. The tape is our way
-of showing memory. If the tape head needs to read a value at a specific index,
-it moves to that index, reads what's on the tape, and updates it as necessary.
-Using the ability to read, write, and move freely, we can implement algorithms
-to recognize and "compute" yes or no answers to problems. \\
+My approach to this turing machine is to break the multiplication of the exponents
+$a^nb^mc^{nm}$ down into an addition problem. For example, $n=2, m=3$, $2*3=2+2+2$.
+With this idea in mind, we can count the number of a's onto the number of c's, and
+repeat for every b.\\
+First, count the number of a's onto c's. This is done by replacing c's
+with X's equal to the number of a's. This is done from steps $0 \rightarrow 2$.
+The head will start on the left, scan right for an $a$. Once all a's have been eliminated,
+we right a b to $0$, and check for accepting by seeing if any c's remain. Then, for every
+$a$ written to the c's, marked by $X$, we repeat the elimination of c's $|b|$ times.\\
+X's and Y's are eliminated in alternating order until all c's have been replaced, and we 
+read blank memory, $\square$, we accept. 
 
 \begin{center}
-	\begin{tabular}{ | p{6cm} | p{6cm} | p{6cm} | }
+	\begin{tabular}{ | p{1.5cm} | p{3.5cm} | p{2cm} | p{8cm} | }
 		\hline
-		\multicolumn{3}{|c|}{Turing Machine for $\{a^nb^mc^{nm}\}$} \\
+		\multicolumn{4}{|c|}{Turing Machine for $\{a^nb^mc^{nm}\}$} \\
 		\hline
-		If in state: & reading: & do: \\ \hline
-		look for an a & test \newline testt& \\ \hline
-		look for a b & & \\ \hline
-		look for a c & & \\ \hline
+		State \# & If in state: & reading: & do: \\ \hline
+		0 & Start State & a \newline b,c,X,Y,0 \newline $\square$ 
+			& Write $0$, move right, go to state \#1 \newline reject
+			\newline accept\\ \hline
+
+		1 & Find $c$ & c \newline a,b,0,X,Y \newline $\square$ & Write $X$, move left,
+			go to state \#2  \newline move right \newline reject\\ \hline
+
+		2 & Find $a$ & a \newline b,0 \newline c,X,Y,$\square$ \newline tape start
+			& Write $0$, move right, go to state \#1 \newline move left \newline
+			reject \newline move right, go to state \#3 \\ \hline
+
+		3 & Find $b$ & b \newline 0 \newline a,c,X,Y $\square$ & Write $0$, move right,
+			go to state \#4 \newline move right \newline reject \\ \hline
+
+		4 & Find $X$ & X \newline b,0 \newline a,c,Y \newline $\square$ & 
+			Write $0$, move right, go to state \#5 \newline move right
+			\newline reject \newline accept \\ \hline
+
+		5 & replace $c$ with $Y$ & c \newline X,0,Y \newline a,b \newline $\square$ 
+			& Write $Y$, move left, go to state \#6 \newline move right
+			\newline reject \newline accept	\\ \hline 
+
+		6 & eliminate $X$ & X \newline Y,0 \newline b \newline a,c,$\square$ & Write $0$, move
+			right, go to state \#5 \newline move left \newline write $0$, move right
+			, go to state \#7 \newline reject \\ \hline
+
+		7 & eliminate $Y$ & Y \newline 0 \newline $\square$ 
+			& Write $0$, move right,
+			go to state \#8 \newline move right \newline accept \\ \hline
+
+		8 & replace $c$ with $X$ & c \newline X,Y,0 \newline b \newline $\square$ 
+			& Write $X$, move left,	go to state \#9 \newline move right \newline
+			reject  \newline accept \\ \hline
+
+		9 & look for a $Y$ & Y \newline 0,X \newline b & Write $0$, move right,
+			go to state \#8 \newline move left \newline write $0$,move right,
+			go to state \#4 \\ \hline
 
 
 \end{tabular}
