@@ -4,6 +4,25 @@
 \usepackage{tikz}
 \usepackage{graphicx}
 
+\usepackage{listings}
+\usepackage{color}
+\usepackage{tabu}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Bash,
+  columns=flexible,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
 \graphicspath{{img/}}
 
 \begin{document}
@@ -20,23 +39,55 @@ Steps taken:\\
 2. Tested passwd again to see what permissions were needed
 Error received: passwd: Authentication token manipulation error
 3. Researched what capabilities passwd needs under the posix capabilities system
-4. Capbilities needed: cap_chown, cap_dac_override, cap_fowner, all needed to be
+4. Capbilities needed: cap\_chown, cap\_dac\_override, cap\_fowner, all needed to be
 set to ep
 
 From the man pages, the following capabilities grant the following permissions:
 
-cap_chown: Make arbitrary changes to file UIDs and GIDs
-cap_dac_override: Bypass file read, write, and execute permission checks.
-cap_fowner: Bypass permission checks on operations that normally require the
-	filesystem UID of the process to match the UID of the file. Set
-	extended file attributes on arbitrary files. Set Access Control Lists
-	on arbitrary files.
+cap\_chown: Make arbitrary changes to file UIDs and GIDs
+
+cap\_dac\_override: Bypass file read, write, and execute permission checks.
+
+cap\_fowner: Bypass permission checks on operations that normally require the
+filesystem UID of the process to match the UID of the file. Set
+extended file attributes on arbitrary files. Set Access Control Lists
+on arbitrary files.
 
 \section*{Question 2}
 
-cap_dac_read_search: Bypass file read permissions checks and directory read and
-	execute permission cehcks.
+cap\_dac\_read\_search: Bypass file read permissions checks and directory read and
+	execute permission checks.
+
+We can demonstrate this capability by removing the `ls' command's set-UID capability
+using:
+\begin{lstlisting}[caption=Removing set-UID capability on ls]
+root@code-virtual-machine: chmod u-s /bin/ls
+\end{lstlisting}
+
+Then, we can test out the lack of set-UID capability by running ls on a directory
+that requires root access, such as /root:
+
+\begin{lstlisting}
+code@code-virtual-machine:~/git/compsci/370/3\$ ls /root
+ls: cannot open directory '/root': Permission denied
+\end{lstlisting}
+
+Now, we can add the cap\_dac\_read\_search capability to ls:
+\begin{lstlisting}
+code@code-virtual-machine:~/git/compsci/370/3\$ sudo setcap cap_dac_read_search=ep /bin/ls
+code@code-virtual-machine:~/git/compsci/370/3\$ ls -a /root
+.  ..  .bash_history  .bashrc  .bzr.log  .cache  .profile
+\end{lstlisting}
+
+We've demonstrated that, using the cap\_dac\_read\_search capability, we can remove
+the need for ls to run at an elevated level.
+
 \section*{Question 3}
+
+\section*{Question 4}
+\section*{Question 5}
+\section*{Question 6}
+
 
 \end{document}
 
