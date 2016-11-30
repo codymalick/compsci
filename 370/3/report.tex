@@ -1,0 +1,44 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage{tikz}
+\usepackage{graphicx}
+
+\graphicspath{{img/}}
+
+\begin{document}
+
+\title{CS 370, Assignment 3 Report}
+\author{Cody Malick\\
+\texttt{malickc@oregonstate.edu}}
+\date{\today}
+\maketitle
+
+\section*{Question 1}
+Steps taken:\\
+1. used chmod u-s /usr/bin/passwd
+2. Tested passwd again to see what permissions were needed
+Error received: passwd: Authentication token manipulation error
+3. Researched what capabilities passwd needs under the posix capabilities system
+4. Capbilities needed: cap_chown, cap_dac_override, cap_fowner, all needed to be
+set to ep
+
+From the man pages, the following capabilities grant the following permissions:
+
+cap_chown: Make arbitrary changes to file UIDs and GIDs
+cap_dac_override: Bypass file read, write, and execute permission checks.
+cap_fowner: Bypass permission checks on operations that normally require the
+	filesystem UID of the process to match the UID of the file. Set
+	extended file attributes on arbitrary files. Set Access Control Lists
+	on arbitrary files.
+
+\section*{Question 2}
+
+cap_dac_read_search: Bypass file read permissions checks and directory read and
+	execute permission cehcks.
+\section*{Question 3}
+
+\end{document}
+
+
+
