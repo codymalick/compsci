@@ -11,7 +11,7 @@
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
-\lstset{frame=tb,
+\lstset{frame=none,
   language=Bash,
   columns=flexible,
   numberstyle=\tiny\color{gray},
@@ -61,21 +61,21 @@ cap\_dac\_read\_search: Bypass file read permissions checks and directory read a
 We can demonstrate this capability by removing the `ls' command's set-UID capability
 using:
 \begin{lstlisting}[caption=Removing set-UID capability on ls]
-root@code-virtual-machine: chmod u-s /bin/ls
+root@ubuntu: chmod u-s /bin/ls
 \end{lstlisting}
 
 Then, we can test out the lack of set-UID capability by running ls on a directory
 that requires root access, such as /root:
 
 \begin{lstlisting}
-code@code-virtual-machine:~/git/compsci/370/3\$ ls /root
+seed@ubuntu:~/ ls /root
 ls: cannot open directory '/root': Permission denied
 \end{lstlisting}
 
 Now, we can add the cap\_dac\_read\_search capability to ls:
 \begin{lstlisting}
-code@code-virtual-machine:~/git/compsci/370/3\$ sudo setcap cap_dac_read_search=ep /bin/ls
-code@code-virtual-machine:~/git/compsci/370/3\$ ls -a /root
+seed@ubuntu:~/ sudo setcap cap_dac_read_search=ep /bin/ls
+seed@ubuntu:~/ ls -a /root
 .  ..  .bash_history  .bashrc  .bzr.log  .cache  .profile
 \end{lstlisting}
 
@@ -83,9 +83,51 @@ We've demonstrated that, using the cap\_dac\_read\_search capability, we can rem
 the need for ls to run at an elevated level.
 
 \section*{Question 3}
+After the capability was added, tests b,d, and e failed. Let's break down what
+happened after the capability was added.
+\subsection*{a}
+After: Passed\\
+Observations: This test just tries to open the file initially. It passes. 
+
+\subsection*{b}
+After: Failed\\
+Observations: This test should have failed, as we call cap\_disable(), which
+allows the process to temporarily disable the privilege.
+
+\subsection*{c}
+After: Passed\\
+Observations: This test passes, as we have re-enabled the capability using
+cap\_enable().
+
+\subsection*{d}
+After: Failed\\
+Observations: This test fails because we drop the cabability completely using
+cap\_drop(), making it unrecoverable.
+
+\subsection*{e}
+After: Failed\\
+Observations: This test tries to reenable the capability after it was dropped.
+The test fails because, once the capability has been deleted from the process,
+it cannot be recovered soley by the process.
 
 \section*{Question 4}
+In ACL, we would have to assign elevated privileges to a certain person or
+role in order to accomplish what we did here. Linux uses the `sudo' command
+to make this relatively simple. While typing `sudo' is fairly easy and convenient,
+it does not allow very fine grain control of the system. The more sudoers on a
+given system, the more security vulnerabilities there are.
+
+Capabilites, while less conveniant, are more fine grained in their control of
+the system. Using capabilities properly would reduce the number of sudoers or
+super users needed on the system.
+
 \section*{Question 5}
+The attacker would be able to use capability A if he managed to call the code
+to reenable it. Disabling the capability is only temporary.
+If the capability was completely dropped or deleted, however, he would not be
+able to unless he was able to compromise the code before the capability was
+dropped.
+
 \section*{Question 6}
 
 
