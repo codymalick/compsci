@@ -1,0 +1,18 @@
+#include<tunables/global>
+
+# We want a very restricted apache instance that serves a single file
+/usr/sbin/apache2 {
+	
+	# Capabilities
+	capability kill,
+	capability net_bind_service,
+	capability setuid,
+	capability setgid,
+
+	# www folder should be accessible to serve static webpages
+	/var/www/
+
+	#Apache specific apparmor files
+	#include<apache2.d>
+	
+}
