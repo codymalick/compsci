@@ -11,8 +11,8 @@
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
-\lstset{frame=none,
-  language=Bash,
+\lstset{frame=single,
+  language=bash,
   columns=flexible,
   numberstyle=\tiny\color{gray},
   keywordstyle=\color{blue},
@@ -35,18 +35,18 @@
 
 \section*{Question 1}
 Steps taken:\\
-1. used chmod u-s /usr/bin/passwd
-2. Tested passwd again to see what permissions were needed
+1. used chmod u-s /usr/bin/passwd\\
+2. Tested passwd again to see what permissions were needed\\
 Error received: passwd: Authentication token manipulation error
-3. Researched what capabilities passwd needs under the posix capabilities system
+3. Researched what capabilities passwd needs under the posix capabilities system\\
 4. Capbilities needed: cap\_chown, cap\_dac\_override, cap\_fowner, all needed to be
-set to ep
+set to ep\\
 
-From the man pages, the following capabilities grant the following permissions:
+From the man pages, the following capabilities grant the following permissions:\\
 
-cap\_chown: Make arbitrary changes to file UIDs and GIDs
+cap\_chown: Make arbitrary changes to file UIDs and GIDs\\
 
-cap\_dac\_override: Bypass file read, write, and execute permission checks.
+cap\_dac\_override: Bypass file read, write, and execute permission checks.\\
 
 cap\_fowner: Bypass permission checks on operations that normally require the
 filesystem UID of the process to match the UID of the file. Set
@@ -56,16 +56,16 @@ on arbitrary files.
 \section*{Question 2}
 
 cap\_dac\_read\_search: Bypass file read permissions checks and directory read and
-	execute permission checks.
+	execute permission checks.\\
 
 We can demonstrate this capability by removing the `ls' command's set-UID capability
-using:
+using:\\
 \begin{lstlisting}[caption=Removing set-UID capability on ls]
 root@ubuntu: chmod u-s /bin/ls
 \end{lstlisting}
 
 Then, we can test out the lack of set-UID capability by running ls on a directory
-that requires root access, such as /root:
+that requires root access, such as /root:\\
 
 \begin{lstlisting}
 seed@ubuntu:~/ ls /root
@@ -129,9 +129,33 @@ able to unless he was able to compromise the code before the capability was
 dropped.
 
 \section*{Question 6}
+I chose very limited options for apache in my apparmor profile. The primary
+scenario I tackled was apache, serving static webpages, needing very limited
+capabilities in general. I've added comments to the file as needed. While I've
+found other options online, just tackling a basic scenario for this exercise
+made sense. 
 
+\begin{lstlisting}{caption=Very basic apache apparmor profile}
+# This is a basic apparmor profile for apache.
+/usr/sbin/apache2 {
+	
+	# Capabilities
+	# It should be able to stop itself
+	capability kill,
+	
+	# It should be able to bind it's service to a network socket
+	capability net_bind_service,
 
+	# www folder should be accessible to serve static webpages
+	/var/www/*
+
+	# Apache specific apparmor files from the apache2 apparmor package
+	#include<apache2.d>
+	
+}
+\end{lstlisting}
 \end{document}
+
 
 
 
