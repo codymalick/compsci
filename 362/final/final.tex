@@ -1,0 +1,94 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage{tikz}
+
+\begin{document}
+
+  \title{CS 362, Final}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{\today}
+  \maketitle
+
+\section*{Problem 1}
+	\subsection*{I}
+	\subsubsection*{a}
+		You would need one for every possible set of inputs, not taking
+		into account bad inputs:
+		\begin{itemize}
+			\item foo(false,false,false)
+			\item foo(true,false,false)
+			\item foo(false,true,false)
+			\item foo(true,true,false)
+			\item foo(true,false,true)
+			\item foo(false,true,true)
+			\item foo(true,true,true)
+		\end{itemize}
+
+		7 total inputs. If, however, we needed to test all possible bad
+		input, it would be a very large set of tests including other
+		data types, nulls, etc. The total number is not easily
+		countable.
+
+	\subsubsection*{b}
+		Functionality partitioning would not be possible given only the
+		prototype of the function. In order to perform functionality
+		based partitioning, you need to be able to analyse the behavior
+		of the function itself.
+
+	\subsection*{II}
+		\subsubsection*{a}
+			To exhaustively test the function, you would need to
+			pass all possible values of $a$, $b$, and $c$ to the
+			function (as stated in the answer to question I(a)),
+			totaling seven cases, not including all possible bad
+			input, null or otherwise.\\
+			More efficiently, you can test all functionality by
+			looking at all the possible branches in the function:
+			\begin{itemize}
+				\item a==b
+				\item a!=b
+				\item b==c
+				\item b!=c
+			\end{itemize}
+			Totaling four primary cases.
+
+		\subsubsection*{b}
+			You could perform interface-based partitioning, but you
+			would end up with tests cases that would not vary. For
+			example, testing a==c:\\\\
+				biz(true,false,true)\\\\
+			Would not change the behavior of the function.
+
+	\subsection*{III}
+	\subsubsection*{a}
+		To \textit{exhaustively} test the function would require
+		spanning all possible values of $a$, which would be equal to
+		$2^{32}$ possible values. This does not include testing other
+		bad values, null, wrong types, etc.
+
+	\subsubsection*{b}
+		The most intuitive way to partition this function with
+		functionality based testing would be to look at the possible
+		branches, while $k < a$, and while $k > a$. This gives us two
+		possible branches that we should test functionality on.
+
+\section*{Problem 4}
+	This function could be randomly tested with a two pronged approach:\\\\
+	First, test the directory functionality by randomly picking a real
+	directory name and passing it into the function, or a randomly generated
+	string, containing characters that couldn't be real directories, and
+	checking the results for \textit{FileNotFoundException}.
+	Second, for each directory passed, real and fake, get a list of real
+	files and create a list of fake files, and randomly pull from either,
+	checking to see if the result is correct or not.\\\\
+	Enough runs through this scheme would test all possibilities:
+	\begin{itemize}
+		\item fake directories, fake files
+		\item real directories, fake files
+		\item fake directories, real files
+		\item real directories, real files. 
+	\end{itemize}
+
+\end{document}
