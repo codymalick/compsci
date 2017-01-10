@@ -1,0 +1,37 @@
+Distributed Systems
+
+Overview:
+
+Distributed System
+A collection of automata whose distribution is transparent to the user so that
+the system appears as one local machine. This is in contrast to a network, 
+where the user is aware that there are several machines, and their location, 
+storage, replication, load balancing and functionality is not transparent. 
+Distributed systems usually use some kind of client-server organization.
+
+Multiple Computers
+Interconnections
+Shared States
+
+A distributed system is a collection of entities, each of which is autonomous,
+programmable, asynchronous and failure-prone, and whihc communicate through an
+unreliable communication medium.
+
+Important Distributed Systems Issues:
+No global clock, asynchrony
+Unpredictable failures of components, failure prone
+Highly variable bandwidth
+Possibly large and variable latency: few ms to several seconds
+Large numbers of hosts: two to several million
+
+Common Goals:
+Heterogeneity
+Robustness
+Availability
+Transparency
+Concurrency
+Efficiency
+Scalability
+Security
+Openness
+
