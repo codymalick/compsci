@@ -1,0 +1,87 @@
+\documentclass[12pt,letterpaper,onecolumn,draftclsnofoot]{IEEEtran}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{tabu}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C,
+  columns=flexible,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+\let\endtitlepage\relax
+
+\begin{document}
+\begin{titlepage}
+  \title{CS 476 - Winter 2017\\Cloud SDN and Load Balancer}
+  \author{Cody Malick, Undergraduate CS\\ Dan Stoyer, Undergraduate CS \\
+  	Andy Garcia, Undergraduate ECE and CS}
+  \date{January 20, 2017}
+  \maketitle
+  \vspace*{1cm}
+\end{titlepage}
+
+\section{Project Description}
+For this project, we have chosen to work on the "traffic load balancing through
+software-defined networking" project, with the twist that we will use a cloud
+platform. The project has three major components, the first being the creation
+of some cloud virtual machine on a service such as AWS or the Google Cloud
+Platform. Once the VM is set up, we can set up a local virtual network using
+Mininet. Lastly, we will set up a simple load balancing service on top of the
+SDN service.
+
+\section{Motivation}
+These problems are real problems in industry, and are very applicable to our
+team's education and future employment. Cloud technologies are becoming more
+and more relevant with the rise of large-scale cloud platforms in enterprise
+computer. Learning about basic cloud technologies, SDN, and load balancing will
+all come in handy in the future. 
+
+\section{Solution Method}
+For the first part of the project, we plan on using a free, enterprise based
+platform, such as Amazon Web Services Free-Tier, or Google Cloud Platform's
+free trial, to initialize a Virtual Machine online. After the VM is created,
+we will use Mininet to create a virtual network layer inside the VM. Using that
+network layer, we can then spin up a few web servers to act as our individual
+nodes. Then, using the established framework, add a simple load balancing
+service on top of the SDN. We will use a simple load balancing algorithm, such
+as round robin.
+
+\section{Evaluation Method}
+We will evaluate the network performance using third party tools such as 
+Wireshark, or build in Mininet utilities like \textit{iperf}.\cite{design} We
+can also do basic analysis and evaluation of the performance drop of a SDN vs
+non-SDN. The load balancer performance can also be evaluated to see how well it
+distributes load over the Mininet Hosts.
+
+\section{Execution Plan}
+The project goals will be divided into three parts:
+
+\begin{enumerate}
+\item Environment Construction, setting up the testing environment, SDN, and 
+	load balancing service. 
+\item Testing, gathering statistics on Mininet hosts as to network performance,
+	and load balancing effectiveness.
+\item Evaluation, writing up report on test results, and evaluation of results.
+\end{enumerate}
+
+Dividing the project into these parts will give us a clear indication of where
+we are in terms of progress, and a good idea if we've hit a roadblock on any
+individual piece. 
+
+\section{Bibliography}
+\bibliographystyle{IEEEtran}
+\bibliography{proposal}
+
+\end{document}
