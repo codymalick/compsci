@@ -49,13 +49,13 @@
 	$\mathcal{L}_2$, the adversary Eve can't choose the function, but she
 	can choose the message $m_1$. In the case of $\mathcal{L}_2$, it simply
 	returns a random ciphertext $c \leftarrow \{0,1\}^\lambda$, while
-	$\mathcal{L}_2$ returns an OTP encrypted ciphertext with a random key
+	$\mathcal{L}_1$ returns an OTP encrypted ciphertext with a random key
 	without the possibility of an all zero key. The probabilities of 
 	$\mathcal{L}_1$ and $\mathcal{L}_2$ are as follows (where $P(x)$ is the
 	probability of x):\\
 
-	\noindent$P(\mathcal{L}_1) = 1-P(0^\lambda)$\\
-	$P(\mathcal{L}_2) = 1$\\
+	\noindent$P(\mathcal{L}_1) = \frac{1}{2^\lambda-1}$\\
+	$P(\mathcal{L}_2) = \frac{1}{2^\lambda}$\\
 
 	Because the probabilities differ, there is a case where Eve can find a
 	difference in behavior, specifically that $\mathcal{L}_1$ cannot
