@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2016.3.16)  18 JAN 2017 21:33
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2016.3.16)  20 JAN 2017 16:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -353,21 +353,52 @@ Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count110
+\lst@gtempboxa=\box35
+\lst@token=\toks26
+\lst@length=\count111
+\lst@currlwidth=\dimen156
+\lst@column=\count112
+\lst@pos=\count113
+\lst@lostspace=\dimen157
+\lst@width=\dimen158
+\lst@newlines=\count114
+\lst@lineno=\count115
+\lst@maxwidth=\dimen159
+
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
+\c@lstnumber=\count116
+\lst@skipnumbers=\count117
+\lst@framebox=\box36
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2007/02/22 1.4 listings configuration
+))
+Package: listings 2007/02/22 1.4 (Carsten Heinz)
+
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2004/09/05 1.3 listings language file
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
 ) (./a1.aux)
 \openout1 = `a1.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 6.
-LaTeX Font Info:    ... okay on input line 6.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 6.
-LaTeX Font Info:    ... okay on input line 6.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 6.
-LaTeX Font Info:    ... okay on input line 6.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 6.
-LaTeX Font Info:    ... okay on input line 6.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 6.
-LaTeX Font Info:    ... okay on input line 6.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 6.
-LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -406,17 +437,17 @@ LaTeX Font Info:    ... okay on input line 6.
 ABD: EveryShipout initializing macros
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count110
-\scratchdimen=\dimen156
-\scratchbox=\box35
-\nofMPsegments=\count111
-\nofMParguments=\count112
-\everyMPshowfont=\toks26
-\MPscratchCnt=\count113
-\MPscratchDim=\dimen157
-\MPnumerator=\count114
-\makeMPintoPDFobject=\count115
-\everyMPtoPDFconversion=\toks27
+\scratchcounter=\count118
+\scratchdimen=\dimen160
+\scratchbox=\box37
+\nofMPsegments=\count119
+\nofMParguments=\count120
+\everyMPshowfont=\toks27
+\MPscratchCnt=\count121
+\MPscratchDim=\dimen161
+\MPnumerator=\count122
+\makeMPintoPDFobject=\count123
+\everyMPtoPDFconversion=\toks28
 ) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -461,112 +492,140 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    Try loading font information for U+msa on input line 12.
+\c@lstlisting=\count124
+LaTeX Font Info:    Try loading font information for U+msa on input line 27.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 12.
+LaTeX Font Info:    Try loading font information for U+msb on input line 27.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Underfull \hbox (badness 10000) in paragraph at lines 15--23
+Underfull \hbox (badness 10000) in paragraph at lines 30--38
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 15--23
+Underfull \hbox (badness 10000) in paragraph at lines 30--38
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 15--23
+Underfull \hbox (badness 10000) in paragraph at lines 30--38
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 15--23
+Underfull \hbox (badness 10000) in paragraph at lines 30--38
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 24--29
+Underfull \hbox (badness 10000) in paragraph at lines 39--44
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 24--29
+Underfull \hbox (badness 10000) in paragraph at lines 39--44
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 33--35
+Underfull \hbox (badness 10000) in paragraph at lines 48--50
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 36--38
+Underfull \hbox (badness 10000) in paragraph at lines 51--53
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 36--38
+Underfull \hbox (badness 10000) in paragraph at lines 51--53
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--41
+Underfull \hbox (badness 10000) in paragraph at lines 54--56
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--41
+Underfull \hbox (badness 10000) in paragraph at lines 54--56
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 42--47
+Underfull \hbox (badness 10000) in paragraph at lines 57--62
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 48--56
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 57--59
+Underfull \hbox (badness 10000) in paragraph at lines 63--66
 
  []
 
 [1
 
-{/usr/share/texlive/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
-(./a1.aux) ) 
+{/usr/share/texlive/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 69.
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 69.
+
+Underfull \hbox (badness 10000) in paragraph at lines 78--82
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 91--95
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 96--103
+
+ []
+
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 119.
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/omlcmr.fd
+File: omlcmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <10> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 119.
+ [2
+
+] (./a1.aux) ) 
 Here is how much of TeX's memory you used:
- 10303 strings out of 495063
- 195051 string characters out of 3182201
- 238487 words of memory out of 3000000
- 13275 multiletter control sequences out of 15000+200000
+ 11667 strings out of 495063
+ 215007 string characters out of 3182201
+ 290838 words of memory out of 3000000
+ 14615 multiletter control sequences out of 15000+200000
  11057 words of font info for 44 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 56i,6n,55p,413b,236s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx1
-2.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/te
-xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1
-/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmtt12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
-nts/symbols/msbm10.pfb>
-Output written on a1.pdf (2 pages, 96904 bytes).
+ 56i,6n,55p,413b,1211s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmb
+x12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pf
+b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmtt12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/s
+ymbols/msbm10.pfb>
+Output written on a1.pdf (2 pages, 110121 bytes).
 PDF statistics:
- 58 PDF objects out of 1000 (max. 8388607)
- 42 compressed objects within 1 object stream
+ 62 PDF objects out of 1000 (max. 8388607)
+ 45 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 
