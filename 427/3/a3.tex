@@ -1,203 +1,227 @@
-\documentclass[11pt]{article}
+\documentclass[10pt,letterpaper]{article}
 
-%% Sample LaTeX for CS427/519
-%% Mike Rosulek
-%% last update 2017-01-23
-
-\usepackage{xspace,graphicx,amsmath,amssymb,xcolor}
-
-%% operators
-
-\newcommand{\pct}{\mathbin{\%}}
-% makes ":=" aligned better
+\usepackage[margin=0.75in]{geometry}
+\usepackage{tikz}
+\usepackage{amsfonts}
+\usepackage{xspace}
+\usepackage{graphicx}
 \usepackage{mathtools}
-\mathtoolsset{centercolon}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{empheq}
+\usepackage{bm}
+\definecolor{myblue}{rgb}{.8, .8, 1}
+\newlength\mytemplen
+\newsavebox\mytempbox
 
-% indistinguishability operator
-% http://tex.stackexchange.com/questions/22168/triple-approx-and-triple-approx-with-a-straight-middle-line
-\newcommand{\indist}{  \mathrel{\vcenter{\offinterlineskip
-  \hbox{$\sim$}\vskip-.35ex\hbox{$\sim$}\vskip-.35ex\hbox{$\sim$}}}}
-\renewcommand{\cong}{\indist}
+\makeatletter
+\newcommand\mybluebox{%
+\@ifnextchar[%]
+	{\@mybluebox}%
+{\@mybluebox[0pt]}}
 
+\def\@mybluebox[#1]{%
+	\@ifnextchar[%]
+		{\@@mybluebox[#1]}%
+	{\@@mybluebox[#1][0pt]}}
 
+\def\@@mybluebox[#1][#2]#3{
+	\sbox\mytempbox{#3}%
+	\mytemplen\ht\mytempbox
+	\advance\mytemplen #1\relax
+	\ht\mytempbox\mytemplen
+	\mytemplen\dp\mytempbox
+	\advance\mytemplen #2\relax
+	\dp\mytempbox\mytemplen
+\colorbox{myblue}{\hspace{1em}\usebox{\mytempbox}\hspace{3em}}}
 
-\newcommand{\K}{\mathcal{K}}
-\newcommand{\M}{\mathcal{M}}
-\newcommand{\C}{\mathcal{C}}
-\newcommand{\Z}{\mathbb{Z}}
-
-\newcommand{\Enc}{\text{\sf Enc}}
-\newcommand{\Dec}{\text{\sf Dec}}
-\newcommand{\KeyGen}{\text{\sf KeyGen}}
-
-% fancy script L
-\usepackage[mathscr]{euscript}
-\renewcommand{\L}{\ensuremath{\mathscr{L}}\xspace}
-\newcommand{\lib}[1]{\ensuremath{\L_{\textsf{#1}}}\xspace}
-
-
-\newcommand{\myterm}[1]{\ensuremath{\text{#1}}\xspace}
-\newcommand{\bias}{\myterm{bias}}
-\newcommand{\link}{\diamond}
-\newcommand{\subname}[1]{\ensuremath{\textsc{#1}}\xspace}
-
-
-
-%% colors
-\definecolor{highlightcolor}{HTML}{F5F5A4}
-\definecolor{highlighttextcolor}{HTML}{000000}
-\definecolor{bitcolor}{HTML}{a91616}
-
-
-%%% boxes for writing libraries/constructions
-\usepackage{varwidth}
-
-\newcommand{\codebox}[1]{%
-        \begin{varwidth}{\linewidth}%
-        \begin{tabbing}%
-            ~~~\=\quad\=\quad\=\quad\=\kill % initialize tabstops
-            #1
-        \end{tabbing}%
-        \end{varwidth}%
-}
-\newcommand{\titlecodebox}[2]{%
-    \fboxsep=0pt%
-    \fcolorbox{black}{black!10}{%
-        \begin{varwidth}{\linewidth}%
-        \centering%
-        \fboxsep=3pt%
-        \colorbox{black!10}{#1} \\
-        \colorbox{white}{\codebox{#2}}%
-        \end{varwidth}%
-    }
-}
-\newcommand{\fcodebox}[1]{%
-    \framebox{\codebox{#1}}%
-}
-\newcommand{\hlcodebox}[1]{%
-    \fcolorbox{black}{highlightcolor}{\codebox{#1}}%
-}
-\newcommand{\hltitlecodebox}[2]{%
-    \fboxsep=0pt%
-    \fcolorbox{black}{black!15!highlightcolor}{%
-        \begin{varwidth}{\linewidth}%
-        \centering%
-        \fboxsep=3pt%
-        \colorbox{black!15!highlightcolor}{\color{highlighttextcolor}#1} \\
-        \colorbox{highlightcolor}{\color{highlighttextcolor}\codebox{#2}}%
-        \end{varwidth}%
-    }
-}
-
-
-%% highlighting
-\newcommand{\basehighlight}[1]{\colorbox{highlightcolor}{\color{highlighttextcolor}#1}}
-\newcommand{\mathhighlight}[1]{\basehighlight{$#1$}}
-\newcommand{\highlight}[1]{\raisebox{0pt}[-\fboxsep][-\fboxsep]{\basehighlight{#1}}}
-\newcommand{\highlightline}[1]{%\raisebox{0pt}[-\fboxsep][-\fboxsep]{
-    \hspace*{-\fboxsep}\basehighlight{#1}%
-%}
-}
-
-%% bits
-\newcommand{\bit}[1]{\textcolor{bitcolor}{\texttt{\upshape #1}}}
-\newcommand{\bits}{\{\bit0,\bit1\}}
-
-
-%%%%
+\makeatother
 
 \begin{document}
-	\title{CS 427, Assignment 3}
-	\author{Cody Malick}
-	\texttt{malickc@oregonstate.edu}
-	\date{\today}
-	\maketitle
+\title{CS 427, Assignment 3}
+\author{Cody Malick\\
+\texttt{malickc@oregonstate.edu}}
+\date{\today}
+\maketitle
 
-	\section{}
-	\subsection{}
-	\subsection{}
-	\subsection{}
-	\section{}
+\section{}
+	\subsection*{a}
+	The PRG seems to be secure. While the results of $y$ never change, the randomness
+	of the first $\lambda$ bits are still uniformly random, as it has been given
+	that $G()$ is secure. The only difference, then, would be that instead of
+	$H(s)$ returning a string of ${0,1}^{3\lambda}$, it returns ${0,1}^{2\lambda}$.
+	Incidentally, this is identical behavior to the function we were provided, $G()$.
+	We can prove that this is secure by showing that $H(s)$	is indistinguishable
+	from a secure PRG:\\
 
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			H(s):\\
+			& \quad x\ :=\ G(s)\\
+			& \quad y\ :=\ G(0^{\lambda})\\
+			& \quad return(x||y)\\
+		\end{split}
+	\end{empheq}
 
-    \[
-        A \link 
-        \fcodebox{
-            \underline{$\subname{challenge}(m_1 \cdots m_\ell)$:} \\
-            \> \highlightline{$r := \subname{samp}()$} \\
-            \> $c_0 := r$ \\
-            \> for $i = 1$ to $\ell$: \\
-            \>\> $r := \subname{query}(r)$ \\
-            \>\> $c_i := r \oplus m_i$ \\
-            \> return $c_0 c_1 \cdots c_\ell$
-        }
-        \link 
-        \fcodebox{
-            $T := $ empty \\
-            \\
-            \underline{$\subname{query}(r)$:} \\
-            \> if $T[r]$ undefined: \\
-            \>\> \highlightline{$T[r] := \subname{samp}()$} \\
-            \> return $T[r]$
-        }
-        \link 
-        \hlcodebox{
-            \underline{$\subname{samp}()$:} \\
-            \> $s \gets \bits^\lambda$ \\
-            \> return $s$
-        }
-    \]
+	We can first abstract $x\ :=\ G(s)$ because $G()$ is secure. We can replace
+	that with a random distribution of $x \leftarrow {0,1}^{\lambda}$. This does
+	not affect the calling program as it is simply the result of $G(s)$:
 
-    \[
-            \titlecodebox{$\lib{cpa-L}^\Sigma$}{
-                $k \gets \Sigma.\KeyGen$ \\[8pt]
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			H(s):\\
+			& \quad \bm{x\ \leftarrow\ \{0,1\}^{2\lambda}}\\
+			& \quad y\ :=\ G(0^{\lambda})\\
+			& \quad return(x||y)\\
+		\end{split}
+	\end{empheq}
 
-                \underline{$\subname{challenge}(m_L, m_R)$:} \\
-                \> $c := \Sigma.\Enc(k,\mathhighlight{m_L})$ \\
-                \> return $c$
-            }
-    \]
-%
-\begin{align*}
-    \lib{left} \equiv \lib{right}
-        &\Leftrightarrow \forall A: \Pr[A \link \lib{left} \mbox{ outputs 1}] = \Pr[A \link \lib{right} \mbox{ outputs 1}]
-\\
-    \lib{left} \indist \lib{right}
-        &\Leftrightarrow \forall \mbox{ poly-time } A: \Pr[A \link \lib{left} \mbox{ outputs 1}] \approx \Pr[A \link \lib{right} \mbox{ outputs 1}]
-\end{align*}
+	Next, I claim we can remove the constant string from the library, as it would
+	not change the probability of the resulting function. In the former case, we
+	had a result of:\\
 
-     \begin{center}
-     \framebox{
-        \codebox{
-            \underline{$\KeyGen$:} \\
-            \> $k \gets \bits^\lambda$ \\
-            \> return $k$
-        }
-        \qquad
-        \codebox{
-            \underline{$\Enc(k,m)$:} \\
-            \> $r \gets \bits^\lambda$\\
-            \> $x := F(k,r) \oplus m$ \\
-            \> return $(r,x)$
-        }
-        \qquad
-        \codebox{
-            \underline{$\Dec(k,(r,x))$:} \\
-            \> $m := F(k,r) \oplus x$ \\
-            \> return $m$
-        }
-    }
+	$\frac{1}{2^{2\lambda}}c$\\
 
-    \bigskip
+	Where $c$ is an unchanging constant, the resulting value of $y$. As we call
+	this function an arbitrarily large number of times, the unchanging value of
+	$c$ would have no effect on the resulting probability function.  Therefore:\\
 
-    \fcodebox{
-        \underline{$H(s)$:} \\
-        \> $x := G(s)$ \\
-        \> $y := G(x_{\textsf{right}})$ \\
-        \> return $x_{\textsf{left}} \| y$
-    }
-    \end{center}
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			H(s):\\
+			& \quad x\ \leftarrow\ \{0,1\}^{2\lambda}\\
+			& \quad return(\bm{x})\\
+		\end{split}
+	\end{empheq}
 
+	As expected, this ends up being identical to $G()$, and therefore, $H()$ is
+	indistinguishable from $G()$, and a secure PRG.
 
+	\subsection*{b}
+	There is a problem with this PRG, in that you are always xoring a constant
+	value, $G(0^{\lambda})$. We can take advantage of this in an attack, by running
+	two different values through the PRG $x_1$ and $x_2$, then xoring those two values together.
+	The resulting string is the values of $G(x_1),G(x_2)$ xored together. With that strategy,
+	an arbitrary calling program can always check the resulting string:\\
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			P():\\
+			& \quad x_1, x_2\ \leftarrow\ \{0,1\}^{\lambda}\\
+			& \quad y_1\ :=\ H(x_1)\\
+			& \quad y_2\ :=\ H(x_2)\\
+			& \quad if (G(x_1) \bmod G(x_2)) == (y_1 \bmod y_2))\ \{\\
+			& \qquad return\ true\\
+			& \quad \}\\
+			& \quad return\ false
+		\end{split}
+	\end{empheq}
+
+	With this setup, $P()$ will return true with a probability of $1$, while a
+	secure PRG of this type should return $\frac{1}{2^{2\lambda}}$
+
+	\subsection*{c}
+	This is similar to the first problem, in that it simply adds a constant string
+	to the resulting random string from $G()$:\\
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			H(s):\\
+			& \quad x\ :=\ G(s)\\
+			& \quad return(s||x)\\
+		\end{split}
+	\end{empheq}
+
+	We can first abstract $x\ :=\ G(s)$ because $G()$ is secure. We can replace
+	that with a random distribution of $x \leftarrow {0,1}^{\lambda}$. This does
+	not affect the calling program as it is simply the result of $G(s)$:
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			H(s):\\
+			& \quad \bm{x\ \leftarrow\ \{0,1\}^{2\lambda}}\\
+			& \quad return(s||x)\\
+		\end{split}
+	\end{empheq}
+
+	Next, I claim we can remove the constant string from the library, as it would
+	not change the probability of the resulting function. In the former case, we
+	had a result of:\\
+
+	$\frac{1}{2^{2\lambda}}c$\\
+
+	Where $c$ is an unchanging constant, the resulting value of $y$. As we call
+	this function an arbitrarily large number of times, the unchanging value of
+	$c$ would have no effect on the resulting probability function.  Therefore:\\
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			H(s):\\
+			& \quad x\ \leftarrow\ \{0,1\}^{2\lambda}\\
+			& \quad return(\bm{x})\\
+		\end{split}
+	\end{empheq}
+
+	As before, the resulting function is indistinguishable to $G()$ in probability.
+
+\section{}
+This is a relatively simplistic proof. Our end goal is simply to show that we
+can freely exchange $G_1$ and $G_2$. Starting with $\mathcal{L}^{G_1}_{which-prg}$:\\
+
+\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+	\begin{split}
+		QUERY():\\
+		& \quad s\ \leftarrow\ \{0,1\}^{\lambda}\\
+		& \quad return\ G_1(s)\\
+	\end{split}
+\end{empheq}
+
+My first step would be abstract away the call to $G_1$ into a seperate function:\\
+
+\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+	\begin{split}
+		QUERY():\\
+		& \quad s\ \leftarrow\ \{0,1\}^{\lambda}\\
+		& \quad \bm{z\ :=\ \mathcal{F}(s)} \\
+		& \quad return\ \bm{z}
+	\end{split}
+\end{empheq}
+
+Where $\mathcal{F}$:\\
+
+\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+	\begin{split}
+		\mathcal{F}(s):\\
+		& \quad z\ := G_1(s)\\
+		& \quad return\ z
+	\end{split}
+\end{empheq}
+
+We can substitute the call to $G_1$ with a call to $G_2$ as they both have equal
+input and output ranges:
+
+\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+	\begin{split}
+		\mathcal{F}(s):\\
+		& \quad z\ := \bm{G_2(s)}\\
+		& \quad return\ z
+	\end{split}
+\end{empheq}
+
+With that changed, we can substitute the resulting function back into $QUERY()$:\\
+
+\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+	\begin{split}
+		QUERY():\\
+		& \quad s\ \leftarrow\ \{0,1\}^{\lambda}\\
+		& \quad \bm{z\ :=\ \bm{G_2(s)}} \\
+		& \quad return\ z
+	\end{split}
+\end{empheq}
+
+With that in place, we've shown that $\mathcal{L}^{G_1}_{which-prg}$ is indistinguishable
+from $\mathcal{L}^{G_2}_{which-prg}$
 
 \end{document}
