@@ -48,123 +48,146 @@
 
 \section{}
 	\subsection*{a}
-	The PRG seems to be secure. While the results of $y$ never change, the randomness
-	of the first $\lambda$ bits are still uniformly random, as it has been given
-	that $G()$ is secure. The only difference, then, would be that instead of
-	$H(s)$ returning a string of ${0,1}^{3\lambda}$, it returns ${0,1}^{2\lambda}$.
-	Incidentally, this is identical behavior to the function we were provided, $G()$.
-	We can prove that this is secure by showing that $H(s)$	is indistinguishable
-	from a secure PRG:\\
+	This PRG is insecure. We can show this by having two QUERY functions,
+	$QUERY_1$ and $QUERY_2$. $QUERY_2$ returns a uniform random distribution,
+	while $QUERY_1$ uses a psuedorandom function $H(s)$:\\
 
 	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
 		\begin{split}
-			H(s):\\
-			& \quad x\ :=\ G(s)\\
-			& \quad y\ :=\ G(0^{\lambda})\\
-			& \quad return(x||y)\\
+			QUERY_1():\\
+			& \quad s\ \leftarrow\ \{0,1\}^{\lambda}\\
+			& \quad return\ H(s)\\
 		\end{split}
 	\end{empheq}
-
-	We can first abstract $x\ :=\ G(s)$ because $G()$ is secure. We can replace
-	that with a random distribution of $x \leftarrow {0,1}^{\lambda}$. This does
-	not affect the calling program as it is simply the result of $G(s)$:
 
 	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
 		\begin{split}
-			H(s):\\
-			& \quad \bm{x\ \leftarrow\ \{0,1\}^{2\lambda}}\\
-			& \quad y\ :=\ G(0^{\lambda})\\
-			& \quad return(x||y)\\
+			QUERY_2():\\
+			& \quad z\ \leftarrow\ \{0,1\}^{2\lambda}\\
+			& \quad return\ z\\
 		\end{split}
 	\end{empheq}
 
-	Next, I claim we can remove the constant string from the library, as it would
-	not change the probability of the resulting function. In the former case, we
-	had a result of:\\
-
-	$\frac{1}{2^{2\lambda}}c$\\
-
-	Where $c$ is an unchanging constant, the resulting value of $y$. As we call
-	this function an arbitrarily large number of times, the unchanging value of
-	$c$ would have no effect on the resulting probability function.  Therefore:\\
+	I claim that an adversary can tell the difference between these two
+	functions by only looking at the result of calling either function. 
+	The adversary can tell which library he is calling, by simply looking
+	at the second half of the output of $QUERY_1$. The calling function
+	$\mathcal{F}$:\\
 
 	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
 		\begin{split}
-			H(s):\\
-			& \quad x\ \leftarrow\ \{0,1\}^{2\lambda}\\
-			& \quad return(\bm{x})\\
+			\mathcal{F}():\\
+			& \quad x\ :=\ QUERY()\\
+			& \quad x_1\ :=\ first\ half\ of\ x\\
+			& \quad x_2\ :=\ second\ half\ of\ x\\
+			& \quad \\
+			& \quad y\ :=\ QUERY()\\
+			& \quad y_1\ :=\ first\ half\ of\ y\\
+			& \quad y_2\ :=\ second\ half\ of\ y\\
+			& \quad \\
+			& \quad if\ (\ x_2\ ==\ y_2\ )\ \{\\
+			& \qquad return\ true \\
+			& \quad \} \\
+			& \quad return\ false\\
 		\end{split}
 	\end{empheq}
 
-	As expected, this ends up being identical to $G()$, and therefore, $H()$ is
-	indistinguishable from $G()$, and a secure PRG.
+	Given that $\mathcal{F}$ calls $QUERY_1$ twice, then $\mathcal{F}$ will
+	return true with a probability of 1. While if $\mathcal{F}$ calls 
+	$QUERY_2$ twice, then the probability of $x_2 == y_2$ is quite small,
+	$\frac{1}{2^\lambda}*\frac{1}{2^\lambda}$. Given that information, the
+	PRG is not secure.
 
 	\subsection*{b}
-	There is a problem with this PRG, in that you are always xoring a constant
-	value, $G(0^{\lambda})$. We can take advantage of this in an attack, by running
-	two different values through the PRG $x_1$ and $x_2$, then xoring those two values together.
-	The resulting string is the values of $G(x_1),G(x_2)$ xored together. With that strategy,
-	an arbitrary calling program can always check the resulting string:\\
+
+	I claim this PRG is secure due to OTP. To show that this PRG is secure,
+	we must show that, given a calling function, we cannot differentiate 
+	between two queries, $QUERY_1,QUERY_2$:
 
 	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
 		\begin{split}
-			P():\\
-			& \quad x_1, x_2\ \leftarrow\ \{0,1\}^{\lambda}\\
-			& \quad y_1\ :=\ H(x_1)\\
-			& \quad y_2\ :=\ H(x_2)\\
-			& \quad if (G(x_1) \bmod G(x_2)) == (y_1 \bmod y_2))\ \{\\
-			& \qquad return\ true\\
-			& \quad \}\\
-			& \quad return\ false
+			QUERY_1():\\
+			& \quad s\ \leftarrow\ \{0,1\}^{\lambda}\\
+			& \quad return\ H(s)\\
 		\end{split}
 	\end{empheq}
 
-	With this setup, $P()$ will return true with a probability of $1$, while a
-	secure PRG of this type should return $\frac{1}{2^{2\lambda}}$
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			QUERY_2():\\
+			& \quad z\ \leftarrow\ \{0,1\}^{2\lambda}\\
+			& \quad return\ z\\
+		\end{split}
+	\end{empheq}
 
-	\subsection*{c}
-	This is similar to the first problem, in that it simply adds a constant string
-	to the resulting random string from $G()$:\\
+	Inside of $H(s)$, getting two random strings and xoring them together
+	looks a lot like OTP. We can try and convert $H(s)$ into a different form.
+	With the original $H(s)$:
 
 	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
 		\begin{split}
 			H(s):\\
 			& \quad x\ :=\ G(s)\\
-			& \quad return(s||x)\\
+			& \quad y\ :=\ G(0^\lambda) \\
+			& \quad return\ x \oplus y\\
 		\end{split}
 	\end{empheq}
 
-	We can first abstract $x\ :=\ G(s)$ because $G()$ is secure. We can replace
-	that with a random distribution of $x \leftarrow {0,1}^{\lambda}$. This does
-	not affect the calling program as it is simply the result of $G(s)$:
+	We can abstract out the xor into a function $\mathcal{F}$:
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			\mathcal{F}(k,m):\\
+			& \quad return\ k \oplus m
+		\end{split}
+	\end{empheq}
 
 	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
 		\begin{split}
 			H(s):\\
-			& \quad \bm{x\ \leftarrow\ \{0,1\}^{2\lambda}}\\
-			& \quad return(s||x)\\
+			& \quad x\ :=\ G(s)\\
+			& \quad y\ :=\ G(0^\lambda) \\
+			& \quad return\ \bm{\mathcal{F}(x,y)} \\
 		\end{split}
 	\end{empheq}
 
-	Next, I claim we can remove the constant string from the library, as it would
-	not change the probability of the resulting function. In the former case, we
-	had a result of:\\
+	I claim this does not change the calling function, as we are performing
+	the same operations, just with a linking function rather than in $H(s)$.
+	$\mathcal{F}$ is identical to OTP, which we have proven has a uniformly
+	distributed output. With that in mind, both queries, $QUERY_1,QUERY_2$
+	both return a uniformly distributed output, and we can differentiate between
+	them. They are, then, indistinguishable. $H()$ is a secure PRG.
 
-	$\frac{1}{2^{2\lambda}}c$\\
 
-	Where $c$ is an unchanging constant, the resulting value of $y$. As we call
-	this function an arbitrarily large number of times, the unchanging value of
-	$c$ would have no effect on the resulting probability function.  Therefore:\\
+	\subsection*{c}
+	This problem is very similar to the first problem, but the primary difference
+	is that the function will \texttt{always} return the seed as the first
+	half of the return value. I claim that this function is secure, as the
+	seed is randomly generated from a uniform distribution:
 
 	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
 		\begin{split}
 			H(s):\\
-			& \quad x\ \leftarrow\ \{0,1\}^{2\lambda}\\
-			& \quad return(\bm{x})\\
+			& \quad x\ :=\ G(s)\\
+			& \quad return\ s||x\\
 		\end{split}
 	\end{empheq}
 
-	As before, the resulting function is indistinguishable to $G()$ in probability.
+	We can first abstract the call to $G(s)$ as a uniformly random distribution,
+	as we know that $G()$ is secure:
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			H(s):\\
+			& \quad x\ \leftarrow \{0,1\}^{2\lambda}\\
+			& \quad return\ s||x \\
+		\end{split}
+	\end{empheq}
+
+	It is clear now that we have two values, both of which have a uniform
+	random distribution. The resulting probability distribution is then
+	$\frac{1}{2^{2\lambda}} * \frac{1}{2^{\lambda}} = \frac{1}{2^{3\lambda}}$.
+	With that output, then $H()$ is a secure PRG
 
 \section{}
 This is a relatively simplistic proof. Our end goal is simply to show that we
@@ -199,7 +222,19 @@ Where $\mathcal{F}$:\\
 	\end{split}
 \end{empheq}
 
-We can substitute the call to $G_1$ with a call to $G_2$ as they both have equal
+Because we assume that $G_1$ is a secure PRG, then we can simply set the output
+of the function to a uniformly random distribution:
+
+\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+	\begin{split}
+		\mathcal{F}(s):\\
+		& \quad \bm{z\ \leftarrow\ \{0,1\}^{2\lambda}}\\
+		& \quad return\ z
+	\end{split}
+\end{empheq}
+
+We can take advantage of the fact that the output is uniformly random, to substitute
+$G_2$ in place of the uniform distribution, as we assume $G_2$ is a secure PRG:
 input and output ranges:
 
 \begin{empheq}[box={\mybluebox[3pt]}]{equation*}
