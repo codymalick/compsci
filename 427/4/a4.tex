@@ -1,0 +1,63 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage{tikz}
+\usepackage{amsfonts}
+\usepackage{xspace}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{empheq}
+\usepackage{bm}
+\definecolor{myblue}{rgb}{.8, .8, 1}
+\newlength\mytemplen
+\newsavebox\mytempbox
+
+\makeatletter
+\newcommand\mybluebox{%
+\@ifnextchar[%]
+	{\@mybluebox}%
+{\@mybluebox[0pt]}}
+
+\def\@mybluebox[#1]{%
+	\@ifnextchar[%]
+		{\@@mybluebox[#1]}%
+	{\@@mybluebox[#1][0pt]}}
+
+\def\@@mybluebox[#1][#2]#3{
+	\sbox\mytempbox{#3}%
+	\mytemplen\ht\mytempbox
+	\advance\mytemplen #1\relax
+	\ht\mytempbox\mytemplen
+	\mytemplen\dp\mytempbox
+	\advance\mytemplen #2\relax
+	\dp\mytempbox\mytemplen
+\colorbox{myblue}{\hspace{1em}\usebox{\mytempbox}\hspace{3em}}}
+
+\makeatother
+
+\begin{document}
+\title{CS 427, Assignment 3}
+\author{Cody Malick\\
+\texttt{malickc@oregonstate.edu}}
+\date{\today}
+\maketitle
+
+\section{}
+	\subsection*{a}
+	
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			QUERY_1():\\
+			& \quad s\ \leftarrow\ \{0,1\}^{\lambda}\\
+			& \quad return\ H(s)\\
+		\end{split}
+	\end{empheq}
+
+	\subsection*{b}
+
+\end{document}
