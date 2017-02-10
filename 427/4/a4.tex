@@ -48,16 +48,35 @@
 
 \section{}
 	\subsection*{a}
-	
+	It is fairly easy to show that this function is insecure by using a
+	chosen plaintex attack. Here is a quick example. Suppose you have some
+	calling function $\mathcal{F}$:
 
 	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
 		\begin{split}
-			QUERY_1():\\
-			& \quad s\ \leftarrow\ \{0,1\}^{\lambda}\\
+			\mathcal{F}():\\
+			& \quad m_1\ \leftarrow\ \{0,1\}^{\lambda}\\
+			& \quad m_2\ \leftarrow\ \{0,1\}^{\lambda}\\
+			& \quad k\ := Keygen() \\
+			& \quad // Split the resulting cipher text into two parts
+			& \quad c_1,c_2\ :=\ H(k,m_1||m_2) \\
+			& \quad if(\ m_2\ ==\ c_1) {
+			& \qquad return true \\
+			& \quad } \\
+			& \quad return false
 			& \quad return\ H(s)\\
 		\end{split}
 	\end{empheq}
 
+	Examining this attack, we can see that $\mathcal{F}$ will return true
+	with a probability of 1. The PRF provides no encryption for the first
+	half of the plain text. If $H()$ were secure, we should not be able to
+	differentiate between $H()$ and some secure $PRP$.
+
 	\subsection*{b}
+	While this function is slightly more secure than the last, it can also
+	be attacked with a chosen plaintext attack, but we have to be a little
+	smarter about how we extract information. If we feed the two round cipher
+	the same plaintext, we can reduce the output range by $\frac{1}{2}$:
 
 \end{document}
