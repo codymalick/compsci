@@ -50,7 +50,9 @@
 	\subsection*{a}
 	It is fairly easy to show that this function is insecure by using a
 	chosen plaintex attack. Here is a quick example. Suppose you have some
-	calling function $\mathcal{F}$:
+	calling function $\mathcal{F}$, where $H$ is either the function we're attacking
+	or a function that is a secure PRP, that returns a uniformly
+	distributed encrypted value:
 
 	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
 		\begin{split}
@@ -58,25 +60,157 @@
 			& \quad m_1\ \leftarrow\ \{0,1\}^{\lambda}\\
 			& \quad m_2\ \leftarrow\ \{0,1\}^{\lambda}\\
 			& \quad k\ := Keygen() \\
-			& \quad // Split the resulting cipher text into two parts
+			& \quad //Split\ the\ resulting\ cipher\ text\ into\ two\ parts\\
 			& \quad c_1,c_2\ :=\ H(k,m_1||m_2) \\
-			& \quad if(\ m_2\ ==\ c_1) {
-			& \qquad return true \\
-			& \quad } \\
-			& \quad return false
-			& \quad return\ H(s)\\
+			& \quad if(\ m_2\ ==\ c_1) \{\\
+			& \qquad return\ true \\
+			& \quad \} \\
+			& \quad return\ false\\
 		\end{split}
 	\end{empheq}
 
 	Examining this attack, we can see that $\mathcal{F}$ will return true
-	with a probability of 1. The PRF provides no encryption for the first
+	with a probability of 1 for the function $H$ we are attacking, and will
+	almost never return true for a properly ecrypted value.
+	The PRF provides no encryption for the first
 	half of the plain text. If $H()$ were secure, we should not be able to
 	differentiate between $H()$ and some secure $PRP$.
 
 	\subsection*{b}
 	While this function is slightly more secure than the last, it can also
 	be attacked with a chosen plaintext attack, but we have to be a little
-	smarter about how we extract information. If we feed the two round cipher
-	the same plaintext, we can reduce the output range by $\frac{1}{2}$:
+	smarter about how we extract information. We can gain information about
+	the plaintext by setting the first half of two messages to $m_1$, and 
+	the later half of either to any other string. In this case, $m_2$ and
+	$m_3$. 
+	
+\section{}
+	To show that $F'$ is a secure PRF, we have to show that the output, which
+	in this case would be uniformly random, is indistinguishable from a 
+	secure PRF. We can show this by transforming $F'$ to look have output
+	like some other function, $F$. Starting with our base definition of
+	$F'$:
 
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			F'(k,r):\\
+			& \quad return\ G(F(k,r))\\
+		\end{split}
+	\end{empheq}
+
+	We first can expand all the operations:
+
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			F'(k,r):\\
+			& \quad f\ :=\ F(k,r)\\
+			& \quad g\ :=\ G(f)\\
+			& \quad return\ g\\
+		\end{split}
+	\end{empheq}
+
+	This does not change the calling function as we have not changed the
+	fundamental behavior of the function. Next, we can pull $F$ out into a
+	calling function $\mathcal{F}$, and substitute $\mathcal{F}$ for
+	it's resulting output, a uniformly random distribution:
+
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			F'(k,r):\\
+			& \quad f\ :=\ \mathcal{F}(k,r)\\
+			& \quad g\ :=\ G(f)\\
+			& \quad return\ g\\
+		\end{split}
+	\end{empheq}
+
+	
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			\mathcal{F}(k,r):\\
+			& \quad return x \leftarrow \{0,1\}^\lambda\\
+		\end{split}
+	\end{empheq}
+
+	Substitute the results of the new function $\mathcal{F}$:
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			F'(k,r):\\
+			& \quad f\ \leftarrow\ \{0,1\}^\lambda\\
+			& \quad g\ :=\ G(f)\\
+			& \quad return\ g\\
+		\end{split}
+	\end{empheq}
+
+	We can do this, because we have assumed that $F$ is a secure PRF, which
+	outputs a random number picked from a uniformly random distribution.
+	Next, we can perform the same proceedure with $G$, but we must show why
+	it works for results of length $2\lambda$. $G$ is pulled out into function
+	$\mathcal{G}$, and then is substitued:
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			F'(k,r):\\
+			& \quad f\ :=\ \{0,1\}^\lambda\\
+			& \quad g\ :=\ \mathcal{G}(f)\\
+			& \quad return\ g\\
+		\end{split}
+	\end{empheq}
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			\mathcal{G}(x):\\
+			& \quad x_1\ :=\ first\ half\ of\ x\\
+			& \quad x_2\ :=\ second\ half\ of\ x\\
+			& \quad c_1\ :=\ \mathcal{F}(x_1) \\
+			& \quad c_2\ :=\ \mathcal{F}(x_2) \\
+			& \quad return c_1 || c_2\\
+			& \quad return\ g\\
+		\end{split}
+	\end{empheq}
+
+	With this outline complete, we can then substitute the previous result
+	of $\mathcal{F}$, specifically its random output:
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			\mathcal{G}(x):\\
+			& \quad c_1\ \leftarrow\ \{0,1\}^\lambda\\
+			& \quad c_2\ \leftarrow\ \{0,1\}^\lambda\\
+			& \quad return\ c_1 || c_2\\
+		\end{split}
+	\end{empheq}
+
+	This result can be rewritten as a random value of length $2\lambda$:
+
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			F'(k,r):\\
+			& \quad f\ \leftarrow\ \{0,1\}^\lambda\\
+			& \quad g\ \leftarrow\ \{0,1\}^{2\lambda}\\
+			& \quad return\ g\\
+		\end{split}
+	\end{empheq}
+
+	This is the desired result, as the output is a uniformly random distribution
+	of length $2\lambda$. This result is indistinguishable from a secure
+	PRF, and that completes the proof.
+\section{}
+	Given that $F$ is a PRP, then it must, by definition, have an inverse,
+	$F^{-1}$. The decryption algorith for this setup would then be:
+
+	\begin{empheq}[box={\mybluebox[3pt]}]{equation*}
+		\begin{split}
+			DEC(k,(x,y)):\\
+			& \quad s_2\ :=\ F^{-1}(k,y)\\
+			& \quad s_1\ :=\ F^{-1}(k,x)\\
+			& \quad m\ :=\ s_2 \oplus s_1\\
+			& \quad return\ m\\
+		\end{split}
+	\end{empheq}
+
+	
 \end{document}
