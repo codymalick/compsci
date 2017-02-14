@@ -1,0 +1,105 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage{tikz}
+\usepackage{amsfonts}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\begin{document}
+
+  \title{CS 476, Assignment 1}
+  \author{Cody Malick\\
+  \texttt{malickc@oregonstate.edu}}
+  \date{\today}
+  \maketitle
+
+\section*{1}
+\subsection*{a}
+\subsubsection*{i}
+\begin{center}
+	\begin{tikzpicture}[scale=0.2]
+		\tikzstyle{every node}+=[inner sep=0pt]
+		\draw [black] (36.2,-13.1) circle (3);
+		\draw (36.2,-13.1) node {$I$};
+		\draw [black] (21,-23.2) circle (3);
+		\draw (21,-23.2) node {$C$};
+		\draw [black] (50.1,-19.1) circle (3);
+		\draw (50.1,-19.1) node {$t_1$};
+		\draw [black] (50.1,-30.6) circle (3);
+		\draw (50.1,-30.6) node {$t_2$};
+		\draw [black] (50.1,-45) circle (3);
+		\draw (50.1,-45) node {$...$};
+		\draw [black] (36.8,-50.4) circle (3);
+		\draw (36.8,-50.4) node {$t_k$};
+		\draw [black] (50.1,-22.1) -- (50.1,-27.6);
+		\fill [black] (50.1,-27.6) -- (50.6,-26.8) -- (49.6,-26.8);
+		\draw (49.6,-24.85) node [left] {$1$};
+		\draw [black] (50.1,-33.6) -- (50.1,-42);
+		\fill [black] (50.1,-42) -- (50.6,-41.2) -- (49.6,-41.2);
+		\draw (49.6,-37.8) node [left] {$1$};
+		\draw [black] (48.306,-47.394) arc (-44.31067:-91.49354:11.529);
+		\fill [black] (39.76,-50.87) -- (40.54,-51.39) -- (40.57,-50.39);
+		\draw (45.35,-50.54) node [below] {$1$};
+		\draw [black] (34.877,-10.42) arc (234:-54:2.25);
+		\draw (36.2,-5.85) node [above] {$u_i\mbox{ }=\mbox{ }(1-p)^n$};
+		\fill [black] (37.52,-10.42) -- (38.4,-10.07) -- (37.59,-9.48);
+		\draw [black] (21.625,-20.274) arc (160.53911:86.66688:11.623);
+		\fill [black] (21.63,-20.27) -- (22.36,-19.69) -- (21.42,-19.35);
+		\draw (19.9,-13.97) node [above] {$u_c\mbox{ }=\mbox{ }1-u_i-u_1$};
+		\draw [black] (34.711,-15.7) arc (-34.71993:-78.07408:17.45);
+		\fill [black] (34.71,-15.7) -- (33.84,-16.07) -- (34.67,-16.64);
+		\draw (31.03,-20.79) node [below] {$1$};
+		\draw [black] (39.057,-12.222) arc (98.51909:34.78558:10.029);
+		\fill [black] (48.78,-16.42) -- (48.73,-15.48) -- (47.91,-16.05);
+		\draw (47.3,-12.4) node [above] {$u_1=pn(1-p)^{n-1}\mbox{ }=\mbox{ }p$};
+		\draw [black] (36.75,-47.4) -- (36.25,-16.1);
+		\fill [black] (36.25,-16.1) -- (35.76,-16.91) -- (36.76,-16.89);
+		\draw (37.02,-31.75) node [right] {$1$};
+	\end{tikzpicture}
+\end{center}
+
+\subsubsection*{ii}
+Balance Equations:\\
+State I: $S_i(1-u_i)=u_i(S_k+S_c)$\\
+State C: $S_iu_c=S_cu_i$\\
+State $t_1$: $U_1 = P$ \\
+State $t_k$: $S_iu_c=S_ku_i$ \\
+
+Stationary Probabilities:\\
+
+State I: $S_i=\frac{u_i(S_k+S_c)}{1-u_i}\\$
+State C: $S_c=\frac{S_iu_c}{u_i}\\$
+State K: $S_k=\frac{S_i}{u_1}\\$
+
+\subsubsection*{iii}
+System throughput is defined by the average output traffic:\\
+
+\subsubsection*{iv}
+\subsubsection*{v}
+
+\section*{1}
+\subsection*{a}
+Given that B has a rate of $R_B=\frac{1}{2}$ message per time slot, because it
+has to send and reveive a message. It then takes two time frames to move one 
+message. C has a rate of $R_C = 1$ message per time slot.
+The maximum throughput of a given connection is limited by its smallest rate,
+which is $\frac{1}{2}$
+
+\subsection*{b}
+The maximum rate would then be two messages per time frame, because both A
+and D are transmitting unimpaired. Then the maximum rate would be $\frac{2}{1}$
+or simply 2 messages per timeframe.
+
+\subsection*{c}
+For this scenario, A would have to reserve a slot with B, and C with D. With
+this in mind, then we have to look at what nodes would collide. B and C will
+collide with a reservation collision. Then, B or C would have to wait until 
+A or D are done sending in order to start. Then the maximum throughput in this
+case would simply be 1 message per timeframe.
+
+\subsection*{d}
+In a wired scenario, there would be no issues, and the maximum throughput would
+simply be 2 messages per timeframe. There are no collisions. For that reason
+wired is much more efficient.
+\end{document}
