@@ -1,0 +1,216 @@
+\documentclass[10pt]{article}
+%%%%%%%%%%%%%%%%%%%%%%%
+% Mike's stuff
+
+%% Sample LaTeX for CS427/519
+%% Mike Rosulek
+%% last update 2017-01-23
+
+\usepackage{xspace,graphicx,amsmath,amssymb,xcolor}
+\usepackage[margin=1in]{geometry}
+
+%% operators
+
+\newcommand{\pct}{\mathbin{\%}}
+% makes ":=" aligned better
+\usepackage{mathtools}
+\mathtoolsset{centercolon}
+
+% indistinguishability operator
+% http://tex.stackexchange.com/questions/22168/triple-approx-and-triple-approx-with-a-straight-middle-line
+\newcommand{\indist}{  \mathrel{\vcenter{\offinterlineskip
+\hbox{$\sim$}\vskip-.35ex\hbox{$\sim$}\vskip-.35ex\hbox{$\sim$}}}}
+\renewcommand{\cong}{\indist}
+
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\Enc}{\text{\sf Enc}}
+\newcommand{\Dec}{\text{\sf Dec}}
+\newcommand{\KeyGen}{\text{\sf KeyGen}}
+
+% fancy script L
+\usepackage[mathscr]{euscript}
+\renewcommand{\L}{\ensuremath{\mathscr{L}}\xspace}
+\newcommand{\lib}[1]{\ensuremath{\L_{\textsf{#1}}}\xspace}
+
+\newcommand{\myterm}[1]{\ensuremath{\text{#1}}\xspace}
+\newcommand{\bias}{\myterm{bias}}
+\newcommand{\link}{\diamond}
+\newcommand{\subname}[1]{\ensuremath{\textsc{#1}}\xspace}
+
+%% colors
+\definecolor{highlightcolor}{HTML}{F5F5A4}
+\definecolor{highlighttextcolor}{HTML}{000000}
+\definecolor{bitcolor}{HTML}{a91616}
+
+%%% boxes for writing libraries/constructions
+\usepackage{varwidth}
+
+\newcommand{\codebox}[1]{%
+	\begin{varwidth}{\linewidth}%
+		\begin{tabbing}%
+			~~~\=\quad\=\quad\=\quad\=\kill % initialize tabstops
+			#1
+		\end{tabbing}%
+	\end{varwidth}%
+}
+\newcommand{\titlecodebox}[2]{%
+	\fboxsep=0pt%
+	\fcolorbox{black}{black!10}{%
+		\begin{varwidth}{\linewidth}%
+			\centering%
+			\fboxsep=3pt%
+			\colorbox{black!10}{#1} \\
+			\colorbox{white}{\codebox{#2}}%
+		\end{varwidth}%
+	}
+}
+\newcommand{\fcodebox}[1]{%
+	\framebox{\codebox{#1}}%
+}
+\newcommand{\hlcodebox}[1]{%
+	\fcolorbox{black}{highlightcolor}{\codebox{#1}}%
+}
+\newcommand{\hltitlecodebox}[2]{%
+	\fboxsep=0pt%
+	\fcolorbox{black}{black!15!highlightcolor}{%
+		\begin{varwidth}{\linewidth}%
+			\centering%
+			\fboxsep=3pt%
+			\colorbox{black!15!highlightcolor}{\color{highlighttextcolor}#1} \\
+			\colorbox{highlightcolor}{\color{highlighttextcolor}\codebox{#2}}%
+		\end{varwidth}%
+	}
+}
+
+
+%% highlighting
+\newcommand{\basehighlight}[1]{\colorbox{highlightcolor}{\color{highlighttextcolor}#1}}
+\newcommand{\mathhighlight}[1]{\basehighlight{$#1$}}
+\newcommand{\highlight}[1]{\raisebox{0pt}[-\fboxsep][-\fboxsep]{\basehighlight{#1}}}
+\newcommand{\highlightline}[1]{%\raisebox{0pt}[-\fboxsep][-\fboxsep]{
+	\hspace*{-\fboxsep}\basehighlight{#1}%
+	%}
+}
+
+%% bits
+\newcommand{\bit}[1]{\textcolor{bitcolor}{\texttt{\upshape #1}}}
+\newcommand{\bits}{\{\bit0,\bit1\}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\title{CS 427, Assignment 5}
+\author{Cody Malick\\
+\texttt{malickc@oregonstate.edu}}
+\date{\today}
+\maketitle
+
+\section{}
+The weakness in this altered CBC mode is that the IV is encrypted without being
+XORed with something else. This leaves us with an encrypted IV that can be used
+to tell whether or not another block of the encryption is empty. For example, 
+we can look at $c_0$, and compare it to $c_1$. If $c_1$ is all zeroes, it'll be
+equal to the encrypted IV. This would reduce the complexity of the encryption
+by the size of the block. For example:
+\[
+	\fcodebox{
+		$k := \{0,1\}^\ell$
+		\\
+		\underline{$\subname{Attack}()$:} \\
+		\> // A string that begins with 0's in the first block size \\
+		\> $m_1 := 00..0 + \{0,1\}^{\ell-\lambda}$ \\
+		\> $c_0, c_1, ..., c_\ell := \Enc(k, m_1)$ \\
+		\> // Use the encrypted IV to gain information about the first block \\
+		\> if $c_0 == c_1$: \\
+		\>\> return true \\
+		\> return false \\
+	}
+\]
+
+The attacking function will return true with a probability 1. This shows that
+the function is not CPA secure, as we were able to glean information about
+the ciphertext.
+
+\section{}
+\subsection*{a}
+We can show that this scheme is secure through a simple hybrid proof. If $\Sigma$
+is secure, then it returns a uniformly random distribution result, and is not
+susceptible to CPAs. Building of these assumptions, we can show a relatively
+simple hybrid proof. Here is the starting state:
+
+\[
+	\fcodebox{
+		\underline{$\Sigma'.\Enc(k,m)$:} \\
+		\> $c_1 := \Sigma.\Enc(k,m)$ \\
+		\> $c_2 := \Sigma.\Enc(k,m)$ \\
+		\> return$(c_1,c_2)$
+	}
+\]
+
+The first step in our hybrid proof is to pull out both of our encryption calls
+into a function call $\mathcal{F}$:
+
+\[
+	\fcodebox{
+		\underline{$\Sigma'.\Enc(k,m)$:} \\
+		\> $c_1 := \mathhighlight{\mathcal{F}(k,m)}$ \\
+		\> $c_2 := \mathhighlight{\mathcal{F}(k,m)}$ \\
+		\> return $(c_1,c_2)$\\
+	}
+	\link	
+	\fcodebox{
+		\underline{$\mathcal{F}(k,m)$:} \\
+		\> return $\Sigma.\Enc(k,m)$\\
+	}
+\]
+
+This doesn't change the outcome of the calling function, as the behavior inside
+of $\mathcal{F}$ is the same as it was before the abstraction. We can now safely
+replace the return value inside of $\mathcal{F}$ with a uniformly random
+distribution because it has been assumed that it is a CPA secure function:
+
+\[
+	\fcodebox{
+		\underline{$\Sigma'.\Enc(k,m)$:} \\
+		\> $c_1 := \mathcal{F}(k,m)$ \\
+		\> $c_2 := \mathcal{F}(k,m)$ \\
+		\> return $(c_1,c_2)$\\
+	}
+	\link	
+	\fcodebox{
+		\underline{$\mathcal{F}(k,m)$:} \\
+		\> return $\mathhighlight{x \leftarrow \{0,1\}^\lambda}$\\
+	}
+\]
+
+Now, we can simply substitute the random value from $\mathcal{F}$ into its
+parent function without changing any behavior:
+
+\[
+	\fcodebox{
+		\underline{$\Sigma'.\Enc(k,m)$:} \\
+		\> $\mathhighlight{c_1 \leftarrow \{0,1\}^\lambda}$ \\
+		\> $\mathhighlight{c_2 \leftarrow \{0,1\}^\lambda}$ \\
+		\> return $(c_1,c_2)$\\
+	}
+\]
+
+This function is CPA secure as there is no way for a chosen plaintext attack
+to glean any information. The resulting values are uniformly random, and inputting
+the same plaintext twice will not yield the same result. $\Sigma'$ is CPA secure.
+
+\subsection*{b}
+
+
+
+\section{}
+
+
+
+\end{document}
