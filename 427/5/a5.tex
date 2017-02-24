@@ -206,10 +206,46 @@ to glean any information. The resulting values are uniformly random, and inputti
 the same plaintext twice will not yield the same result. $\Sigma'$ is CPA secure.
 
 \subsection*{b}
+This function can be attacked with a chosen ciphertext attack, because it does
+not check a resulting ciphertext against a list of ciphertexts it has generated
+before decrypting. We can then take advantage of this fairly easily:
 
+\[
+	\fcodebox{
+		\underline{$Attack()$:} \\
+		\> $m_1 := 000...00$ \\
+		\> $m_2 := 111...11$ \\
+		\> $c_1,c_2 := CHALLENGE(m_1||m_2)$ \\
+		\> $d_1,d_2 := CHALLENGE(m_2||m_1)$ \\
+		\> if $Dec(c_2,d_1)$: return true \\
+		\> else: return false \\
+	}
+\]
 
+Because of the scheme, the decryption function will only return true when both
+halves of the ciphertext are equal. In this case, the probability of that will
+be 1. Which means we can find a relationship
+between the two ciphertexts. That means that it is not CCA secure.
 
 \section{}
+The decryption algorithm would be:
+
+\[
+	\fcodebox{
+		\underline{$Dec(r,k,x)$:} \\
+		\> $c := x \oplus r $\\
+		\> $m := F^{-1}(k,c) \oplus r$ \\
+		\> return $m$ \\
+	}
+\]
+
+This scheme is not CCA secure as we can glean some information about the
+decrypt function by simply xoring our input ciphertext with r before inputing
+it into the decryption function. The returned value, instead of m, will be
+$m \oplus r$, which gives us information about how the decryption function
+works. 
+
+
 
 
 
