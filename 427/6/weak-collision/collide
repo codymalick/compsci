@@ -1,0 +1,62 @@
+#!/usr/bin/bash
+# Base names for files
+BDOG="input/doge"
+BCAT="input/gcat"
+
+# Variables that will get modified
+DOG=$BDOG
+CAT=$BCAT
+
+ATTEMPTS=0
+
+check_hash () {
+	SEARCH=$(echo $1 | cut -d' ' -f 1 | head -c 10 | grep -f - output)
+
+	# if we find a result, echo it out and exit
+	if [ "$SEARCH" == 0 ]
+	then
+		echo $SEARCH
+		RESULT=$1
+		RESULT+=" "
+		RESULT+=$SEARCH
+		echo $RESULT
+		echo $ATTEMPTS
+		exit 0
+	fi
+}
+
+# Copy needed files over to input directory
+cp doge.jpg gcat.jpg input/
+
+#Terminate if we dont get it in a lot of tries
+for i in {1..1000000}:
+do
+	ATTEMPTS=$((ATTEMPTS+1))
+	#loop forever
+	HDOG=$(md5sum $DOG.jpg)
+
+	check_hash $HDOG
+
+	# Otherwise, add it to the output
+	echo $HDOG >> output
+
+	# Create next file
+	cp $DOG.jpg $BDOG$i.jpg
+	echo "0" >> $BDOG$i.jpg
+
+	ATTEMPTS=$(($ATTEMPTS+1))
+	HCAT=$(md5sum $CAT.jpg)
+
+	check_hash $HCAT
+
+	# Otherwise, add it to the output
+	echo $HCAT >> output
+
+	# Create the next file
+	cp $CAT.jpg $BCAT$i.jpg
+	echo "0" >> $BCAT$i.jpg
+
+
+	DOG=$BDOG$i
+	CAT=$BCAT$i
+done

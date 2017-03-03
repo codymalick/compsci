@@ -1,0 +1,193 @@
+\documentclass[11pt]{article}
+
+%% Sample LaTeX for CS427/519
+%% Mike Rosulek
+%% last update 2017-01-23
+
+\usepackage{xspace,graphicx,amsmath,amssymb,xcolor}
+
+%% operators
+
+\newcommand{\pct}{\mathbin{\%}}
+% makes ":=" aligned better
+\usepackage{mathtools}
+\mathtoolsset{centercolon}
+
+% indistinguishability operator
+% http://tex.stackexchange.com/questions/22168/triple-approx-and-triple-approx-with-a-straight-middle-line
+\newcommand{\indist}{  \mathrel{\vcenter{\offinterlineskip
+  \hbox{$\sim$}\vskip-.35ex\hbox{$\sim$}\vskip-.35ex\hbox{$\sim$}}}}
+\renewcommand{\cong}{\indist}
+
+
+
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\Enc}{\text{\sf Enc}}
+\newcommand{\Dec}{\text{\sf Dec}}
+\newcommand{\KeyGen}{\text{\sf KeyGen}}
+
+% fancy script L
+\usepackage[mathscr]{euscript}
+\renewcommand{\L}{\ensuremath{\mathscr{L}}\xspace}
+\newcommand{\lib}[1]{\ensuremath{\L_{\textsf{#1}}}\xspace}
+
+
+\newcommand{\myterm}[1]{\ensuremath{\text{#1}}\xspace}
+\newcommand{\bias}{\myterm{bias}}
+\newcommand{\link}{\diamond}
+\newcommand{\subname}[1]{\ensuremath{\textsc{#1}}\xspace}
+
+
+
+%% colors
+\definecolor{highlightcolor}{HTML}{F5F5A4}
+\definecolor{highlighttextcolor}{HTML}{000000}
+\definecolor{bitcolor}{HTML}{a91616}
+
+
+%%% boxes for writing libraries/constructions
+\usepackage{varwidth}
+
+\newcommand{\codebox}[1]{%
+        \begin{varwidth}{\linewidth}%
+        \begin{tabbing}%
+            ~~~\=\quad\=\quad\=\quad\=\kill % initialize tabstops
+            #1
+        \end{tabbing}%
+        \end{varwidth}%
+}
+\newcommand{\titlecodebox}[2]{%
+    \fboxsep=0pt%
+    \fcolorbox{black}{black!10}{%
+        \begin{varwidth}{\linewidth}%
+        \centering%
+        \fboxsep=3pt%
+        \colorbox{black!10}{#1} \\
+        \colorbox{white}{\codebox{#2}}%
+        \end{varwidth}%
+    }
+}
+\newcommand{\fcodebox}[1]{%
+    \framebox{\codebox{#1}}%
+}
+\newcommand{\hlcodebox}[1]{%
+    \fcolorbox{black}{highlightcolor}{\codebox{#1}}%
+}
+\newcommand{\hltitlecodebox}[2]{%
+    \fboxsep=0pt%
+    \fcolorbox{black}{black!15!highlightcolor}{%
+        \begin{varwidth}{\linewidth}%
+        \centering%
+        \fboxsep=3pt%
+        \colorbox{black!15!highlightcolor}{\color{highlighttextcolor}#1} \\
+        \colorbox{highlightcolor}{\color{highlighttextcolor}\codebox{#2}}%
+        \end{varwidth}%
+    }
+}
+
+
+%% highlighting
+\newcommand{\basehighlight}[1]{\colorbox{highlightcolor}{\color{highlighttextcolor}#1}}
+\newcommand{\mathhighlight}[1]{\basehighlight{$#1$}}
+\newcommand{\highlight}[1]{\raisebox{0pt}[-\fboxsep][-\fboxsep]{\basehighlight{#1}}}
+\newcommand{\highlightline}[1]{%\raisebox{0pt}[-\fboxsep][-\fboxsep]{
+    \hspace*{-\fboxsep}\basehighlight{#1}%
+%}
+}
+
+%% bits
+\newcommand{\bit}[1]{\textcolor{bitcolor}{\texttt{\upshape #1}}}
+\newcommand{\bits}{\{\bit0,\bit1\}}
+
+
+%%%%
+
+\begin{document}
+
+    \section*{Example \LaTeX{} stuff}
+
+    \[
+        A \link 
+        \fcodebox{
+            \underline{$\subname{challenge}(m_1 \cdots m_\ell)$:} \\
+            \> \highlightline{$r := \subname{samp}()$} \\
+            \> $c_0 := r$ \\
+            \> for $i = 1$ to $\ell$: \\
+            \>\> $r := \subname{query}(r)$ \\
+            \>\> $c_i := r \oplus m_i$ \\
+            \> return $c_0 c_1 \cdots c_\ell$
+        }
+        \link 
+        \fcodebox{
+            $T := $ empty \\
+            \\
+            \underline{$\subname{query}(r)$:} \\
+            \> if $T[r]$ undefined: \\
+            \>\> \highlightline{$T[r] := \subname{samp}()$} \\
+            \> return $T[r]$
+        }
+        \link 
+        \hlcodebox{
+            \underline{$\subname{samp}()$:} \\
+            \> $s \gets \bits^\lambda$ \\
+            \> return $s$
+        }
+    \]
+
+    \[
+            \titlecodebox{$\lib{cpa-L}^\Sigma$}{
+                $k \gets \Sigma.\KeyGen$ \\[8pt]
+
+                \underline{$\subname{challenge}(m_L, m_R)$:} \\
+                \> $c := \Sigma.\Enc(k,\mathhighlight{m_L})$ \\
+                \> return $c$
+            }
+    \]
+%
+\begin{align*}
+    \lib{left} \equiv \lib{right}
+        &\Leftrightarrow \forall A: \Pr[A \link \lib{left} \mbox{ outputs 1}] = \Pr[A \link \lib{right} \mbox{ outputs 1}]
+\\
+    \lib{left} \indist \lib{right}
+        &\Leftrightarrow \forall \mbox{ poly-time } A: \Pr[A \link \lib{left} \mbox{ outputs 1}] \approx \Pr[A \link \lib{right} \mbox{ outputs 1}]
+\end{align*}
+
+     \begin{center}
+     \framebox{
+        \codebox{
+            \underline{$\KeyGen$:} \\
+            \> $k \gets \bits^\lambda$ \\
+            \> return $k$
+        }
+        \qquad
+        \codebox{
+            \underline{$\Enc(k,m)$:} \\
+            \> $r \gets \bits^\lambda$\\
+            \> $x := F(k,r) \oplus m$ \\
+            \> return $(r,x)$
+        }
+        \qquad
+        \codebox{
+            \underline{$\Dec(k,(r,x))$:} \\
+            \> $m := F(k,r) \oplus x$ \\
+            \> return $m$
+        }
+    }
+
+    \bigskip
+
+    \fcodebox{
+        \underline{$H(s)$:} \\
+        \> $x := G(s)$ \\
+        \> $y := G(x_{\textsf{right}})$ \\
+        \> return $x_{\textsf{left}} \| y$
+    }
+    \end{center}
+
+
+
+\end{document}

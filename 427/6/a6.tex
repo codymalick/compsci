@@ -1,0 +1,176 @@
+\documentclass[10pt]{article}
+%%%%%%%%%%%%%%%%%%%%%%%
+% Mike's stuff
+
+%% Sample LaTeX for CS427/519
+%% Mike Rosulek
+%% last update 2017-01-23
+
+\usepackage{xspace,graphicx,amsmath,amssymb,xcolor}
+\usepackage[margin=1in]{geometry}
+
+%% operators
+
+\newcommand{\pct}{\mathbin{\%}}
+% makes ":=" aligned better
+\usepackage{mathtools}
+\mathtoolsset{centercolon}
+
+% indistinguishability operator
+% http://tex.stackexchange.com/questions/22168/triple-approx-and-triple-approx-with-a-straight-middle-line
+\newcommand{\indist}{  \mathrel{\vcenter{\offinterlineskip
+\hbox{$\sim$}\vskip-.35ex\hbox{$\sim$}\vskip-.35ex\hbox{$\sim$}}}}
+\renewcommand{\cong}{\indist}
+
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\Enc}{\text{\sf Enc}}
+\newcommand{\Dec}{\text{\sf Dec}}
+\newcommand{\KeyGen}{\text{\sf KeyGen}}
+
+% fancy script L
+\usepackage[mathscr]{euscript}
+\renewcommand{\L}{\ensuremath{\mathscr{L}}\xspace}
+\newcommand{\lib}[1]{\ensuremath{\L_{\textsf{#1}}}\xspace}
+
+\newcommand{\myterm}[1]{\ensuremath{\text{#1}}\xspace}
+\newcommand{\bias}{\myterm{bias}}
+\newcommand{\link}{\diamond}
+\newcommand{\subname}[1]{\ensuremath{\textsc{#1}}\xspace}
+
+%% colors
+\definecolor{highlightcolor}{HTML}{F5F5A4}
+\definecolor{highlighttextcolor}{HTML}{000000}
+\definecolor{bitcolor}{HTML}{a91616}
+
+%%% boxes for writing libraries/constructions
+\usepackage{varwidth}
+
+\newcommand{\codebox}[1]{%
+	\begin{varwidth}{\linewidth}%
+		\begin{tabbing}%
+			~~~\=\quad\=\quad\=\quad\=\kill % initialize tabstops
+			#1
+		\end{tabbing}%
+	\end{varwidth}%
+}
+\newcommand{\titlecodebox}[2]{%
+	\fboxsep=0pt%
+	\fcolorbox{black}{black!10}{%
+		\begin{varwidth}{\linewidth}%
+			\centering%
+			\fboxsep=3pt%
+			\colorbox{black!10}{#1} \\
+			\colorbox{white}{\codebox{#2}}%
+		\end{varwidth}%
+	}
+}
+\newcommand{\fcodebox}[1]{%
+	\framebox{\codebox{#1}}%
+}
+\newcommand{\hlcodebox}[1]{%
+	\fcolorbox{black}{highlightcolor}{\codebox{#1}}%
+}
+\newcommand{\hltitlecodebox}[2]{%
+	\fboxsep=0pt%
+	\fcolorbox{black}{black!15!highlightcolor}{%
+		\begin{varwidth}{\linewidth}%
+			\centering%
+			\fboxsep=3pt%
+			\colorbox{black!15!highlightcolor}{\color{highlighttextcolor}#1} \\
+			\colorbox{highlightcolor}{\color{highlighttextcolor}\codebox{#2}}%
+		\end{varwidth}%
+	}
+}
+
+
+%% highlighting
+\newcommand{\basehighlight}[1]{\colorbox{highlightcolor}{\color{highlighttextcolor}#1}}
+\newcommand{\mathhighlight}[1]{\basehighlight{$#1$}}
+\newcommand{\highlight}[1]{\raisebox{0pt}[-\fboxsep][-\fboxsep]{\basehighlight{#1}}}
+\newcommand{\highlightline}[1]{%\raisebox{0pt}[-\fboxsep][-\fboxsep]{
+	\hspace*{-\fboxsep}\basehighlight{#1}%
+	%}
+}
+
+%% bits
+\newcommand{\bit}[1]{\textcolor{bitcolor}{\texttt{\upshape #1}}}
+\newcommand{\bits}{\{\bit0,\bit1\}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\title{CS 427, Assignment 6}
+\author{Cody Malick\\
+\texttt{malickc@oregonstate.edu}}
+\date{\today}
+\maketitle
+
+\section{}
+The weakness here is that we are xoring the results of the PRF $F$ with the
+previous results of the PRF. The seed of the value $t$ being the key. If the
+length of $m$ is of size 1, then the returned value $t$ will always be the result
+of the PRF $F$. While this is an issue, it becomes a significant issue when we
+use this fact our advantage when we take another message, concatinate it with
+a known message resulting in a string of size 2. We can then attack the fact
+that a message of two block sizes doesn't gain any extra encryption from the
+xor:
+
+\[
+	\fcodebox{
+		$k := \subname{KeyGen}()$
+		$
+		\\
+		\underline{$\subname{Attack}()$:} \\
+		\> // Single block message \\
+		\> $m_1 := \{0,1\}^{\lambda}$ \\
+		\> $m_2 := \{0,1\}^{\lambda}$ \\
+		\> $m_3 := \{0,1\}^{\lambda}$ \\
+		\> $h_1 := \subname{MAC}(k, m_1)$ \\
+		\> $h_2 := \subname{MAC}(k, m_2)$ \\
+		\> $h_3 := \subname{MAC}(k, m_1 || m_3) \\
+		\> $h_4 := \subname{MAC}(k, m_2 || m_3) \\
+		\> \\
+		\> if $h_1 \oplus h_3 == h_2 \oplus h_4$: \\
+		\>\> return true \\
+		\> return false \\
+	}
+\]
+
+The attacking function will return true with a probability 1. But the important
+distinguisher here is that the xor does effectively nothing with block size one
+and two strings. 
+\section{}
+
+\section{}
+We can show that this library is not collision resistant by abusing 
+the lack of second-preimage resistance, or weak hash collision resistance. For
+every value we generate through $H^*$, we track it in an array. Then, for each
+new output, we check it against the whole array. If there is a duplicate value,
+then we know we've found a collision:
+\[
+	\fcodebox{
+		\underline{$\subname{Collide}(k,m)$} \\
+		\> $\mathcal{T} := \varnothing$ \\
+		\> //While we haven't found a collision, loop forever
+		\> for( $i = 0; i > 0 ; i++$ ) \{ \\
+		\>\> if $\mathcal{T}.Contains(\subname{H^*}(i) \{$\\
+		\>\>\> return true
+		\>\> \}
+		\> \}
+	}
+\]
+
+This system abuses the birthday attack, which will get a collision probability of
+P, according to the following formula: $P = 1-\frac{n!}{(n-i)!*n^i}$. Because
+the denominator grows quite quickly, collision is highly likely in a relatively
+small number of attempts. 
+
+
+
+\end{document}
