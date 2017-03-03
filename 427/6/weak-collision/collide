@@ -10,7 +10,7 @@ CAT=$BCAT
 ATTEMPTS=0
 
 check_hash () {
-	SEARCH=$(echo $1 | cut -d' ' -f 1 | head -c 10 | grep -f - output)
+	SEARCH=$(echo $1 | cut -d' ' -f 1 | head -c 10 | grep -f - $2)
 
 	# if we find a result, echo it out and exit
 	if [ "$SEARCH" == 0 ]
@@ -35,10 +35,10 @@ do
 	#loop forever
 	HDOG=$(md5sum $DOG.jpg)
 
-	check_hash $HDOG
+	check_hash $HDOG coutput
 
 	# Otherwise, add it to the output
-	echo $HDOG >> output
+	echo $HDOG >> doutput
 
 	# Create next file
 	cp $DOG.jpg $BDOG$i.jpg
@@ -47,15 +47,14 @@ do
 	ATTEMPTS=$(($ATTEMPTS+1))
 	HCAT=$(md5sum $CAT.jpg)
 
-	check_hash $HCAT
+	check_hash $HCAT doutput
 
 	# Otherwise, add it to the output
-	echo $HCAT >> output
+	echo $HCAT >> coutput
 
 	# Create the next file
 	cp $CAT.jpg $BCAT$i.jpg
 	echo "0" >> $BCAT$i.jpg
-
 
 	DOG=$BDOG$i
 	CAT=$BCAT$i

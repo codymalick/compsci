@@ -124,7 +124,6 @@ xor:
 \[
 	\fcodebox{
 		$k := \subname{KeyGen}()$
-		$
 		\\
 		\underline{$\subname{Attack}()$:} \\
 		\> // Single block message \\
@@ -134,8 +133,7 @@ xor:
 		\> $h_1 := \subname{MAC}(k, m_1)$ \\
 		\> $h_2 := \subname{MAC}(k, m_2)$ \\
 		\> $h_3 := \subname{MAC}(k, m_1 || m_3) \\
-		\> $h_4 := \subname{MAC}(k, m_2 || m_3) \\
-		\> \\
+		\> $h_4 := \subname{MAC}(k, m_2 || m_3) \\	
 		\> if $h_1 \oplus h_3 == h_2 \oplus h_4$: \\
 		\>\> return true \\
 		\> return false \\
@@ -146,6 +144,25 @@ The attacking function will return true with a probability 1. But the important
 distinguisher here is that the xor does effectively nothing with block size one
 and two strings. 
 \section{}
+After some fun experimentation, I was able to find a collision in the first
+five bytes after 2616776 attempts! The original file hashes are:
+
+gcat.jpg - b4a00bd5ce01c34f9faf62142d51e810\\
+doge.jpg - 2a23c1bc0108eceaa0a6e8837414803d\\
+
+And the collision is:\\
+
+newGcat.jpg - 3fa488457e868f688209d0725baaca3a\\
+newDoge.jpg - 3fa488457ebc3e6fe988b774e67062d5\\
+
+And, of course, the pictures:
+
+\includegraphics{newGcat.jpg}
+\includegraphics{newDoge.jpg}
+
+I've attached a file with this submission, main.go, which contains the code I used
+to generate and check the collision. It's written in the Go programming language.
+I used weak hash collision. 
 
 \section{}
 We can show that this library is not collision resistant by abusing 
