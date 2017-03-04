@@ -55,7 +55,6 @@ func alterHashit(filename string, alteredFilename string) ([]byte, []byte) {
 
 }
 
-// Strong hash collision
 func hashit(filename string) ([]byte) {
   file, err := os.Open(filename)
   if err != nil {
