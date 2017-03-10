@@ -132,7 +132,7 @@ $\phi(N)\ =\ 911797486545590530685490581969705143802653291668718088807630693862\
 
 \noindent With those two numbers, we can calculate the value of $d$:\\
 
-\noindent $d\ =\ \frac{1}{e\ mod\ \phi(N)}$
+\noindent $d\ =\ \frac{1}{e\ mod\ \phi(N)}$\\
 $d\ =\ 876087402216128760554205050038776743914820917321379260264250901674899413\\
 6282031327309248170674784815973921629687229809866185883687888375766251125859858\\
 0335605738183751378608385253239956378629643166962086728346639595202171576099271\\
@@ -153,15 +153,15 @@ quadratic equation:
 \noindent $\phi(N)\ =\ (p-1)(q-1)$\\
 $N\ =\ p*q$\\
 
-$\phi(n)\ =\ (p-1)*(q-1)$\\
+\noindent $\phi(n)\ =\ (p-1)*(q-1)$\\
 $\frac{\phi(N)}{p-1}\ =\ (q-1)$\\
 $\frac{\phi(N)}{p-1}+1\ =\ q$\\
 
 \noindent And conversely:\\
 
-$\frac{\phi(n)}{q-1}+1\ =\ p$\\
+\noindent$\frac{\phi(n)}{q-1}+1\ =\ p$\\
 
-We also have the other formula:\\
+\noindent We also have the other formula:\\
 
 \noindent $p\ =\ \frac{N}{q}$\\
 $q\ =\ \frac{N}{p}$\\
@@ -189,9 +189,18 @@ Using these formula, we can calculate the requested values:\\
 $p*q\ =\ N$
 
 \section{}
-If $x$ and $y$ are known, and we know that $x^2 \equiv_N y^2$, then 
-$x^2 = y^2\ mod\ N$. Because of this relationship, we know also that
-$N\ |\ x^2-y^2$. Then, by definition, we know that $x^2-y^2$ is a factor of
-N. Then, knowing one of the factors, the other can be easily found. 
+If $x$ and $y$ are known, and we know that $x^2 \equiv_N y^2$, then:\\
+
+\noindent $x^2\ =\ y^2\ mod\ N$\\
+
+Because of this relationship, we know also that:
+
+\noindent $x^2-y^2\ =\ 0\ mod\ N$\\
+$(x-y)(x+y)\ =\ 0\ mod\ N$\\
+
+Because we know that the left side of the equation is equal to 0 mod n, the
+left side is then equal to some multiple of n. With that knowledge, we know that
+$(x-y)$ and $(x+y)$ contain factors of N. We can then solve for the greatest
+common divisor of $((x+y),N)$ and $((x-y),N)$ to quickly find the factors. 
 
 \end{document}
