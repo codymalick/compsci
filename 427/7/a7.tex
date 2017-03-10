@@ -1,0 +1,197 @@
+\documentclass[10pt]{article}
+%%%%%%%%%%%%%%%%%%%%%%%
+% Mike's stuff
+
+%% Sample LaTeX for CS427/519
+%% Mike Rosulek
+%% last update 2017-01-23
+
+\usepackage{xspace,graphicx,amsmath,amssymb,xcolor}
+\usepackage[margin=1in]{geometry}
+
+%% operators
+
+\newcommand{\pct}{\mathbin{\%}}
+% makes ":=" aligned better
+\usepackage{mathtools}
+\mathtoolsset{centercolon}
+
+% indistinguishability operator
+% http://tex.stackexchange.com/questions/22168/triple-approx-and-triple-approx-with-a-straight-middle-line
+\newcommand{\indist}{  \mathrel{\vcenter{\offinterlineskip
+\hbox{$\sim$}\vskip-.35ex\hbox{$\sim$}\vskip-.35ex\hbox{$\sim$}}}}
+\renewcommand{\cong}{\indist}
+
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\Enc}{\text{\sf Enc}}
+\newcommand{\Dec}{\text{\sf Dec}}
+\newcommand{\KeyGen}{\text{\sf KeyGen}}
+
+% fancy script L
+\usepackage[mathscr]{euscript}
+\renewcommand{\L}{\ensuremath{\mathscr{L}}\xspace}
+\newcommand{\lib}[1]{\ensuremath{\L_{\textsf{#1}}}\xspace}
+
+\newcommand{\myterm}[1]{\ensuremath{\text{#1}}\xspace}
+\newcommand{\bias}{\myterm{bias}}
+\newcommand{\link}{\diamond}
+\newcommand{\subname}[1]{\ensuremath{\textsc{#1}}\xspace}
+
+%% colors
+\definecolor{highlightcolor}{HTML}{F5F5A4}
+\definecolor{highlighttextcolor}{HTML}{000000}
+\definecolor{bitcolor}{HTML}{a91616}
+
+%%% boxes for writing libraries/constructions
+\usepackage{varwidth}
+
+\newcommand{\codebox}[1]{%
+	\begin{varwidth}{\linewidth}%
+		\begin{tabbing}%
+			~~~\=\quad\=\quad\=\quad\=\kill % initialize tabstops
+			#1
+		\end{tabbing}%
+	\end{varwidth}%
+}
+\newcommand{\titlecodebox}[2]{%
+	\fboxsep=0pt%
+	\fcolorbox{black}{black!10}{%
+		\begin{varwidth}{\linewidth}%
+			\centering%
+			\fboxsep=3pt%
+			\colorbox{black!10}{#1} \\
+			\colorbox{white}{\codebox{#2}}%
+		\end{varwidth}%
+	}
+}
+\newcommand{\fcodebox}[1]{%
+	\framebox{\codebox{#1}}%
+}
+\newcommand{\hlcodebox}[1]{%
+	\fcolorbox{black}{highlightcolor}{\codebox{#1}}%
+}
+\newcommand{\hltitlecodebox}[2]{%
+	\fboxsep=0pt%
+	\fcolorbox{black}{black!15!highlightcolor}{%
+		\begin{varwidth}{\linewidth}%
+			\centering%
+			\fboxsep=3pt%
+			\colorbox{black!15!highlightcolor}{\color{highlighttextcolor}#1} \\
+			\colorbox{highlightcolor}{\color{highlighttextcolor}\codebox{#2}}%
+		\end{varwidth}%
+	}
+}
+
+
+%% highlighting
+\newcommand{\basehighlight}[1]{\colorbox{highlightcolor}{\color{highlighttextcolor}#1}}
+\newcommand{\mathhighlight}[1]{\basehighlight{$#1$}}
+\newcommand{\highlight}[1]{\raisebox{0pt}[-\fboxsep][-\fboxsep]{\basehighlight{#1}}}
+\newcommand{\highlightline}[1]{%\raisebox{0pt}[-\fboxsep][-\fboxsep]{
+	\hspace*{-\fboxsep}\basehighlight{#1}%
+	%}
+}
+
+%% bits
+\newcommand{\bit}[1]{\textcolor{bitcolor}{\texttt{\upshape #1}}}
+\newcommand{\bits}{\{\bit0,\bit1\}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\title{CS 427, Assignment 7}
+\author{Cody Malick\\
+\texttt{malickc@oregonstate.edu}}
+\date{\today}
+\maketitle
+
+\section{}
+To get the value of $m$, we ultimately have to derive the value of $d$, our
+decryption exponent. To do so, we start by calculating the RSA Modulus:\\
+
+\noindent $N\ =\ p*q$\\
+$N\ =\ 911797486545590530685490581969705143802653291668718088807630693862734987\\
+5532657604237614264588159197059815174375567981463992373512122956300201579359580\\
+5215238577716681027825152983443943441550557354571582134685037600218456613417870\\
+18714549993329931085779672821202518040360247980809810895818474245240280337281$\\
+
+\noindent Now we need the value of $\phi(N)$:\\
+
+\noindent $\phi(N)\ =\ (p-1)*(q-1)$\\
+$\phi(N)\ =\ 911797486545590530685490581969705143802653291668718088807630693862\\
+7349875532657604237614264588159197059815174375567981463992373512122956300201579\\
+3595805077546189468415157627748782583976339715090578658910915643377622180520960\\
+9946226945875923321513495389884349680225795943502744149049896011236139948560364\\
+6464$\\
+
+\noindent With those two numbers, we can calculate the value of $d$:\\
+
+\noindent $d\ =\ \frac{1}{e\ mod\ \phi(N)}$
+$d\ =\ 876087402216128760554205050038776743914820917321379260264250901674899413\\
+6282031327309248170674784815973921629687229809866185883687888375766251125859858\\
+0335605738183751378608385253239956378629643166962086728346639595202171576099271\\
+93631392683611409041866251714943161694705196079552228765852086148853008203391$\\
+
+\noindent Now that we know $d$, simply raise our ciphertext to the power of $d$:\\
+
+\noindent $m\ =\ (c\ mod\ N)^d$\\
+$m\ =\ 1223334444555556666667777777888888889999999990000000000$\\
+
+And our message is ``1223334444555556666667777777888888889999999990000000000''. I
+confirmed this by re-encrypting it with the encryption exponent $e$.
+
+\section{}
+Given $\phi(N)$ and $n$, we can quickly find the two factors using algebra, and the
+quadratic equation:
+
+\noindent $\phi(N)\ =\ (p-1)(q-1)$\\
+$N\ =\ p*q$\\
+
+$\phi(n)\ =\ (p-1)*(q-1)$\\
+$\frac{\phi(N)}{p-1}\ =\ (q-1)$\\
+$\frac{\phi(N)}{p-1}+1\ =\ q$\\
+
+\noindent And conversely:\\
+
+$\frac{\phi(n)}{q-1}+1\ =\ p$\\
+
+We also have the other formula:\\
+
+\noindent $p\ =\ \frac{N}{q}$\\
+$q\ =\ \frac{N}{p}$\\
+
+Plugging these in to create two quadratic equations:
+
+\noindent $0\ =\ q^2+(Nq+q-\phi(N)q)+N$\\
+\noindent $0\ =\ p^2+(Np+p-\phi(N)p)+N$\\
+
+Plug these into the quadratic formula:
+
+\noindent $q\ =\ \frac{(1+N-\phi(N)) + \sqrt{(1+N-\phi(N))^2-4*N}}{2}$\\
+\noindent $p\ =\ \frac{(1+N-\phi(N)) - \sqrt{(1+N-\phi(N))^2-4*N}}{2}$\\
+
+Using these formula, we can calculate the requested values:\\
+
+\noindent $p\ =\ 13071703506582537746030691218059776645988993761791975581514478\\
+3550384410764373225534882490634747346714029248654758565923709885799257583872347\\
+06493900130209$\\
+
+\noindent $q\ =\ 69753531824404927370972886793693353755768382947514632265151944\\
+8755124165887426702302511051321397209426399534784224332849550739386177318878139\\
+260776560609$\\
+
+$p*q\ =\ N$
+
+\section{}
+If $x$ and $y$ are known, and we know that $x^2 \equiv_N y^2$, then 
+$x^2 = y^2\ mod\ N$. Because of this relationship, we know also that
+$N\ |\ x^2-y^2$. Then, by definition, we know that $x^2-y^2$ is a factor of
+N. Then, knowing one of the factors, the other can be easily found. 
+
+\end{document}
