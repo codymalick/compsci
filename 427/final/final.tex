@@ -1,0 +1,160 @@
+\documentclass[10pt]{article}
+%%%%%%%%%%%%%%%%%%%%%%%
+% Mike's stuff
+
+%% Sample LaTeX for CS427/519
+%% Mike Rosulek
+%% last update 2017-01-23
+
+\usepackage{xspace,graphicx,amsmath,amssymb,xcolor}
+\usepackage[margin=1in]{geometry}
+
+%% operators
+
+\newcommand{\pct}{\mathbin{\%}}
+% makes ":=" aligned better
+\usepackage{mathtools}
+\mathtoolsset{centercolon}
+
+% indistinguishability operator
+% http://tex.stackexchange.com/questions/22168/triple-approx-and-triple-approx-with-a-straight-middle-line
+\newcommand{\indist}{  \mathrel{\vcenter{\offinterlineskip
+\hbox{$\sim$}\vskip-.35ex\hbox{$\sim$}\vskip-.35ex\hbox{$\sim$}}}}
+\renewcommand{\cong}{\indist}
+
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\Enc}{\text{\sf Enc}}
+\newcommand{\Dec}{\text{\sf Dec}}
+\newcommand{\KeyGen}{\text{\sf KeyGen}}
+
+% fancy script L
+\usepackage[mathscr]{euscript}
+\renewcommand{\L}{\ensuremath{\mathscr{L}}\xspace}
+\newcommand{\lib}[1]{\ensuremath{\L_{\textsf{#1}}}\xspace}
+
+\newcommand{\myterm}[1]{\ensuremath{\text{#1}}\xspace}
+\newcommand{\bias}{\myterm{bias}}
+\newcommand{\link}{\diamond}
+\newcommand{\subname}[1]{\ensuremath{\textsc{#1}}\xspace}
+
+%% colors
+\definecolor{highlightcolor}{HTML}{F5F5A4}
+\definecolor{highlighttextcolor}{HTML}{000000}
+\definecolor{bitcolor}{HTML}{a91616}
+
+%%% boxes for writing libraries/constructions
+\usepackage{varwidth}
+
+\newcommand{\codebox}[1]{%
+	\begin{varwidth}{\linewidth}%
+		\begin{tabbing}%
+			~~~\=\quad\=\quad\=\quad\=\kill % initialize tabstops
+			#1
+		\end{tabbing}%
+	\end{varwidth}%
+}
+\newcommand{\titlecodebox}[2]{%
+	\fboxsep=0pt%
+	\fcolorbox{black}{black!10}{%
+		\begin{varwidth}{\linewidth}%
+			\centering%
+			\fboxsep=3pt%
+			\colorbox{black!10}{#1} \\
+			\colorbox{white}{\codebox{#2}}%
+		\end{varwidth}%
+	}
+}
+\newcommand{\fcodebox}[1]{%
+	\framebox{\codebox{#1}}%
+}
+\newcommand{\hlcodebox}[1]{%
+	\fcolorbox{black}{highlightcolor}{\codebox{#1}}%
+}
+\newcommand{\hltitlecodebox}[2]{%
+	\fboxsep=0pt%
+	\fcolorbox{black}{black!15!highlightcolor}{%
+		\begin{varwidth}{\linewidth}%
+			\centering%
+			\fboxsep=3pt%
+			\colorbox{black!15!highlightcolor}{\color{highlighttextcolor}#1} \\
+			\colorbox{highlightcolor}{\color{highlighttextcolor}\codebox{#2}}%
+		\end{varwidth}%
+	}
+}
+
+
+%% highlighting
+\newcommand{\basehighlight}[1]{\colorbox{highlightcolor}{\color{highlighttextcolor}#1}}
+\newcommand{\mathhighlight}[1]{\basehighlight{$#1$}}
+\newcommand{\highlight}[1]{\raisebox{0pt}[-\fboxsep][-\fboxsep]{\basehighlight{#1}}}
+\newcommand{\highlightline}[1]{%\raisebox{0pt}[-\fboxsep][-\fboxsep]{
+	\hspace*{-\fboxsep}\basehighlight{#1}%
+	%}
+}
+
+%% bits
+\newcommand{\bit}[1]{\textcolor{bitcolor}{\texttt{\upshape #1}}}
+\newcommand{\bits}{\{\bit0,\bit1\}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\title{CS 427, Final Project\\ POODLE\\ Padding Oracle on Downgraded Legacy
+Encryption}
+\author{Cody Malick\\
+\texttt{malickc@oregonstate.edu}}
+\date{\today}
+\maketitle
+\vspace{4cm}
+
+\begin{abstract}
+	This paper outlines the POODLE exploit. It gives details on how it
+	allows an adversary to repeatedly query a server, and eventually decrypt
+	a block one byte at a time. The exploit was first published by the
+	Google Security Team on October 14, 2014 by Bodo Moller, Thai Duong,
+	and Kryzsztof Kotowicz. While SSL version 3.0 is quite old, it is still
+	in use today for browser backward compatibility. 
+
+\end{abstract}
+
+\clearpage
+
+\section*{Introduction}
+POODLE is an attack on Secure Socket Layer version 3.0 that was made public
+in 2014. It was announced on Google's Security Blog, co-published by Bodo Moller,
+Thai Duong, and Kryzsztof Kotowicz. POODLE allows an attacker targeting SSL 3.0
+to decrypt one byte of an encrypted SSL block one out of two-hundred fifty-six 
+attempts. While this is an average, being able to decrypt a byte of an encrypted
+block that quickly is quite a security flaw.\cite{POODLE}
+
+\section*{The Attack}
+\subsection*{Context}
+To completely understand the attack, the context should first be made clear. 
+SSL version 3.0 is quite dated, and should for all intents and purposes be 
+completely retired. Modern browsers, however, use SSLv3 as a fall back for
+compatibility purposes. The browser will first try to connect to the web server
+using TLS version 1.2, the de facto standard for web communication. If that fails, it is
+default behavior in browsers to fall back to earlier standards, such as SSLv3.\cite{POODLE}
+
+While browsers continue to support SSLv3, this attack will continue to be an
+issue. A savvy attacker with the proper resources could catch web requests with
+a man in the middle attack, and prevent all non-SSLv3 requests from going through.
+This would force the use of SSLv3 if it is supported by the web server. 
+
+\subsection*{Padding}
+\subsection*{AES CBC Mode}
+\subsection*{Exploit}
+
+\section*{Exploit Publication by Google}
+\section*{The Fix}
+
+\section*{Bibliography}
+\bibliography{references}
+\bibliographystyle{IEEEtran}
+\end{document}
