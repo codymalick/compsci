@@ -115,11 +115,14 @@ Encryption}
 
 \begin{abstract}
 	This paper outlines the POODLE exploit. It gives details on how it
-	allows an adversary to repeatedly query a server, and eventually decrypt
-	a block one byte at a time. The exploit was first published by the
+	allows an adversary to repeatedly query a server using SSL version 3.0,
+	and eventually decrypt a block one byte at a time. The exploit was
+	first published by the
 	Google Security Team on October 14, 2014 by Bodo Moller, Thai Duong,
 	and Kryzsztof Kotowicz. While SSL version 3.0 is quite old, it is still
-	in use today for browser backward compatibility. 
+	in use today for browser backward compatibility. Later, an updated
+	version of the POODLE exploit was published showing successful attacks
+	against TLS.
 
 \end{abstract}
 
@@ -133,14 +136,16 @@ to decrypt one byte of an encrypted SSL block one out of two-hundred fifty-six
 attempts. While this is an average, being able to decrypt a byte of an encrypted
 block that quickly is quite a security flaw.\cite{POODLE}
 
+It was later found that the vulnerability extended to TLS version 1.0.
+
 \section*{The Attack}
 \subsection*{Context}
 To completely understand the attack, the context should first be made clear. 
 SSL version 3.0 is quite dated, and should for all intents and purposes be 
 completely retired. Modern browsers, however, use SSLv3 as a fall back for
 compatibility purposes. The browser will first try to connect to the web server
-using TLS version 1.2, the de facto standard for web communication. If that fails, it is
-default behavior in browsers to fall back to earlier standards, such as SSLv3.\cite{POODLE}
+using TLS version 1.2, the de facto standard for web communication. If that fails,
+it is default behavior in browsers to fall back to earlier standards, such as SSLv3.\cite{POODLE}
 
 While browsers continue to support SSLv3, this attack will continue to be an
 issue. A savvy attacker with the proper resources could catch web requests with
@@ -148,6 +153,12 @@ a man in the middle attack, and prevent all non-SSLv3 requests from going throug
 This would force the use of SSLv3 if it is supported by the web server. 
 
 \subsection*{Padding}
+The primary point of vulnerability that the attack exploits is in the padding
+of the encrypted message. Padding in SSLv3 is accomplished by measuring the 
+difference between the last block size, and the required size of the block. In
+this case, the block size must be a multiple of sixteen. The SSLv3 implementation
+then measures the difference $d$, and fills the space $d-1$ with random byte
+values. The last byte is then filled with the size of the padding. 
 \subsection*{AES CBC Mode}
 \subsection*{Exploit}
 
