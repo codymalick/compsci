@@ -8,7 +8,8 @@
 
 \usepackage{xspace,graphicx,amsmath,amssymb,xcolor}
 \usepackage[margin=1in]{geometry}
-
+\usepackage{graphicx}
+\graphicspath{{images/}}
 %% operators
 
 \newcommand{\pct}{\mathbin{\%}}
@@ -134,9 +135,16 @@ in 2014. It was announced on Google's Security Blog, co-published by Bodo Moller
 Thai Duong, and Kryzsztof Kotowicz. POODLE allows an attacker targeting SSL 3.0
 to decrypt one byte of an encrypted SSL block one out of two-hundred fifty-six 
 attempts. While this is an average, being able to decrypt a byte of an encrypted
-block that quickly is quite a security flaw.\cite{POODLE}
+block that quickly is quite a security flaw.\cite{POODLE} It was later found
+that the vulnerability extended to TLS version 1.0. It is
+more of an implementation problem. Some implementations of TLS in popular software
+did not correctly check the padding after decryption. \cite{POODLEBites}
 
-It was later found that the vulnerability extended to TLS version 1.0.
+The goal of SSLv3 was to encrypt and keep secret communication between a web
+browser, and a web server. This is accomplished through an initial secret-sharing
+hand shake. It then computes a MAC from the shared secret. Once message exchange
+begins, it uses AES CBC-Mode to encrypt and decrypt messages.\cite{SSLv3} The
+goal of the protocol was to provided secrecy, authenticity, and integrity. 
 
 \section*{The Attack}
 \subsection*{Context}
@@ -150,19 +158,41 @@ it is default behavior in browsers to fall back to earlier standards, such as SS
 While browsers continue to support SSLv3, this attack will continue to be an
 issue. A savvy attacker with the proper resources could catch web requests with
 a man in the middle attack, and prevent all non-SSLv3 requests from going through.
-This would force the use of SSLv3 if it is supported by the web server. 
+This would force the use of SSLv3 if it is supported by the web server.\cite{MozillaPOODLE} 
 
 \subsection*{Padding}
 The primary point of vulnerability that the attack exploits is in the padding
 of the encrypted message. Padding in SSLv3 is accomplished by measuring the 
 difference between the last block size, and the required size of the block. In
-this case, the block size must be a multiple of sixteen. The SSLv3 implementation
+this case, the block size must be a multiple of sixteen. In this case, the AES
+CBC mode block size is sixty-four bits. The SSLv3 implementation
 then measures the difference $d$, and fills the space $d-1$ with random byte
-values. The last byte is then filled with the size of the padding. 
-\subsection*{AES CBC Mode}
-\subsection*{Exploit}
+values. The last byte is then filled with the size of the padding.\cite{SSLv3}
+SSLv3 does not check 
 
-\section*{Exploit Publication by Google}
+\subsection*{AES CBC Mode}
+Cipherblock Chaining mode is one of the most popular modes for AES operation.
+It provides chosen plaintext attack security, and non-deterministic encryption
+using an initialization vector. Here is a diagram from the class textbook that
+illustrates how this process works:\cite{rosulek}
+
+\includegraphics[scale=0.5]{cbcmode}
+
+The key portion of this mode that we will be examining in the attack is that
+the previous encryption block is used to encrypt the following block.
+
+\subsection*{Exploit}
+The exploit is accomplished by executing the following steps:
+
+\begin{enumerate}
+\item 
+\end{enumerate}
+
+The added layer of difficulty to this attack is that the attacker must have two
+requirements in place: the attacker must control some part of the client side
+connection, and the attacker must have visibility of the resulting ciphertext.
+These two pre-requisites require a fairly compromised system to begin with.\cite{US-CERT}
+
 \section*{The Fix}
 
 \section*{Bibliography}
