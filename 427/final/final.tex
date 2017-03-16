@@ -146,8 +146,13 @@ hand shake. It then computes a MAC from the shared secret. Once message exchange
 begins, it uses AES CBC-Mode to encrypt and decrypt messages.\cite{SSLv3} The
 goal of the protocol was to provided secrecy, authenticity, and integrity. 
 
-\section*{The Attack}
-\subsection*{Context}
+POODLE is executed using a padding oracle attack. A padding oracle attack, simply
+described, is abusing the fact that a web server will through an error on a valid
+ciphertext if the padding is bad. This allows an attacker to verify whether or
+not an arbitrary ciphertext has valid padding. Furthermore, with this information,
+and adversary can decrypt the arbitrary ciphertexts!\cite{rosulek}
+
+\section*{Context}
 To completely understand the attack, the context should first be made clear. 
 SSL version 3.0 is quite dated, and should for all intents and purposes be 
 completely retired. Modern browsers, however, use SSLv3 as a fall back for
@@ -165,10 +170,17 @@ The primary point of vulnerability that the attack exploits is in the padding
 of the encrypted message. Padding in SSLv3 is accomplished by measuring the 
 difference between the last block size, and the required size of the block. In
 this case, the block size must be a multiple of sixteen. In this case, the AES
-CBC mode block size is sixty-four bits. The SSLv3 implementation
+CBC mode block size is sixteen bytes, sixty-four bits. The SSLv3 implementation
 then measures the difference $d$, and fills the space $d-1$ with random byte
-values. The last byte is then filled with the size of the padding.\cite{SSLv3}
+values. The last byte is then filled with the size of the padding. The padding
+can be zero, or a maximum of sixty-three bytes.\cite{SSLv3}
 SSLv3 does not check 
+
+When attempting to decrypt, the algorithm checks the last byte for the size of
+the padding. The major issue with this becomes apparent here. Because the padding
+of SSLv3 is nondeterministic and the padding is not covered by the message
+authentication code provided, any value can be provided in the place of the
+padding byte.\cite{POODLE} More on this in the 'exploit' section.
 
 \subsection*{AES CBC Mode}
 Cipherblock Chaining mode is one of the most popular modes for AES operation.
@@ -178,24 +190,81 @@ illustrates how this process works:\cite{rosulek}
 
 \includegraphics[scale=0.5]{cbcmode}
 
-The key portion of this mode that we will be examining in the attack is that
-the previous encryption block is used to encrypt the following block.
+While understanding the underlying encryption algorithm is important to understanding
+the exploit, the primary point of vulnerability is the padding.
 
-\subsection*{Exploit}
+\section*{The Exploit}
 The exploit is accomplished by executing the following steps:
 
-\begin{enumerate}
-\item 
-\end{enumerate}
+\subsubsection*{SSL Version 3.0 Fallback}
+While not required, the vast majority of modern web browsers and web servers use
+modern versions of TLS. Per Mozilla, which has since completely disabled SSLv3
+in the browser, only about 0.3\% of all their requests used SSLv3.\cite{MozillaPOODLE}
+With that in mind, it is likely that an adversary wishing to utilize this attack
+must first force the web browser to fall back to SSLv3. This would typically be
+done during the initial connection between the web browser and web server when
+they first try to agree on a protocol to use. 
 
-The added layer of difficulty to this attack is that the attacker must have two
-requirements in place: the attacker must control some part of the client side
-connection, and the attacker must have visibility of the resulting ciphertext.
-These two pre-requisites require a fairly compromised system to begin with.\cite{US-CERT}
+An adversary, with a man-in-the-middle setup, could disallow any connections
+that were not SSLv3. If both the web browser and web server support SSLv3, they
+would eventually fall back on using the protocol.\cite{POODLE} Once the connection
+has been established, the stage is set for the attack.
+
+\subsubsection*{Replacing the Padding Block}
+Because SSLv3 does not verify the integrity of the padding, or the padding byte
+due to its nondeterministic nature, this is the point of attack. An adversary
+who is able to intercept and alter traffic (our man-in-the-middle setup) can
+replace the padding block with any other block. 
+
+More formally, given ciphertext blocks $C_1 ... C_n$, an initialization vector
+$C_0$, and the block-cipher decryption $D_k$ using key $K$, the recipient of
+the message would use the following process to decrypt:\cite{POODLE}\\
+
+\noindent $P_1 ... P_n, P_i\ =\ D_K(C_i)\ \oplus\ C_{i-1}$\\
+
+
+The receiver would then check the padding on the end ($C_n$), and verify the
+MAC. The attacker could replace $C_n$ with any other block of encrypted
+ciphertext $C_i$ from the same message. Then the ciphertext will still be
+accepted if the decryption of the last byte of block $C_i$ is equal to the
+value of the padding byte. This is the padding oracle attack. \cite{POODLE}.
+
+This means that the attacker knows that the last byte of the decrypted message
+was in-fact equal to the value of the padding byte. The probability of this
+attack being successful turns out to be extremely probable. With only two-hundred
+fifty-six possibilities for any given byte, the probability of success simply
+$\frac{1}{256}$. With such a reliable attack, the attacker can easily iterate
+through the ciphertext blocks, shifting the bytes when a new byte has been
+decrypted. This allows for full decryption of entire blocks given enough time.
+Being able to make several hundred or thousand attacks in a few seconds means 
+that an adversary can reliably decrypt one byte of a message at a time.
+
+While this is fairly devastating, it should again be pointed out that an attacker
+must already have a fairly compromised system in order to execute this method.
+The attacker must have two requirements in place: the attacker must control
+some part of the client side connection, and the attacker must have visibility
+of the resulting ciphertext. These two prerequisites require a fairly
+compromised system to begin with.\cite{US-CERT}
+
+\section*{TLS 1.0 Vulnerability}
+It was discovered a few months after the initial POODLE announcement was made
+that certain implementations of TLS were vulnerable to the attack. TLS, unlike
+SSLv3, is very strict in the formatting of its padding. Certain implementations,
+however, did not check the padding structure after decryption. This leads to the
+same vulnerability to padding oracle attacks that SSLv3 had, minus the need to
+downgrade the security protocol being used.\cite{POODLEBites}
 
 \section*{The Fix}
+There is a patch released for SSLv3 to prevent the POODLE vulnerability. The patch
+only works, however, if both the client and the server are up to date. The real
+danger lies in the fact that SSLv3 is a deprecated protocol that should no longer
+be used.\cite{disablessl3} It's hard if not impossible to ensure that every
+server or client is patched and up to date with the latest SSLv3 versions. More
+importantly, many websites and modern browsers have completely disabled SSLv3 to
+prevent POODLE from being an issue in the first place. Modern browsers enforce
+the use of TLS 1.2, and will fail to connect to older servers that do not support
+modern encryption standards.
 
-\section*{Bibliography}
 \bibliography{references}
 \bibliographystyle{IEEEtran}
 \end{document}
