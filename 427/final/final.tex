@@ -130,40 +130,60 @@ Encryption}
 \clearpage
 
 \section*{Introduction}
-POODLE is an attack on Secure Socket Layer version 3.0 that was made public
-in 2014. It was announced on Google's Security Blog, co-published by Bodo Moller,
-Thai Duong, and Kryzsztof Kotowicz. POODLE allows an attacker targeting SSL 3.0
-to decrypt one byte of an encrypted SSL block one out of two-hundred fifty-six 
-attempts. While this is an average, being able to decrypt a byte of an encrypted
-block that quickly is quite a security flaw.\cite{POODLE} It was later found
-that the vulnerability extended to TLS version 1.0. It is
-more of an implementation problem. Some implementations of TLS in popular software
-did not correctly check the padding after decryption. \cite{POODLEBites}
+POODLE, or Padding Oracle On Downgraded Legacy Encryption, 
+is an attack on Secure Socket Layer version 3.0 that was made public
+October of 2014. It was announced on the Google Security Blog, published by
+Bodo Moller, and co-published by Thai Duong, and Kryzsztof Kotowicz. It was
+discovered while the good folks at Google Security Team were investigating
+vulnerabilities in Chrome. I am of the opinion that the Google Security Team
+published the vulnerability in an ethical fashion. It is apparent that they had
+not known about the vulnerability for a long period as they moved quickly to
+publish their results. The blog post mentions that they had not yet even
+patched Google's own servers. \cite{googlesec}
 
-The goal of SSLv3 was to encrypt and keep secret communication between a web
-browser, and a web server. This is accomplished through an initial secret-sharing
-hand shake. It then computes a MAC from the shared secret. Once message exchange
-begins, it uses AES CBC-Mode to encrypt and decrypt messages.\cite{SSLv3} The
-goal of the protocol was to provided secrecy, authenticity, and integrity. 
+POODLE allows an attacker targeting SSL 3.0 to decrypt one byte of an encrypted
+SSL block one out of two-hundred fifty-six attempts. While this is an average,
+being able to decrypt a byte of an encrypted block that quickly is quite the
+security flaw.\cite{POODLE} It was later found that the vulnerability extended
+to certain implementations of TLS version 1.0. Certain implementations of TLS in
+popular software did not correctly check the padding after decryption. \cite{POODLEBites}
+
+The goal of SSLv3 was to encrypt and provide secrecy and security for
+communication between a web browser and a web server. This is accomplished
+through an initial secret-sharing hand shake, computing a MAC from the shared
+secret, and using AES CBC mode to encrypt and decrypt messages.\cite{SSLv3}
+While the original goal of the SSLv3 was to provided secrecy, authenticity, and
+integrity, it has since be antiquated by newer protocols due to design flaws
+exploited by attacks such as POODLE.
 
 POODLE is executed using a padding oracle attack. A padding oracle attack, simply
-described, is abusing the fact that a web server will through an error on a valid
+described, is abusing the fact that a web server will throw an error on a valid
 ciphertext if the padding is bad. This allows an attacker to verify whether or
 not an arbitrary ciphertext has valid padding. Furthermore, with this information,
-and adversary can decrypt the arbitrary ciphertexts!\cite{rosulek}
+and adversary can decrypt the arbitrary ciphertexts!\cite{rosulek} This would
+allow an attacker access to sensitive information in a web browser such as
+cookies or cache data.
 
 \section*{Context}
-To completely understand the attack, the context should first be made clear. 
+To completely understand the attack, the context should first be described.
 SSL version 3.0 is quite dated, and should for all intents and purposes be 
-completely retired. Modern browsers, however, use SSLv3 as a fall back for
+completely retired. Modern browsers, however, use SSLv3 as a fallback for
 compatibility purposes. The browser will first try to connect to the web server
 using TLS version 1.2, the de facto standard for web communication. If that fails,
 it is default behavior in browsers to fall back to earlier standards, such as SSLv3.\cite{POODLE}
 
 While browsers continue to support SSLv3, this attack will continue to be an
 issue. A savvy attacker with the proper resources could catch web requests with
-a man in the middle attack, and prevent all non-SSLv3 requests from going through.
-This would force the use of SSLv3 if it is supported by the web server.\cite{MozillaPOODLE} 
+a man-in-the-middle attack, and prevent all non-SSLv3 requests from being transferred.
+This would force the use of SSLv3 if it is supported by the web server.\cite{MozillaPOODLE}
+
+\subsection*{Man-in-the-Middle}
+Man-in-the-middle attacks are fairy simple in concept, but harder to execute.
+The attack is executed by intercepting a communication between two hosts, and
+reading or altering the information passed between them.\cite{mttm} While the
+specifics are not important to understanding POODLE, it is important to know
+that an attacker with a setup like this can read, alter, and inject completely
+new data into a communication.
 
 \subsection*{Padding}
 The primary point of vulnerability that the attack exploits is in the padding
@@ -173,12 +193,12 @@ this case, the block size must be a multiple of sixteen. In this case, the AES
 CBC mode block size is sixteen bytes, sixty-four bits. The SSLv3 implementation
 then measures the difference $d$, and fills the space $d-1$ with random byte
 values. The last byte is then filled with the size of the padding. The padding
-can be zero, or a maximum of sixty-three bytes.\cite{SSLv3}
-SSLv3 does not check 
+can be zero, or a maximum of sixty-three bytes.\cite{SSLv3} It is possible for
+an entire encryption block to be only padding.
 
-When attempting to decrypt, the algorithm checks the last byte for the size of
+When attempting to decrypt, the algorithm will check the last byte for the size of
 the padding. The major issue with this becomes apparent here. Because the padding
-of SSLv3 is nondeterministic and the padding is not covered by the message
+of SSLv3 is nondeterministic, and the padding is not covered by the message
 authentication code provided, any value can be provided in the place of the
 padding byte.\cite{POODLE} More on this in the 'exploit' section.
 
@@ -190,38 +210,45 @@ illustrates how this process works:\cite{rosulek}
 
 \includegraphics[scale=0.5]{cbcmode}
 
-While understanding the underlying encryption algorithm is important to understanding
-the exploit, the primary point of vulnerability is the padding.
+Of particular importance to notice for this attack is the formula used to decrypt
+a given ciphertext block:\\
+
+\noindent $m_i\ :=\ F^{-1}(k,c_i)\ \oplus\ c_{i-1}$\\
+
+This formula will come up again in the exploit section. While understanding the
+underlying encryption algorithm is important to understanding the exploit, the
+primary point of vulnerability is the padding. The CBC encryption used in SSLv3
+is sound. 
 
 \section*{The Exploit}
 The exploit is accomplished by executing the following steps:
 
 \subsubsection*{SSL Version 3.0 Fallback}
-While not required, the vast majority of modern web browsers and web servers use
-modern versions of TLS. Per Mozilla, which has since completely disabled SSLv3
-in the browser, only about 0.3\% of all their requests used SSLv3.\cite{MozillaPOODLE}
-With that in mind, it is likely that an adversary wishing to utilize this attack
-must first force the web browser to fall back to SSLv3. This would typically be
-done during the initial connection between the web browser and web server when
-they first try to agree on a protocol to use. 
+While not required, being able to force a target back onto SSLv3 is often necessary.
+The vast majority of modern web browsers and web servers use some version of TLS.
+Per Mozilla, which has since completely disabled SSLv3 in Firefox, only about
+0.3\% of all their requests used SSLv3.\cite{MozillaPOODLE} With that in mind,
+it is likely that an adversary wishing to utilize this attack must first force
+the web browser to fall back to SSLv3. This would typically be done during the
+initial connection between the web browser and web server when they first try
+to agree on a protocol to use. 
 
-An adversary, with a man-in-the-middle setup, could disallow any connections
+An adversary with a man-in-the-middle setup could disallow any connections
 that were not SSLv3. If both the web browser and web server support SSLv3, they
 would eventually fall back on using the protocol.\cite{POODLE} Once the connection
 has been established, the stage is set for the attack.
 
 \subsubsection*{Replacing the Padding Block}
-Because SSLv3 does not verify the integrity of the padding, or the padding byte
+Because SSLv3 does not verify the integrity of the padding or the padding byte
 due to its nondeterministic nature, this is the point of attack. An adversary
 who is able to intercept and alter traffic (our man-in-the-middle setup) can
-replace the padding block with any other block. 
+replace the padding block with any other block.
 
 More formally, given ciphertext blocks $C_1 ... C_n$, an initialization vector
 $C_0$, and the block-cipher decryption $D_k$ using key $K$, the recipient of
-the message would use the following process to decrypt:\cite{POODLE}\\
+the message would use the following process to decrypt to get $P$:\cite{POODLE}\\
 
 \noindent $P_1 ... P_n, P_i\ =\ D_K(C_i)\ \oplus\ C_{i-1}$\\
-
 
 The receiver would then check the padding on the end ($C_n$), and verify the
 MAC. The attacker could replace $C_n$ with any other block of encrypted
@@ -232,7 +259,7 @@ value of the padding byte. This is the padding oracle attack. \cite{POODLE}.
 This means that the attacker knows that the last byte of the decrypted message
 was in-fact equal to the value of the padding byte. The probability of this
 attack being successful turns out to be extremely probable. With only two-hundred
-fifty-six possibilities for any given byte, the probability of success simply
+fifty-six possibilities for any given byte, the probability of success is simply
 $\frac{1}{256}$. With such a reliable attack, the attacker can easily iterate
 through the ciphertext blocks, shifting the bytes when a new byte has been
 decrypted. This allows for full decryption of entire blocks given enough time.
@@ -255,15 +282,26 @@ same vulnerability to padding oracle attacks that SSLv3 had, minus the need to
 downgrade the security protocol being used.\cite{POODLEBites}
 
 \section*{The Fix}
-There is a patch released for SSLv3 to prevent the POODLE vulnerability. The patch
-only works, however, if both the client and the server are up to date. The real
-danger lies in the fact that SSLv3 is a deprecated protocol that should no longer
-be used.\cite{disablessl3} It's hard if not impossible to ensure that every
-server or client is patched and up to date with the latest SSLv3 versions. More
-importantly, many websites and modern browsers have completely disabled SSLv3 to
-prevent POODLE from being an issue in the first place. Modern browsers enforce
-the use of TLS 1.2, and will fail to connect to older servers that do not support
-modern encryption standards.
+Ideally, it would be possible to patch SSLv3 to prevent the attack from occurring.
+This could be done if SSLv3 altered its padding technique to be able to verify
+its padding and padding byte. There has not, however, been such a patch released.
+There are patches that make it much harder to execute the downgrade attack against
+TLS capable machines. The patch only works, however, if both the client and the
+server are up to date.\cite{disablessl3} The real danger lies in the fact
+that SSLv3 is a deprecated protocol that should no longer be used. It is
+extremely hard, if not impossible, to ensure that every server or client is
+patched and up to date with the latest SSLv3 versions. More importantly, many
+websites and modern browsers have completely disabled SSLv3 to prevent POODLE
+from being an issue in the first place. Modern browsers enforce the use of TLS
+1.2, and will fail to connect to older servers that do not support modern
+encryption standards. The simple answer is to disable SSLv3 entirely.
+
+POODLE is a fascinating example of a real world demonstration of a padding oracle
+attack. While we learned about them this term in class, I did not expect to see
+an attack as viable as this one out in the wild. It is, however, reassuring to see that
+companies such as Google and Mozilla have taken such a hard line in protecting
+their customers. I'm looking forward to reading more about attacks such as these
+in the future. 
 
 \bibliography{references}
 \bibliographystyle{IEEEtran}
