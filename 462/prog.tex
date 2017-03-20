@@ -241,10 +241,156 @@ will work on getting Ciao tested with the new features in our full five NUC
 setup once progress has been made on development.
 
 \section{Team Member Evaluations}
-\subsection{Garrett Smith}
-\subsection{Matthew Johnson}
+\subsection{Team Member Roles}
+While all member contributed quite a bit this term, each of the team had
+specializations. My specialization was focusing on development, understanding
+how to use OVS, as well as being a language expert in the Go programming language. 
+I am also the elected team leader and handle any administrative tasks as needed.
 
-\section{Winter Term Review}
+\subsection{Garrett Smith}
+Garrett focused on setting up a proof of concept for networking, as well as
+writing and setting up network testing environments. Garrett has been a reliable
+and helpful teammate these last two terms. I have no suggestions to improve his
+behavior. Garrett has focused primarily on the network testing, performance,
+and prototyping of the Ciao cluster. While this portion of the project is far
+less glamorous than development, Garrett has tackled the many challenges
+accompanying it with no complaints. He has solved difficult problems, and 
+done an excellent job documenting his work. Having completed the proof of concept
+portion of the networking, he has joined Matthew and I in completing the development
+of the Ciao prototype.
+
+\subsection{Matthew Johnson}
+Matthew specialized in understanding the Ciao architecture, and worked extensively
+on development. Matthew also served as the point of contact for our team and
+the team at Intel. Matthew has been a stronghold of production this term, and
+I feel the spearhead of development. I believe he has made the greatest contribution
+in terms of hours spent on development. He has quickly picked up the Go programming
+language, and has been our team's expert on the Ciao architecture. As far as
+behavior, I again have no complaints or suggestions. Matthew has always pushed
+our team to be productive, and continue moving forward even when things seemed
+grim. He has been a leader and a great teammate. 
+
+\section{Winter Term Week by Week Reports}
+\subsection{Winter Break and Week One}
+
+Over Christmas break Cody and Matthew tried to get Ciao set up on the cluster
+using a manual installation method. We ran into some tough issues and
+communicated them with the Intel team. The Intel team pointed us to a much more
+recently updated setup document that included automated deployment.
+
+During week one there was still an issue in the version of Clear Linux (our
+target distribution) that we were running that caused docker certification to be
+broken. This was fixed within the week and we continued trying to set up Ciao.
+
+\subsection{Week Two}
+
+Garrett wrote several scripts to collect network performance data between nodes.
+He made significant progress in parsing bandwidth data into csv format for
+graphical representation.
+
+This week we continued to work on the Ciao deployment via automated ansible
+playbooks. We encountered several issues from the start and worked through
+them one by one. Issues included errors in the ansible playbooks regarding yaml
+parsing and fqdn configuration. This type of issue was resolved by hardcoding
+the playbooks for our specific setup. By the end of the week we were seeing
+certification management issues in the build.
+
+\subsection{Week Three}
+
+This week we believed we were successful in deploying Ciao and began
+implementation of Open vSwitch components. Garrett has begun working out network
+measurements for our initial benchmarks. Garrett discovered that the network was
+not being set up properly, however, due to issues with the OSU network.
+
+The first half of the week was spent debugging our Ciao deploy with members of
+the Ciao development team at Intel. After several email conversations and debug
+steps, we were advised to switch our operating system to Ubuntu because of
+various certification issues in Clear Linux. This, along with running from
+within a ciao-deploy docker container, fixed our issues and allowed us to
+properly initialize the cluster. As mentioned earlier, our network was not
+properly set up.
+
+\subsection{Week Four}
+
+During week four we continued tentative development on the OVS modules for Ciao.
+Some of the necessary functions have been written, but it has been difficult to
+test this over the physical cluster. Garrett, who has worked on the OSU network
+in the past, thinks the network may not be assigning IPs to the cluster. The OSU
+network DHCP servers will not assign an IP unless the MAC address has been
+registered with the university. To get around this we may have to do single-vm
+setup or find a way to set up the cluster independent from the OSU network.
+
+Ciao provides ciao-down, a tool that helps set up a single-vm environment for
+testing. This will be helpful once we get it spun up.
+
+We were still having issues gathering initial network metrics due to
+inaccessible nodes on our physical cluster. Garrett is working through this but
+the best way to address this may be single-vm for now.
+
+\subsection{Week Five}
+
+Early in the week we got ciao-down (the single-vm setup for Ciao) working to
+test our code.
+
+We have a schedule we are following, and our initial goal was to complete the
+OVS module by the end of week five. Although we had a module written of
+something we were hoping might work, we were unable to get it to integrate
+properly with the rest of Ciao.  It is likely we were misunderstanding some
+things in the calling hierarchy.  Matthew communicated the issues we were seeing
+with Manohar Castelino, one of our clients and a software defined networking
+expert. This led to a conversation about whether or not it was strictly
+necessary to create the bridges in Open vSwitch or if we could simply create the
+GRE tunnels themselves.
+
+As far as the physical cluster goes, we realized that the OSU network will not
+lease IP addresses unless the MAC address is registered with the University.
+Since Ciao uses the network's DHCP server to assign IP addresses to the nodes
+this is a big issue. Garrett has been setting up the physical cluster with a
+DHCP server running on the switch, with only our deployment NUC connected to the
+internet. He has been running into issues setting up the Keystone server once he
+took our controller NUC off the internet. He was trying to modify ansible tasks
+to get around the issue when I left campus today. If he is not able to get this
+to work we will probably ask the university for a subnet we can run a
+non-MAC-locked DHCP server on, but Garrett has worked in OSU IT before and said
+we are unlikely to get permission for that. The number of errors the OSU network
+has generated for us has been a little frustrating.
+
+\subsection{Week Six}
+
+Matthew met with Manohar in-person at Intel on Tuesday to discuss the issues
+with OVS bridges. It turns out Open vSwitch will not attach tunnels to non-OVS
+bridges. This expands our scope somewhat to build a full OVS framework for Ciao,
+instead of just OVS tunnels.
+
+The rest of the week was devoted to working on the midterm progress report for
+Winter term.
+
+\subsection{Week Seven}
+Week seven was devoted entirely to development. A lot of good progress was made
+on implementing the Open vSwitch. We discovered that a scope change was needed.
+OVS requires a full integration and use of OVS bridges, not just the tunnels. 
+We also were able to get basic tests running on code for fast debugging of
+code. We also were able to get our documents signed and submitted week seven.
+
+\subsection{Week Eight}
+Week eight was slow for the team. Cody was out sick, and Matthew was moving 
+up to Portland. Matthew was able to speak to Manohar about the scope change. 
+With approval, we got started on getting the command line functions set up.
+Garrett was also able to make some progress with getting docker containers
+working with an OVS bridge.
+
+\subsection{Week Nine}
+Week nine the team fully fleshed out the functions needed to call the OVS
+command line utility using the \texttt{exec} function call. With those functions
+in place, the next step was adding multiple network mode capability to Ciao.
+
+\subsection{Week Ten}
+A large portion of week ten was dedicated to working on the first poster draft.
+We got some feedback from Frank on our poster, then submitted it on time. Development
+wise, we found that Ciao uses a \texttt{bridge} data structure to build and 
+track the state of the network. The \texttt{bridge} struct is only utilized with
+Linux generated bridges. We started work adding multiple mode capability to
+support the new code being written.
 
 \section{Retrospective}
 
@@ -276,13 +422,18 @@ setup once progress has been made on development.
 		required for OVS tunnels & Worked on progress report for midterm
 		\\ \hline
 
-		7 & \\ \hline
+		7 & Large scope change & Documents signed & Development progress,
+		scope change defined\\ \hline
 
-		8 & \\ \hline
+		8 & Good progress on OVS implementation & Approved scope change
+		& Wrote functions to create OVS bridges and tunnels\\ \hline
 
-		9 & \\ \hline
+		9 & Completed OVS command line functions & Adding network switches
+		to Ciao data structures & Started Ciao integration
+		of new network mode\\ \hline
 
-		10 & \\ \hline
+		10 & Ciao implementation almost working, close to prototype & 
+		Poster created & Created poster, had it reviewed, and submitted\\ \hline
 
 	\end{tabular}
 \end{center}
