@@ -59,9 +59,8 @@ basicstyle=\ttfamily
 		Orchestration Networking project over the Fall and Winter
 		terms. It contains a short description of the project's purposes
 		and goals, current progress, current issues, and any solutions
-		to those issues. It also contains a week by week retrospective
-		for all ten weeks of Fall term and the first half of Winter
-		term. \end{abstract}
+		to those issues. It also contains individual team member reviews,
+		and a week by week retrospective for Winter term. \end{abstract}
 
 \end{titlepage}
 \tableofcontents
@@ -178,7 +177,7 @@ became clear it was an issue unrelated to configuration. The difference in
 behavior was reported to the Clear Linux development team. They have since
 shipped a bug fix in a later release. On that front, we were able to iron out
 Ciao's behavior on Clear Linux.
-
+\subsection{FQDN}
 The second major issue we encountered was that of getting FQDN's in Ciao, or
 Fully Qualified Domain Names. These were important to the controller node of
 Ciao as it needed to identify the compute nodes needed to deploy software onto.
@@ -240,6 +239,18 @@ are not currently using a fully deployed version of Ciao for development, we
 will work on getting Ciao tested with the new features in our full five NUC
 setup once progress has been made on development.
 
+\subsection{Scope Change}
+A big turning point for the project this turn was in the scope change that was
+made. We initially had planned on using a third party Open vSwitch API called
+\texttt{libovsdb}. \texttt{Libovsdb} is a library written in the Go programming
+language. While \texttt{libovsdb} provided many useful interfaces in Go, it added
+undocumented overhead of requiring the calling library to know about all bridges
+created in Ciao. After quite a bit of research, and a few conversations with
+the Intel team, it was decided that we needed to fully implement OVS bridges,
+rather than just the tunnels. Since starting on the revised scope, we've made
+good progress since week seven. We are currently working on getting the prototype
+working.
+
 \section{Team Member Evaluations}
 \subsection{Team Member Roles}
 While all member contributed quite a bit this term, each of the team had
@@ -250,25 +261,34 @@ I am also the elected team leader and handle any administrative tasks as needed.
 \subsection{Garrett Smith}
 Garrett focused on setting up a proof of concept for networking, as well as
 writing and setting up network testing environments. Garrett has been a reliable
-and helpful teammate these last two terms. I have no suggestions to improve his
-behavior. Garrett has focused primarily on the network testing, performance,
-and prototyping of the Ciao cluster. While this portion of the project is far
-less glamorous than development, Garrett has tackled the many challenges
-accompanying it with no complaints. He has solved difficult problems, and 
-done an excellent job documenting his work. Having completed the proof of concept
-portion of the networking, he has joined Matthew and I in completing the development
-of the Ciao prototype.
+and helpful teammate these last two terms. I often had questions on Docker related
+to networking, as well as how the network was being set up. He has been a reliable
+source of information, as well as a pleasure to work with.
+I have no suggestions to improve his behavior. Garrett has focused primarily
+on the network testing, performance, and prototyping of the Ciao cluster.
+While this portion of the project is far less glamorous than development,
+Garrett has tackled the many challenges accompanying it with no complaints. He
+has solved difficult problems, and done an excellent job documenting his work.
+Having completed the proof of concept portion of the networking, he has joined
+Matthew and I in completing the development of the Ciao prototype.
 
 \subsection{Matthew Johnson}
 Matthew specialized in understanding the Ciao architecture, and worked extensively
 on development. Matthew also served as the point of contact for our team and
 the team at Intel. Matthew has been a stronghold of production this term, and
-I feel the spearhead of development. I believe he has made the greatest contribution
-in terms of hours spent on development. He has quickly picked up the Go programming
-language, and has been our team's expert on the Ciao architecture. As far as
-behavior, I again have no complaints or suggestions. Matthew has always pushed
-our team to be productive, and continue moving forward even when things seemed
-grim. He has been a leader and a great teammate. 
+I feel the spearhead of development. In my opinion, he has made the greatest
+contribution in terms of hours spent on development. He has quickly picked up
+the Go programming language, and has been our team's expert on the Ciao
+architecture. Matthew and I have paired program quite a bit this term on 
+challenging portions of development, and has been a great teammate to have.
+As far as behavior, I again have no complaints or suggestions. Regardless of his
+own schedule, he always made time to work on the project when we needed to. 
+Matthew has always pushed our team to be productive, and continue moving forward
+even when things seemed grim. He has been a leader and a great teammate. 
+
+Overall, I thoroughly enjoyed working with Matthew and Garrett on the project
+this term. I feel that we work quite well as a team, and am looking forward
+to completing the project next term.
 
 \section{Winter Term Week by Week Reports}
 \subsection{Winter Break and Week One}
