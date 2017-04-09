@@ -1,0 +1,55 @@
+\documentclass[10pt]{article}
+\usepackage[margin=1in]{geometry}
+
+\begin{document}
+\title{CS 352, Project Proposal\\ Twitch Stream Metadata Website}
+\author{Cody Malick\\
+\texttt{malickc@oregonstate.edu}}
+\date{\today}
+\maketitle
+
+\section*{Project}
+Twitch.tv is one of the most popular sites on the web. It is a free platform
+that allows video game players to share their experiences with viewers. Hundreds
+of thousands of people visit the site each day. While the site itself is
+very well designed, there is no way to easily get metadata or statistics about 
+an individual stream. For example, a streamer might wanted to know how well his stream has
+done over a few months, or even compare those statistics to other Twitch streams.
+This data is accessible through the Twitch API, and could be displayed using 
+intuitive graphs and interactive charts.
+
+\section{Screens}
+\subsection{Home Screen}
+The home screen would display a random high traffic stream's metadata. Data
+included would be the name of the stream, current viewers, and popular games.
+Examples of other data include:
+\begin{itemize}
+	\item Unique visitors per day
+	\item Uptime of stream on average
+	\item Number of subscribers over time
+	\item Number of followers over time
+	\item A graph of viewers throughout the length of the stream
+	\item Views per game (if the streamer switched games)
+\end{itemize}
+
+Useful or interesting information from the graphs could be extracted. For example,
+when is a stream most popular? Which game draws the most viewers? 
+
+\subsection{Tabs}
+While a homescreen could contain important information, each screen could have
+tabs that contain other extraneous information. An example subtab could be
+a zoomed in version of a graph on the home page. 
+
+\subsection{Search}
+There would need to be a search screen allowing a user to find the data about
+a particular stream. This would be a simple search box, either as a seperate 
+screen, or build into the navigation bar at the top of the website.
+
+\section{Challenges}
+While a site like this would be very fun and interesting, there are a number
+of usability and design challenges that would have to be examined. While data
+visualization is fun, how much data should be shown on one screen? Too much
+data would overwhelm the user, while too little would cause the user problems
+clicking through tabs. 
+
+\end{document}
